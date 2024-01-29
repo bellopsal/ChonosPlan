@@ -95,7 +95,7 @@ class Registers:
 
     def update(self, CDB):
         for reg in self.R:
-            if reg.disp == 0 & reg.td == 0:
+            if reg.disp == 0 and reg.td == 0:
                 reg.value = CDB
                 reg.disp = 1
 

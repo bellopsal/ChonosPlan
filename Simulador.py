@@ -72,7 +72,7 @@ class Simulador_1_FU:
             print(" CDB "+ str(self.CDB))
 
             # actualizar valores
-            self.fu.update(self.CDB.get())
+            #self.fu.update(self.CDB.get())
             self.registers.update(self.CDB.get())
             self.registers.update_scoreboard()
             self.pos = self.pos + 1

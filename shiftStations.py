@@ -9,13 +9,13 @@ class ShiftStation:
 
         self.FU1 = None  # which FU will generate first operand
         self.FU2 = None  # which FU will generate last operand
-        self.RP = 0  # when first operand will be ready
+        self.RP = -1  # when first operand will be ready
         self.value = None  # first operand
 
         self.type_operation = None
 
     def one_clock_cycle(self):
-        if self.bitInUse == 1 & self.bitAvail == 0:
+        if self.bitInUse == 1 and self.bitAvail == 0:
             self.RP = self.RP - 1
 
 
@@ -59,9 +59,9 @@ class SS:
 
     def update(self, CDB):
         for ss in self.SS:
-            if ss.bitInUse == 1 & ss.bitAvail == 0 & ss.RP == 0:
+            if ss.bitInUse == 1 and ss.bitAvail == 0 and ss.RP == 0 :
                 ss.value = CDB
                 ss.bitAvail = 27
-                ss.RP = None
+                ss.RP = -1
 
 
