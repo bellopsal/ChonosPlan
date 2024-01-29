@@ -1,7 +1,7 @@
 Luf_int = 2
 Luf_mult = 4
 
-import Scoreboard
+from FU import Scoreboard
 
 
 class Register:

@@ -3,8 +3,7 @@
 #       type
 #       Stack of Shift Stations
 #       BRT of the SS -> 0 if SS empty / 1 cc
-import BRT
-import shiftStations
+from FU import BRT, shiftStations
 
 n = 10 # numero pila
 
