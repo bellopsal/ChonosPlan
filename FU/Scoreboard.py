@@ -1,8 +1,9 @@
+import csv
 class Scoreboard:
 
     def __init__(self, i):
         self.number = i
-        self.T = [0]
+        self.T = [2]
         self.td = []
         self.fu = []
         self.value = []
@@ -11,6 +12,8 @@ class Scoreboard:
         l_aux = ["+" + str(self.td[i]) + " (" + str(self.fu[i]) + ") " for i in range(len(self.fu))]
         return f"R{self.number}: {' | '.join(l_aux)}"
 
+    def dump_csv(self):
+        return ["+" + str(self.td[i]) + " (" + str(self.fu[i]) + ") " for i in range(len(self.fu))]
 
 class Scoreboards:
 
@@ -19,11 +22,11 @@ class Scoreboards:
         self.n = number
 
     def __str__(self):
-        r0 = len(self.scoreboard[0].T)
 
-        str_a = "       "
-        ciclos = [" T" + str(i) + " " for i in range(r0)]
-        str_a += "    |    ".join(ciclos)
+
+        str_a = "         "
+        ciclos = [" T" + str(i) + " " for i in self.scoreboard[0].T]
+        str_a += "   |   ".join(ciclos)
         str_a += "\n"
 
         for a in range(self.n):
@@ -31,6 +34,16 @@ class Scoreboards:
             str_a += "\n"
 
         return str_a
+
+    def dump_csv(self):
+        fields = ["Register"]+["T" + str(i) + " " for i in self.scoreboard[0].T]
+        rows = [["R"+str(i)]+self.scoreboard[i].dump_csv() for i in range(self.n)]
+
+        with open("scoreboard.csv", "w") as f:
+            write = csv.writer(f)
+            write.writerow(fields)
+            write.writerows(rows)
+
 
     def update_i(self, i, registro):
         self.scoreboard[i].T.append(self.scoreboard[i].T[-1]+1)

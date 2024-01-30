@@ -89,3 +89,6 @@ class Simulador_1_FU:
             self.registers.update(self.CDB.get())
             self.pos = self.pos + 1
 
+
+    def dump_csv(self):
+        self.registers.scoreboard.dump_csv()
