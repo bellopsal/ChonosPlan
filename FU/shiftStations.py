@@ -1,6 +1,6 @@
 class ShiftStation:
     def __init__(self):
-        self.bitInUse = 0
+        self.bitInUse = 0   # if the ss is in use ( with data in it)
         self.bitAvail = 0  # first operand available 1 or not
         self.bitMux = None # 0 if second taken from Register
                             # 1 if taken from other op
@@ -64,4 +64,25 @@ class SS:
                 ss.bitAvail = 27
                 ss.RP = -1
 
+
+
+class Pile:
+    def __init__(self,size):
+        self.values = [None]*size
+        self.fu = [None]*size
+        self.bitUse = [-1]*size
+        self.size = size
+
+
+    def one_clock_cycle(self):
+        self.values.pop(0)
+        self.values.append(None)
+
+        self.fu.pop(0)
+        self.fu.append(None)
+
+        self.bitUse.pop(0)
+        self.bitUse.append(-1)
+
+        self.bitUse = [b-1 if b > 0 else b for b in self.bitUse]
 

@@ -9,10 +9,14 @@ class Simulador_1_FU:
     def __init__(self, list_program, n_ss, fu_type, name, n_registers, b_scoreboard):
         # set of instructions
         self.program = Program.Program(list_program)
-        self.fu = funtionalUnit.FU(name, fu_type, n_ss)
+
+        self.fu_add = funtionalUnit.FU("int_1", "int", n_ss)
+        self.fu_mult = funtionalUnit.FU("add_1", "add", n_ss)
+        self.fu_store = funtionalUnit.FU("store_1", "store", n_ss)
+
         self.registers = Registers.Registers(n_registers, b_scoreboard)
         self.CDB = CDB.CDB()
-        self.pos = 0
+        self.PC = 0
         self.b_scoreboard = b_scoreboard
 
     def one_clock_cycle(self):
@@ -21,11 +25,11 @@ class Simulador_1_FU:
         self.registers.one_clock_cycle_ini()
         self.fu.one_clock_cycle_ini()
 
-        ss_0 = self.fu.SS.get(0)
-        pile = self.fu.pile
+        # data that will be use for the alu
 
 
-        if self.pos < self.program.n:
+
+        if self.PC < self.program.n:
             # if there are still instructions in the program
             inst = self.program.get(self.pos)
             [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2] = self.registers.td_calculation(inst.r2, inst.r3)

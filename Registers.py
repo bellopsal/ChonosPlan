@@ -72,7 +72,7 @@ class Registers:
         # primero tengo que actualizar los registros que serán destino
         # asi tengo en cuenta el tiempo anterior y en el caso de escalaridad
         # no perder el orden de las instrucciones!!!
-        if (t1 >= t2):
+        if t1 >= t2:
             ts_max = t1
             ts_min = t2
             arg_min = source1
