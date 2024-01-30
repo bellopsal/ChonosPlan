@@ -1,13 +1,16 @@
+import csv
+
+
 class ShiftStation:
     def __init__(self):
         self.bitInUse = 0   # if the ss is in use ( with data in it)
         self.bitAvail = 0  # first operand available 1 or not
-        self.bitMux = None # 0 if second taken from Register
+        self.bitMux = 0 # 0 if second taken from Register
                             # 1 if taken from other op
                             # 2 if second taken from pile
 
 
-        self.FU1 = None  # which FU will generate first operand
+        self.FU1 = None  # which FU will generate first operand No está siendo implementado bien ahora mismo
         self.FU2 = None  # which FU will generate last operand
         self.RP = -1  # when first operand will be ready
         self.value = None  # first operand
@@ -21,27 +24,43 @@ class ShiftStation:
 
 
     def __str__(self):
-        return f"value = {self.value} -- bitinUse = {self.bitInUse}--bitMux {self.bitMux}-- bitAv {self.bitAvail}-- RP {self.RP}"
+        return f"     {self.bitInUse}    |    {self.bitMux}   |     {self.bitAvail}    | {self.RP} | {self.FU1} | {self.FU2} | {self.value}"
+
 
 class SS:
     def __init__(self, n_ss):
         # the first ss is the one ex in this cycle
         self.SS = [ShiftStation() for i in range(n_ss)]
         self.n = n_ss
+        self.csv = "ss.csv"
+
+        with open("ss.csv", "w") as f:
+            write = csv.writer(f)
+            fields = ["SS", "bitMux","RP","FU1", "FU2", "value"]
+            rows = [[str(i), self.SS[i].bitMux, self.SS[i].RP, self.SS[i].FU1, self.SS[i].FU2, self.SS[i].value] for i in range(n_ss-1, -1, -1) ]
+            write.writerow(fields)
+            write.writerows(rows)
+
 
     def __str__(self):
         res = ""
         for i in range(self.n):
-            txt = "\n" + f"SS{i}"+ str(self.SS[i])
+            txt = "\n" + f"SS{i} "+ str(self.SS[i])
             res = txt + res
-
+        res = "     bitInUse | bitMux | bitAvail | RP | FU1 | FU2 | value" + res
         return res
+
+
 
     def one_clock_cycle(self):
         self.SS.pop(0)
         self.SS.append(ShiftStation())
         for e in self.SS:
             e.one_clock_cycle()
+
+
+
+
 
 
     def get(self,i):
@@ -63,8 +82,16 @@ class SS:
                 ss.value = CDB
                 ss.bitAvail = 27
                 ss.RP = -1
+'''
+        with open("ss.csv", "a") as f:
+            write = csv.writer(f)
+            fields = ["SS", "bitMux", "RP", "FU1", "FU2", "value"]
+            rows = [[str(i), self.SS[i].bitMux, self.SS[i].RP, self.SS[i].FU1, self.SS[i].FU2, self.SS[i].value] for i
+                    in range(self.n - 1, -1, -1)]
+            write.writerow(fields)
+            write.writerows(rows)
 
-
+'''
 
 class Pile:
     def __init__(self,size):

@@ -39,6 +39,7 @@ class Scoreboards:
         fields = ["Register"]+["T" + str(i) + " " for i in self.scoreboard[0].T]
         rows = [["R"+str(i)]+self.scoreboard[i].dump_csv() for i in range(self.n)]
 
+
         with open("scoreboard.csv", "w") as f:
             write = csv.writer(f)
             write.writerow(fields)
