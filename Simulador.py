@@ -6,17 +6,17 @@ import Registers
 
 class Simulador_1_FU:
 
-    def __init__(self, list_program, n_ss, fu_type, name, n_registers, b_scoreboard):
+    def __init__(self, list_program, n_ss, fu_type, name, n_registers, b_scoreboard,pile_size):
         # set of instructions
         self.program = Program.Program(list_program)
 
-        self.fu_add = funtionalUnit.FU("int_1", "int", n_ss)
-        self.fu_mult = funtionalUnit.FU("add_1", "add", n_ss)
-        self.fu_store = funtionalUnit.FU("store_1", "store", n_ss)
+        self.fu = funtionalUnit.FU("int_1", "int", n_ss,pile_size=pile_size,latency = 3)
+        self.fu_mult = funtionalUnit.FU("add_1", "add", n_ss,pile_size=pile_size,latency = 3)
+        self.fu_store = funtionalUnit.FU("store_1", "store", n_ss,pile_size=pile_size,latency = 3)
 
         self.registers = Registers.Registers(n_registers, b_scoreboard)
         self.CDB = CDB.CDB()
-        self.PC = 0
+        self.pos = 0
         self.b_scoreboard = b_scoreboard
 
     def one_clock_cycle(self):
@@ -29,7 +29,7 @@ class Simulador_1_FU:
 
 
 
-        if self.PC < self.program.n:
+        if self.pos < self.program.n:
             # if there are still instructions in the program
             inst = self.program.get(self.pos)
             [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2] = self.registers.td_calculation(inst.r2, inst.r3)
@@ -72,7 +72,7 @@ class Simulador_1_FU:
 
             # operacion, por ahora solo suma
 
-            self.CDB.put(self.fu.calculate(self.CDB.get(), self.registers, ss_0, pile))
+            #self.CDB.put(self.fu.calculate(self.CDB.get(), self.registers, ss_0, pile))
             print(" CDB "+ str(self.CDB))
 
             # actualizar valores
@@ -82,7 +82,7 @@ class Simulador_1_FU:
             self.pos = self.pos + 1
         else:
         # operacion, por ahora solo suma
-            self.CDB.put(self.fu.calculate(self.CDB.get(), self.registers, ss_0, pile))
+            #self.CDB.put(self.fu.calculate(self.CDB.get(), self.registers, ss_0, pile))
 
     # actualizar valores
             self.fu.update(self.CDB.get())

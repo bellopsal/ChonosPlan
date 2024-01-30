@@ -15,7 +15,7 @@ class FU:
         self.SS = shiftStations.SS(n_ss)
         self.BRT = BRT.BRT(n_ss)
         self.latency = latency
-        self.pile = shiftStations.P
+        self.pile = shiftStations.Pile(pile_size)
         self.operation = [None]*latency
 
         # Registers that are going to be used for the operation next
@@ -26,7 +26,7 @@ class FU:
     def one_clock_cycle_ini(self):
         # Get the registers that will be used for the operation
         self.ss_side = self.SS.get(0)
-        self.pile_side = self.pile.get(0)
+        #self.pile_side = self.pile.get(0)
 
         # Update the values inside each SS, BRT and pile and moving them one down
         self.SS.one_clock_cycle()
@@ -37,14 +37,14 @@ class FU:
 
 
 
-    def calculate(self, CDB, registers,ss_0, pile):
-        if ss_0.bitInUse == 1:
-            if ss_0.bitMux == 0:
-                return ss_0.value + registers.get_value(int(ss_0.FU2))
-            elif ss_0.bitMux == 1:
-                return ss_0.value + CDB
+    def calculate(self, CDB, registers):
+        if self.ss_side.bitInUse == 1:
+            if self.ss_side.bitMux == 0:
+                return self.ss_side.value + registers.get_value(int(self.ss_side.FU2))
+            elif self.ss_side.bitMux == 1:
+                return self.ss_side.value + CDB
             else:
-               return ss_0.value + pile
+               return self.ss_side.value + self.pile_side
 
 
 
