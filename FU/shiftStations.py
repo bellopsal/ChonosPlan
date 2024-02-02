@@ -60,9 +60,6 @@ class SS:
 
 
 
-
-
-
     def get(self,i):
         return self.SS[i]
 
@@ -82,7 +79,7 @@ class SS:
                 ss.value = CDB
                 ss.bitAvail = 27
                 ss.RP = -1
-'''
+
         with open("ss.csv", "a") as f:
             write = csv.writer(f)
             fields = ["SS", "bitMux", "RP", "FU1", "FU2", "value"]
@@ -91,25 +88,90 @@ class SS:
             write.writerow(fields)
             write.writerows(rows)
 
-'''
+
+class PileElement:
+    def __init__(self):
+        self.value = None
+        self.fu = None
+        #self.bitUse = -1
+        self.RP = -1
+
+    def __str__(self):
+        return f"     {self.RP} | {self.fu} | {self.value}"
+
+
+    def __int__(self, value, fu,RP):
+        self.value = value
+        self.fu = fu
+        #self.bitUse = -1
+        self.RP = RP
+
+    def one_clock_cycle(self):
+        if self.RP > 0:
+            self.RP = self.RP - 1
+
+    def setValue(self, value):
+        self.value = value
+
+    def setFu(self, fu):
+        self.fu = fu
+
+    def setRP(self, RP):
+        self.RP = RP
+
+
+    def getValue(self):
+        return self.value
+
+    def getFU(self):
+        return self.fu
+
+    def getRP(self):
+        return self.RP
+
+
 
 class Pile:
     def __init__(self,size):
-        self.values = [None]*size
-        self.fu = [None]*size
-        self.bitUse = [-1]*size
-        self.size = size
+        self.pile = [PileElement() for i in range(size)]
+        self.n = size
+        self.csv = "pile.csv"
+
+        with open("pile.csv", "w") as f:
+            write = csv.writer(f)
+            fields = ["Element", "RP", "FU",  "value"]
+            rows = [[str(i), self.pile[i].RP, self.pile[i].fu,self.pile[i].value] for i
+                    in range(self.n - 1, -1, -1)]
+            write.writerow(fields)
+            write.writerows(rows)
+
+    def __str__(self):
+        res = ""
+        for i in range(self.n):
+            txt = "\n" + f"Pile{i} "+ str(self.pile[i])
+            res = txt + res
+        res = "      RP | FU |value" + res
+        return res
+
 
 
     def one_clock_cycle(self):
-        self.values.pop(0)
-        self.values.append(None)
+        self.pile.pop(0)
+        self.pile.append(PileElement())
 
-        self.fu.pop(0)
-        self.fu.append(None)
+        for element in self.pile:
+            element.one_clock_cycle()
 
-        self.bitUse.pop(0)
-        self.bitUse.append(-1)
+    def update(self, CDB):
+        for element in self.pile:
+            if element.RP == 0:
+                element.value = CDB
+                element.RP = -1
 
-        self.bitUse = [b-1 if b > 0 else b for b in self.bitUse]
-
+        with open(csv, "a") as f:
+            write = csv.writer(f)
+            fields = ["Element", "RP", "FU",  "value"]
+            rows = [[str(i), self.pile[i].RP, self.pile[i].fu,self.pile[i].value] for i
+                    in range(self.n - 1, -1, -1)]
+            write.writerow(fields)
+            write.writerows(rows)

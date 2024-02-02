@@ -10,17 +10,19 @@ s = Simulador.Simulador_1_FU(list_program = instrucciones,
 s.one_clock_cycle()
 #print(s.registers.scoreboard)
 
-print(s.fu.SS)
+#print(s.fu.SS)
 #print(s.registers)
+print(s.fu.pile)
 #print(s.CDB)
 
 print ("---------------------------")
 s.one_clock_cycle()
 
-print(s.registers.scoreboard)
-s.dump_csv()
-print(s.fu.SS)
+#print(s.registers.scoreboard)
+#s.dump_csv()
+#∫print(s.fu.SS)
 #print(s.registers)
+print(s.fu.pile)
 #print(s.CDB)
 
 
