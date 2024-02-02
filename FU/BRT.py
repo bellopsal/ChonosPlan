@@ -4,6 +4,9 @@ class BRT:
     def __init__(self, n_ss):
         self.table = [0]*n_ss
 
+    def __str__(self):
+        return str(self.table)
+
     def get(self, i):
         return self.table[i]
 

@@ -9,18 +9,28 @@ n = 10 # numero pila
 
 
 class FU:
-    def __init__(self, name, fu_type, n_ss, latency, pile_size):
+    def __init__(self, name, fu_type, ss_size, latency, pile_size):
         self.name = name
         self.type = fu_type
-        self.SS = shiftStations.SS(n_ss)
-        self.BRT = BRT.BRT(n_ss)
+        self.SS = shiftStations.SS(ss_size)
+        self.BRT = BRT.BRT(ss_size)
         self.latency = latency
         self.pile = shiftStations.Pile(pile_size)
-        self.operation = [None]*latency
+        self.operationQueue = [None]*latency
 
         # Registers that are going to be used for the operation next
         self.ss_side = None
         self.pile_side = None
+
+
+    def strBRT(self):
+        return f"BRT {self.name}: " + str(self.BRT)
+
+    def strOperationQueue(self):
+        res = ""
+        for i in range(self.latency):
+            res = res + f"E{i}: " +str(self.operationQueue[i]) + " -> "
+        return f"Operation queue: "+ res + "CBD"
 
 
     def one_clock_cycle_ini(self):

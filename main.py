@@ -13,6 +13,7 @@ s.one_clock_cycle()
 #print(s.fu.SS)
 #print(s.registers)
 print(s.fu.pile)
+print(s.fu.strOperationQueue())
 #print(s.CDB)
 
 print ("---------------------------")
@@ -23,6 +24,7 @@ s.one_clock_cycle()
 #∫print(s.fu.SS)
 #print(s.registers)
 print(s.fu.pile)
+print(s.fu.strOperationQueue())
 #print(s.CDB)
 
 
