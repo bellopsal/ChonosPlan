@@ -16,8 +16,8 @@ class FU:
         self.BRT = BRT.BRT(ss_size)
         self.latency = latency
         self.pile = shiftStations.Pile(pile_size)
-        # self.operationQueue = [None]*latency
-        self.operationQueue = [1, 2, 3]
+        self.operationQueue = [None]*latency
+        #self.operationQueue = [1, 2, 3]
 
         # Registers that are going to be used for the operation next
         self.ss_side = None

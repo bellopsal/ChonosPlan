@@ -1,4 +1,5 @@
 import CDB
+import Memory
 import Program
 import funtionalUnit
 import Registers
@@ -6,9 +7,10 @@ import Registers
 
 class Simulador_1_FU:
 
-    def __init__(self, list_program, n_ss, fu_type, name, n_registers, b_scoreboard,pile_size):
+    def __init__(self, list_program, n_ss, fu_type, name, n_registers, b_scoreboard,pile_size, memory_size):
         # set of instructions
         self.program = Program.Program(list_program)
+        self.memory = Memory.Memory(memory_size)
 
         self.fu = funtionalUnit.FU("int_1", "int", n_ss,pile_size=pile_size,latency = 3)
         self.fu_mult = funtionalUnit.FU("add_1", "add", n_ss,pile_size=pile_size,latency = 3)
