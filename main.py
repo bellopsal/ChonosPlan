@@ -6,26 +6,22 @@ s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              n_registers = 5, b_scoreboard = 1, pile_size = 3)
 
 
+print(s.fu.operationQueue)
 
-s.one_clock_cycle()
-#print(s.registers.scoreboard)
+for _ in range(3):
 
-#print(s.fu.SS)
-#print(s.registers)
-print(s.fu.pile)
-print(s.fu.strOperationQueue())
-#print(s.CDB)
+    s.one_clock_cycle()
+    #print(s.registers)
+    #print(s.registers.scoreboard)
+    print(s.fu.operationQueue)
+    # print(s.fu.SS)
+    # print(s.registers)
+    # print(s.fu.pile)
+    # print(s.fu.strOperationQueue())
+    print(s.CDB)
 
-print ("---------------------------")
-s.one_clock_cycle()
+    print ("---------------------------")
 
-#print(s.registers.scoreboard)
-#s.dump_csv()
-#∫print(s.fu.SS)
-#print(s.registers)
-print(s.fu.pile)
-print(s.fu.strOperationQueue())
-#print(s.CDB)
 
 
 
