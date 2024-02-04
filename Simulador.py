@@ -23,22 +23,20 @@ class Simulador_1_FU:
 
     def one_clock_cycle(self):
 
-        #Operation queue
-        self.CDB.update(add=self.fu.moveOperationQueue(), store=self.fu_store.moveOperationQueue(), mux=self.fu_mult.moveOperationQueue())
+        #Operation queue, Move the values one space and put it on the CBD
+        self.CDB.update(add=self.fu_add.moveOperationQueue(), store=self.fu_store.moveOperationQueue(), mux=self.fu_mult.moveOperationQueue())
 
         # update timestamps and get values from CBD
         self.registers.one_clock_cycle(self.CDB)
-        self.fu.one_clock_cycle_ini()
-
-        # data that will be use for the alu
+        self.fu_add.one_clock_cycle(self.CDB)
 
 
-    #
-    #     if self.pos < self.program.n:
-    #         # if there are still instructions in the program
-    #         inst = self.program.get(self.pos)
-    #         [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2] = self.registers.td_calculation(inst.r2, inst.r3)
-    #
+
+        if self.PC < self.program.n:
+            # if there are still instructions in the program
+            inst = self.program.get(self.PC)
+            [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2] = self.registers.td_calculation(inst.r2, inst.r3)
+
     #
     #         if ts_min == 0:
     #             value = self.registers.R[arg_min].value

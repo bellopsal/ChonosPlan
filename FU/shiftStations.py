@@ -3,23 +3,26 @@ import csv
 
 class ShiftStation:
     def __init__(self):
-        self.bitInUse = 0   # if the ss is in use ( with data in it)
-        self.bitAvail = 0  # first operand available 1 or not
+        #self.bitInUse = 0   # if the ss is in use ( with data in it)
+        #self.bitAvail = 0  # first operand available 1 or not
         self.bitMux = 0 # 0 if second taken from Register
                             # 1 if taken from other op
                             # 2 if second taken from pile
 
 
-        self.FU1 = None  # which FU will generate first operand No está siendo implementado bien ahora mismo
+        self.FU1 = None  # which FU will generate first operand
         self.FU2 = None  # which FU will generate last operand
         self.RP = -1  # when first operand will be ready
         self.value = None  # first operand
 
         self.type_operation = None
 
-    def one_clock_cycle(self):
-        if self.bitInUse == 1 and self.bitAvail == 0:
-            self.RP = self.RP - 1
+    def one_clock_cycle(self, CBD):
+        if self.RP == 1:
+            self.RP = -1
+            self.value = CBD.get(self.FU1)
+        elif self.RP > 1:
+            self.RP = -1
 
 
 
@@ -52,20 +55,21 @@ class SS:
 
 
 
-    def one_clock_cycle(self):
-        self.SS.pop(0)
-        self.SS.append(ShiftStation())
+    def one_clock_cycle(self,CBD):
+        # Update internal values of SS
         for e in self.SS:
-            e.one_clock_cycle()
+            e.one_clock_cycle(CBD)
+
+        self.SS.append(ShiftStation())
+
+        return self.SS.pop(0)
 
 
 
     def get(self,i):
         return self.SS[i]
 
-    def update_i(self, i, bitAvail, bitMux, FU1, FU2, RP, value, type_operation):
-        self.SS[i].bitInUse = 1
-        self.SS[i].bitAvail = bitAvail
+    def update_i(self, i, bitMux, FU1, FU2, RP, value, type_operation):
         self.SS[i].bitMux = bitMux
         self.SS[i].FU1 = FU1
         self.SS[i].FU2 = FU2
@@ -73,12 +77,6 @@ class SS:
         self.SS[i].value = value
         self.SS[i].type_operation = type_operation
 
-    def update(self, CDB):
-        for ss in self.SS:
-            if ss.bitInUse == 1 and ss.bitAvail == 0 and ss.RP == 0 :
-                ss.value = CDB
-                ss.bitAvail = 27
-                ss.RP = -1
 
         with open("ss.csv", "a") as f:
             write = csv.writer(f)
@@ -106,8 +104,11 @@ class PileElement:
         #self.bitUse = -1
         self.RP = RP
 
-    def one_clock_cycle(self):
-        if self.RP > 0:
+    def one_clock_cycle(self, CBD):
+        if self.RP == 1:
+            self.RP = -1
+            self.value = CBD.get(self.fu)
+        elif self.RP > 1:
             self.RP = self.RP - 1
 
     def setValue(self, value):
@@ -132,7 +133,7 @@ class PileElement:
 
 
 class Pile:
-    def __init__(self,size):
+    def __init__(self, size):
         self.pile = [PileElement() for i in range(size)]
         self.n = size
         self.csv = "pile.csv"
@@ -153,14 +154,17 @@ class Pile:
         res = "      RP | FU |value" + res
         return res
 
+    def get(self,i):
+        return self.pile[i]
 
 
-    def one_clock_cycle(self):
-        self.pile.pop(0)
+    def one_clock_cycle(self, CBD):
+        for element in self.pile:
+            element.one_clock_cycle(CBD)
+
         self.pile.append(PileElement())
 
-        for element in self.pile:
-            element.one_clock_cycle()
+        return self.pile.pop(0)
 
     def update(self, CDB):
         for element in self.pile:

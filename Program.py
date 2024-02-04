@@ -9,6 +9,11 @@
 
 
 class Program:
+    typeInstructions = {
+        "add": ["add", "sub"],
+        "mult": ["mul", "div"],
+        "store": ["lb", "sb"]
+    }
 
     def __init__(self, list_instructions):
         self.instructions = [Instruction(e) for e in list_instructions]
@@ -23,7 +28,7 @@ class Program:
 class Instruction:
 
     def __init__(self, l):
-        self.type = "suma"
+        #self.type = "suma"
         self.r1 = int(l[1])
         self.r2 = int(l[2])
         self.r3 = int(l[3])

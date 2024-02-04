@@ -39,15 +39,13 @@ class FU:
             res = res + f"E{i}: " + str(self.operationQueue[i]) + " -> "
         return f"Operation queue: " + res + "CBD"
 
-    def one_clock_cycle_ini(self):
-        # Get the registers that will be used for the operation
-        self.ss_side = self.SS.get(0)
-        # self.pile_side = self.pile.get(0)
+    def one_clock_cycle(self, CBD):
+        self.ss_side = self.SS.one_clock_cycle(CBD)
+        self.pile_side = self.pile.one_clock_cycle(CBD)
 
         # Update the values inside each SS, BRT and pile and moving them one down
-        self.SS.one_clock_cycle()
         self.BRT.one_clock_cycle()
-        self.pile.one_clock_cycle()
+
 
     def calculate(self, CDB, registers):
         if self.ss_side.bitInUse == 1:
