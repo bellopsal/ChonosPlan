@@ -12,8 +12,8 @@ class Simulador_1_FU:
         self.program = Program.Program(list_program)
         self.memory = Memory.Memory(memory_size)
 
-        self.fu = funtionalUnit.FU("int_1", "int", n_ss,pile_size=pile_size,latency = 3)
-        self.fu_mult = funtionalUnit.FU("add_1", "add", n_ss,pile_size=pile_size,latency = 3)
+        self.fu_add = funtionalUnit.FU("add_1", "add", n_ss,pile_size=pile_size,latency = 3)
+        self.fu_mult = funtionalUnit.FU("mult_1", "mult", n_ss,pile_size=pile_size,latency = 3)
         self.fu_store = funtionalUnit.FU("store_1", "store", n_ss,pile_size=pile_size,latency = 3)
 
         self.registers = Registers.Registers(n_registers, b_scoreboard)
@@ -26,8 +26,8 @@ class Simulador_1_FU:
         #Operation queue
         self.CDB.update(add=self.fu.moveOperationQueue(), store=self.fu_store.moveOperationQueue(), mux=self.fu_mult.moveOperationQueue())
 
-        # update timestamps
-        self.registers.one_clock_cycle_ini()
+        # update timestamps and get values from CBD
+        self.registers.one_clock_cycle(self.CDB)
         self.fu.one_clock_cycle_ini()
 
         # data that will be use for the alu

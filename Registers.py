@@ -7,8 +7,7 @@ from FU import Scoreboard
 class Register:
     def __init__(self, i):
         self.number = i  # numero de registro
-        self.disp = 1
-        self.td = 0  # tiempo en llegar value desde fu
+        self.td = None  # tiempo en llegar value desde fu
         self.fu = None  # fu de donde proveendrá el value
         self.value = i
         self.type = None
@@ -16,31 +15,37 @@ class Register:
     def __str__(self):
         return f"R{self.number}: +{self.td} ({self.fu}) value: {self.value}"
 
-    def one_clock_ini(self):
-        if self.td > 0:
+    def one_clock_cycle(self, CBD):
+        # Reduce the TD in one
+        if self.td == 1:
+            self.value=CBD.get(self.value)
+            self.td = None
+        elif self.td > 0:
             self.td = self.td - 1
 
 
+
+
 class Registers:
-    def __init__(self, number, b_scoreboard):
-        self.R = [Register(i) for i in range(number)]
-        self.n = number
+    def __init__(self, size, b_scoreboard):
+        self.R = [Register(i) for i in range(size)]
+        self.size = size
         self.b_scoreboard = b_scoreboard
 
         if b_scoreboard:
-            self.scoreboard = Scoreboard.Scoreboards(number)
+            self.scoreboard = Scoreboard.Scoreboards(size)
 
     def __str__(self):
         str_a = ""
-        for a in range(self.n):
+        for a in range(self.size):
             str_a += str(self.R[a])
             str_a += "\n"
 
         return str_a
 
-    def one_clock_cycle_ini(self):
+    def one_clock_cycle(self, CBD):
         for reg in self.R:
-            reg.one_clock_ini()
+            reg.one_clock_cycle(CBD)
 
     def new_inst(self, destino, td, fu_name):
         # primero tengo que actualizar los registros que serán destino
@@ -48,7 +53,6 @@ class Registers:
         # no perder el orden de las instrucciones!!!
 
         self.R[destino].td = td
-        self.R[destino].disp = 0
         self.R[destino].fu = fu_name
         self.R[destino].value = None
 
@@ -93,11 +97,11 @@ class Registers:
 
         return [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2]
 
-    def update(self, CDB):
-        for reg in self.R:
-            if reg.disp == 0 and reg.td == 0:
-                reg.value = CDB
-                reg.disp = 1
+    # def update(self, CDB):
+    #     for reg in self.R:
+    #         if reg.disp == 0 and reg.td == 0:
+    #             reg.value = CDB
+    #             reg.disp = 1
 
     def update_scoreboard(self):
         if self.b_scoreboard:
