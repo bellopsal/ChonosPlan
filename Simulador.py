@@ -21,6 +21,13 @@ class Simulador_1_FU:
         self.PC = 0
         self.b_scoreboard = b_scoreboard
 
+    def dump_csv(self):
+        self.registers.scoreboard.dump_csv()
+
+    def findFirstEmptyBRT(self, fu, ts_max):
+        n = fu.BRT.find_first_free_after(ts_max)
+        return n
+
     def one_clock_cycle(self):
 
         #Operation queue, Move the values one space and put it on the CBD
@@ -35,44 +42,41 @@ class Simulador_1_FU:
         if self.PC < self.program.n:
             # if there are still instructions in the program
             inst = self.program.get(self.PC)
-            [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2] = self.registers.td_calculation(inst.r2, inst.r3)
+            fu = self.getFU(inst.fu_type)
 
-    #
-    #         if ts_min == 0:
-    #             value = self.registers.R[arg_min].value
-    #             RP = 0
-    #             bitAvail = 1
-    #
-    #         else:
-    #             value = None
-    #             RP = ts_min
-    #             bitAvail = 0
-    #
-    #         if ts_max == 0:
-    #             bitMux = 0
-    #
-    #         else:
-    #             bitMux = 1
-    #
-    #         n = 0
-    #         if self.fu.BRT.get(ts_max) != 0:
-    #             n = self.fu.BRT.find_first_free_after(ts_max)
-    #
-    #             if n != -1:
-    #                 bitMux = 2
-    #
-    #         td = td + n
-    #         ts_max_aux = ts_max + 1
-    #         ts_max = ts_max + n
-    #         if bitMux == 2:
-    #             self.fu.pile[ts_max] = (None, ts_max_aux)
-    #
-    #                 # actualizamos registros, fu con los valores de la nueva instrucción
-    #         self.registers.new_inst(destino=inst.r1, td=td, fu_name=self.fu.name)
-    #         self.fu.BRT.ocupy_range(ts_max,n)
-    #         self.fu.SS.update_i(i=ts_max, bitAvail=bitAvail, bitMux= bitMux, FU1 = FU1, FU2 = FU2,
-    #                             RP = RP, value = value, type_operation=inst.type)
-    #
+            if inst.fu_type == "add" or inst.fu_type =="mult":
+                [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2, inv] = self.registers.td_calculation(inst.r2, inst.r3)
+            elif inst.fu_type == "store":
+                [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2, inv] = self.registers.td_calculation(inst.rd, inst.rs1)
+
+            if ts_min == 0:
+                value = self.registers.R[arg_min].value
+                RP = -1
+
+            else:
+                value = None
+                RP = ts_min
+
+
+            n = self.findFirstEmptyBRT(fu, ts_max)
+
+            if n == 0: bitMux = 0
+            if n > 0 : bitMux = 1
+
+            td = td + n
+            ts_max_aux = ts_max
+            ts_max = ts_max + n
+            if bitMux == 1 or ts_max_aux == 0:
+                self.updatePile(fu,ts_max, ts_max_aux, FU2)
+
+
+    #         # actualizamos registros, fu con los valores de la nueva instrucción
+
+            self.registers.new_inst(destino=inst.r1, td=td, fu_name=fu.name)
+            fu.BRT.occupy_i(ts_max)
+            #fu.SS.update_i(i=ts_max, bitMux= bitMux, FU1 = FU1, FU2 = FU2,
+            #                    RP = RP, value = value, type_operation=inst.function)
+
     #         # operacion, por ahora solo suma
     #
     #         #self.CDB.put(self.fu.calculate(self.CDB.get(), self.registers, ss_0, pile))
@@ -91,6 +95,21 @@ class Simulador_1_FU:
     #         self.fu.update(self.CDB.get())
     #         self.registers.update(self.CDB.get())
     #         self.pos = self.pos + 1
+        self.PC = self.PC +1
 
-    def dump_csv(self):
-        self.registers.scoreboard.dump_csv()
+    def getFU(self, fu_type):
+        if fu_type == "add":
+            return self.fu_add
+
+        if fu_type == "store":
+            return self.fu_store
+
+        if fu_type == "mult":
+            return self.fu_mult
+
+
+
+
+    def updatePile(self, fu, position, RP, FU):
+        fu.pile.pile[position].RP = RP
+        fu.pile.pile[position].fu = FU

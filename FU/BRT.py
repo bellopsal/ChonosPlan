@@ -1,8 +1,9 @@
 # Binary Reservation Table
 
 class BRT:
-    def __init__(self, n_ss):
+    def __init__(self, n_ss, latency):
         self.table = [0]*n_ss
+        self.latency = latency
 
     def __str__(self):
         return str(self.table)
@@ -14,8 +15,8 @@ class BRT:
         # if SS occupied -> 1 in position
         self.table[i] = 1
 
-    def ocupy_range(self,i,tam):
-        self.table[i:i+tam] = [1]*tam
+    def ocupy_range(self,i):
+        self.table[i:i+self.latency] = [1]*self.latency
 
     def find_first_free_after(self,ts_max ):
         for index in range(ts_max, len(self.table)):

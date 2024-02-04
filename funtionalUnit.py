@@ -13,7 +13,7 @@ class FU:
         self.name = name
         self.type = fu_type
         self.SS = shiftStations.SS(ss_size)
-        self.BRT = BRT.BRT(ss_size)
+        self.BRT = BRT.BRT(ss_size, latency)
         self.latency = latency
         self.pile = shiftStations.Pile(pile_size)
         self.operationQueue = [None]*latency

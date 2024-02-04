@@ -7,16 +7,19 @@
 #   function r1, r2, r3
 #  ["add", "1", "2","3"]
 
+typeInstructions = {
+    "add": ["add", "sub"],
+    "mult": ["mul", "div"],
+    "store": ["lb", "sb"]
+}
+
+
 
 class Program:
-    typeInstructions = {
-        "add": ["add", "sub"],
-        "mult": ["mul", "div"],
-        "store": ["lb", "sb"]
-    }
+
 
     def __init__(self, list_instructions):
-        self.instructions = [Instruction(e) for e in list_instructions]
+        self.instructions = list_instructions
         self.n = len(list_instructions)
 
     def get(self, i):
@@ -27,11 +30,19 @@ class Program:
 
 class Instruction:
 
-    def __init__(self, l):
-        #self.type = "suma"
-        self.r1 = int(l[1])
-        self.r2 = int(l[2])
-        self.r3 = int(l[3])
-        self.function = l[0]
+    def __init__(self, operation, r1=None, r2=None, r3=None, rd=None, rs1=None, inm=None):
+        self.r1 = r1
+        self.r2 = r2
+        self.r3 = r3
+        self.rd = rd
+        self.rs1 = rs1
+        self.inm = inm
+
+        self.function = operation
+
+        for key, values in typeInstructions.items():
+            if operation in values:
+                self.fu_type = key
+
 
 

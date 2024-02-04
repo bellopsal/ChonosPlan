@@ -7,7 +7,7 @@ from FU import Scoreboard
 class Register:
     def __init__(self, i):
         self.number = i  # numero de registro
-        self.td = None  # tiempo en llegar value desde fu
+        self.td = 0  # tiempo en llegar value desde fu
         self.fu = None  # fu de donde proveendrá el value
         self.value = i
         self.type = None
@@ -15,13 +15,7 @@ class Register:
     def __str__(self):
         return f"R{self.number}: +{self.td} ({self.fu}) value: {self.value}"
 
-    def one_clock_cycle(self, CBD):
-        # Reduce the TD in one
-        if self.td == 1:
-            self.value=CBD.get(self.value)
-            self.td = None
-        elif self.td > 0:
-            self.td = self.td - 1
+
 
 
 
@@ -45,7 +39,12 @@ class Registers:
 
     def one_clock_cycle(self, CBD):
         for reg in self.R:
-            reg.one_clock_cycle(CBD)
+            if reg.td == 1:
+                reg.value = CBD.get(reg.value)
+                reg.td = -1
+            if reg.td > 0:
+                print("entra ens")
+                reg.td = reg.td - 1
 
     def new_inst(self, destino, td, fu_name):
         # primero tengo que actualizar los registros que serán destino
@@ -81,11 +80,13 @@ class Registers:
             ts_min = t2
             arg_min = source1
             arg_max = source2
+            inv = False
         else:
             ts_max = t2
             ts_min = t1
             arg_min = source2
             arg_max = source1
+            inv = True
 
         td = ts_max + Luf_int
         if t1 == t2 == 0:
@@ -95,7 +96,7 @@ class Registers:
             FU1 = self.R[arg_min].fu
             FU2 = self.R[arg_max].fu
 
-        return [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2]
+        return [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2, inv ]
 
     # def update(self, CDB):
     #     for reg in self.R:
