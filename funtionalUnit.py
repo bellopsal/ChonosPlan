@@ -37,7 +37,7 @@ class FU:
         res = ""
         for i in range(self.latency):
             res = res + f"E{i}: " + str(self.operationQueue[i]) + " -> "
-        return f"Operation queue: " + res + "CBD"
+        return f"{self.name}  queue: " + res + "CBD"
 
     def one_clock_cycle(self, CBD):
         self.ss_side = self.SS.one_clock_cycle(CBD)

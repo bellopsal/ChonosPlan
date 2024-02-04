@@ -45,12 +45,16 @@ class Simulador_1_FU:
             fu = self.getFU(inst.fu_type)
 
             if inst.fu_type == "add" or inst.fu_type =="mult":
-                [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2, inv] = self.registers.td_calculation(inst.r2, inst.r3)
+                [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = self.registers.td_calculation(inst.r2, inst.r3)
+                print([ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv])
             elif inst.fu_type == "store":
-                [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2, inv] = self.registers.td_calculation(inst.rd, inst.rs1)
+                [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = self.registers.td_calculation(inst.rd, inst.rs1)
+
+            td = ts_max + fu.latency
 
             if ts_min == 0:
-                value = self.registers.R[arg_min].value
+                value = self.registers.R[reg_min].value
+                print(value)
                 RP = -1
 
             else:
@@ -60,22 +64,28 @@ class Simulador_1_FU:
 
             n = self.findFirstEmptyBRT(fu, ts_max)
 
-            if n == 0: bitMux = 0
-            if n > 0 : bitMux = 1
+            if ts_max == 0: bitMux = 0
+            else:
+                if n == 0 : bitMux = 2
+                if n > 0 : bitMux = 1
+
 
             td = td + n
             ts_max_aux = ts_max
             ts_max = ts_max + n
-            if bitMux == 1 or ts_max_aux == 0:
-                self.updatePile(fu,ts_max, ts_max_aux, FU2)
+            if ts_max == 0:
+                self.updatePile_case0(fu=fu, position=ts_max, value= self.registers.R[reg_max].value)
+            if bitMux == 1 :
+                self.updatePile_case1(fu,ts_max, ts_max_aux, FU2)
 
 
     #         # actualizamos registros, fu con los valores de la nueva instrucción
 
             self.registers.new_inst(destino=inst.r1, td=td, fu_name=fu.name)
             fu.BRT.occupy_i(ts_max)
-            #fu.SS.update_i(i=ts_max, bitMux= bitMux, FU1 = FU1, FU2 = FU2,
-            #                    RP = RP, value = value, type_operation=inst.function)
+            fu.SS.update_i(i=ts_max, bitMux= bitMux, FU1 = FU1, FU2 = FU2,
+                                RP = RP, value = value, type_operation=inst.function)
+
 
     #         # operacion, por ahora solo suma
     #
@@ -110,6 +120,11 @@ class Simulador_1_FU:
 
 
 
-    def updatePile(self, fu, position, RP, FU):
+    def updatePile_case1(self, fu, position, RP, FU):
         fu.pile.pile[position].RP = RP
         fu.pile.pile[position].fu = FU
+
+    def updatePile_case0(selfself,fu, position, value):
+        fu.pile.pile[position].value = value
+        fu.pile.pile[position].RP = -1
+

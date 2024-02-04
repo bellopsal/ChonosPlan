@@ -78,25 +78,23 @@ class Registers:
         if t1 >= t2:
             ts_max = t1
             ts_min = t2
-            arg_min = source1
-            arg_max = source2
+            reg_max = source1
+            reg_min = source2
+
             inv = False
         else:
             ts_max = t2
             ts_min = t1
-            arg_min = source2
-            arg_max = source1
+            reg_max = source2
+            reg_min = source1
             inv = True
 
-        td = ts_max + Luf_int
-        if t1 == t2 == 0:
-            FU1 = arg_min
-            FU2 = arg_max
-        else:
-            FU1 = self.R[arg_min].fu
-            FU2 = self.R[arg_max].fu
 
-        return [td, ts_max, ts_min, arg_max, arg_min, FU1, FU2, inv ]
+
+        FU1 = self.R[reg_min].fu
+        FU2 = self.R[reg_max].fu
+
+        return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
 
     # def update(self, CDB):
     #     for reg in self.R:

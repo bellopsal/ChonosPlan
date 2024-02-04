@@ -21,13 +21,13 @@ for _ in range(2):
 
     s.one_clock_cycle()
     print(s.registers)
-    print(s.registers.scoreboard)
-    print(s.fu_add.strBRT())
+    #print(s.registers.scoreboard)
+    #print(s.fu_add.strBRT())
     #print(s.fu_add.operationQueue)
-    #print(s.fu_add.SS)
+    print(s.fu_add.SS)
     # print(s.registers)
     # print(s.fu.pile)
-    # print(s.fu.strOperationQueue())
+    print(s.fu_add.strOperationQueue())
     #print(s.CDB)
 
     print ("---------------------------")
