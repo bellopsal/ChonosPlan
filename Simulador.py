@@ -12,9 +12,9 @@ class Simulador_1_FU:
         self.program = Program.Program(list_program)
         self.memory = Memory.Memory(memory_size)
 
-        self.fu_add = funtionalUnit.FU("add_1", "add", n_ss,pile_size=pile_size,latency = 3)
-        self.fu_mult = funtionalUnit.FU("mult_1", "mult", n_ss,pile_size=pile_size,latency = 3)
-        self.fu_store = funtionalUnit.FU("store_1", "store", n_ss,pile_size=pile_size,latency = 3)
+        self.fu_add = funtionalUnit.FU("add", "add", n_ss,pile_size=pile_size,latency = 2)
+        self.fu_mult = funtionalUnit.FU("mult", "mult", n_ss,pile_size=pile_size,latency = 3)
+        self.fu_store = funtionalUnit.FU("store", "store", n_ss,pile_size=pile_size,latency = 3)
 
         self.registers = Registers.Registers(n_registers, b_scoreboard)
         self.CDB = CDB.CDB()
@@ -31,11 +31,22 @@ class Simulador_1_FU:
     def one_clock_cycle(self):
 
         #Operation queue, Move the values one space and put it on the CBD
-        self.CDB.update(add=self.fu_add.moveOperationQueue(), store=self.fu_store.moveOperationQueue(), mux=self.fu_mult.moveOperationQueue())
+        #self.CDB.update(add=self.fu_add.moveOperationQueue(), store=self.fu_store.moveOperationQueue(), mult=self.fu_mult.moveOperationQueue())
+
 
         # update timestamps and get values from CBD
+        #self.registers.one_clock_cycle(self.CDB)
+        #self.fu_add.one_clock_cycle(self.CDB)
+        print(self.CDB)
+
+        self.fu_add.operation(self.CDB)
+        #self.fu_mult.operation(self.CDB)
+        #self.fu_store.operation(self.CDB)
+
+        self.CDB.update(add=self.fu_add.moveOperationQueue(), store=self.fu_store.moveOperationQueue(), mult=self.fu_mult.moveOperationQueue())
         self.registers.one_clock_cycle(self.CDB)
         self.fu_add.one_clock_cycle(self.CDB)
+
 
 
 
@@ -46,7 +57,7 @@ class Simulador_1_FU:
 
             if inst.fu_type == "add" or inst.fu_type =="mult":
                 [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = self.registers.td_calculation(inst.r2, inst.r3)
-                print([ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv])
+                #print([ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv])
             elif inst.fu_type == "store":
                 [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = self.registers.td_calculation(inst.rd, inst.rs1)
 
@@ -54,7 +65,6 @@ class Simulador_1_FU:
 
             if ts_min == 0:
                 value = self.registers.R[reg_min].value
-                print(value)
                 RP = -1
 
             else:
@@ -81,10 +91,15 @@ class Simulador_1_FU:
 
     #         # actualizamos registros, fu con los valores de la nueva instrucción
 
-            self.registers.new_inst(destino=inst.r1, td=td, fu_name=fu.name)
+            self.registers.new_inst(destino=inst.r1, td=td, fu_name=fu.type)
             fu.BRT.occupy_i(ts_max)
             fu.SS.update_i(i=ts_max, bitMux= bitMux, FU1 = FU1, FU2 = FU2,
-                                RP = RP, value = value, type_operation=inst.function)
+                                RP = RP, value = value, type_operation=inst.function, inv= inv)
+
+
+
+
+
 
 
     #         # operacion, por ahora solo suma

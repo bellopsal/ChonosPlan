@@ -7,7 +7,7 @@ class CDB:
         self.mult = None
 
     def __str__(self):
-        txt= f"CBD: \n     add: {self.add} \n     store: {self.store} \n     mult: {self.mux }"
+        txt= f"CBD: \n     add: {self.add} \n     store: {self.store} \n     mult: {self.mult }"
         return txt
 
     def get(self,strValue):
@@ -18,7 +18,7 @@ class CDB:
         elif strValue == "mult":
             return self.mult
 
-    def update(self, add, store, mux):
+    def update(self, add, store, mult):
         self.add = add
         self.store = store
-        self.mux = mux
+        self.mult = mult

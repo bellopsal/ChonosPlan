@@ -40,10 +40,10 @@ class Registers:
     def one_clock_cycle(self, CBD):
         for reg in self.R:
             if reg.td == 1:
-                reg.value = CBD.get(reg.value)
-                reg.td = -1
+                reg.value = CBD.get(reg.fu)
+                reg.fu = None
+                reg.td = 0
             if reg.td > 0:
-                print("entra ens")
                 reg.td = reg.td - 1
 
     def new_inst(self, destino, td, fu_name):
@@ -80,14 +80,14 @@ class Registers:
             ts_min = t2
             reg_max = source1
             reg_min = source2
+            inv = True
 
-            inv = False
         else:
             ts_max = t2
             ts_min = t1
             reg_max = source2
             reg_min = source1
-            inv = True
+            inv = False
 
 
 

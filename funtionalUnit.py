@@ -20,13 +20,36 @@ class FU:
         #self.operationQueue = [1, 2, 3]
 
         # Registers that are going to be used for the operation next
-        self.ss_side = None
-        self.pile_side = None
+        self.ss_side = shiftStations.ShiftStation()
+        self.pile_side = shiftStations.PileElement()
+
+    def operation(self, CBD):
+        operand1 = self.ss_side.value
+        if self.ss_side.bitMux == 2:
+            operand2 = CBD.get(self.ss_side.FU2)
+        else:
+            operand2 = self.pile_side.value
+
+        print("o1: " + str(operand1))
+        print("o2: " + str(operand2))
+
+        if self.ss_side.type_operation == "add":
+            self.operationQueue[0] = operand1 + operand2
+
+        if self.ss_side.type_operation == "sub":
+            if self.ss_side.inv: self.operationQueue[0] = operand2 - operand1
+            else: self.operationQueue[0] = operand1 - operand2
+
+
+
 
     def moveOperationQueue(self):
-        cbd = self.operationQueue[-1]
+
         self.operationQueue.pop(-1)
         self.operationQueue.insert(0, None)
+        cbd = self.operationQueue[-1]
+        #print("move cbd"+ str(cbd))
+        #print(self.operationQueue)
 
         return cbd
 

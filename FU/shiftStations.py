@@ -9,7 +9,7 @@ class ShiftStation:
                             # 1 if second taken from pile
                             # 2 if taken from CDB
 
-        self.inv = False
+        self.inv = False # true if last operand is the first in order
 
 
         self.FU1 = None  # which FU will generate first operand
@@ -77,12 +77,13 @@ class SS:
     def get(self,i):
         return self.l_ss[i]
 
-    def update_i(self, i, bitMux, FU1, FU2, RP, value, type_operation):
+    def update_i(self, i, bitMux, FU1, FU2, RP, value, type_operation, inv):
         self.l_ss[i].bitMux = bitMux
         self.l_ss[i].FU1 = FU1
         self.l_ss[i].FU2 = FU2
         self.l_ss[i].RP = RP
         self.l_ss[i].value = value
+        self.l_ss[i].inv = inv
         self.l_ss[i].type_operation = type_operation
 
 
