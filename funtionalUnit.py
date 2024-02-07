@@ -38,6 +38,13 @@ class FU:
             if self.ss_side.inv: self.operationQueue[0] = operand2 - operand1
             else: self.operationQueue[0] = operand1 - operand2
 
+        if self.ss_side.type_operation == "mul":
+            self.operationQueue[0] = operand1 * operand2
+
+        if self.ss_side.type_operation == "div":
+            if self.ss_side.inv: self.operationQueue[0] = operand2 / operand1
+            else: self.operationQueue[0] = operand1 / operand2
+
 
 
 

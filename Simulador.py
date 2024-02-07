@@ -40,12 +40,13 @@ class Simulador_1_FU:
         #print(self.CDB)
 
         self.fu_add.operation(self.CDB)
-        #self.fu_mult.operation(self.CDB)
-        #self.fu_store.operation(self.CDB)
+        self.fu_mult.operation(self.CDB)
+        self.fu_store.operation(self.CDB)
 
         self.CDB.update(add=self.fu_add.moveOperationQueue(), store=self.fu_store.moveOperationQueue(), mult=self.fu_mult.moveOperationQueue())
         self.registers.one_clock_cycle(self.CDB)
         self.fu_add.one_clock_cycle(self.CDB)
+        self.fu_mult.one_clock_cycle(self.CDB)
         print(self.CDB)
 
 
