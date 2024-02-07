@@ -24,7 +24,7 @@ class ShiftStation:
             self.RP = -1
             self.value = CBD.get(self.FU1)
         elif self.RP > 1:
-            self.RP = -1
+            self.RP = self.RP - 1
 
 
 

@@ -37,7 +37,7 @@ class Simulador_1_FU:
         # update timestamps and get values from CBD
         #self.registers.one_clock_cycle(self.CDB)
         #self.fu_add.one_clock_cycle(self.CDB)
-        print(self.CDB)
+        #print(self.CDB)
 
         self.fu_add.operation(self.CDB)
         #self.fu_mult.operation(self.CDB)
@@ -46,7 +46,7 @@ class Simulador_1_FU:
         self.CDB.update(add=self.fu_add.moveOperationQueue(), store=self.fu_store.moveOperationQueue(), mult=self.fu_mult.moveOperationQueue())
         self.registers.one_clock_cycle(self.CDB)
         self.fu_add.one_clock_cycle(self.CDB)
-
+        print(self.CDB)
 
 
 

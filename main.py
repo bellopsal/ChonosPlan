@@ -3,7 +3,7 @@ from Program import Instruction as Inst
 
 #instrucciones = [["add ", "1", "2", "3"], ["add ", "2", "1", "3"], ["add ", "0", "2", "3"]]
 
-instrucciones = [Inst("add", r1= 1, r2=2, r3=2), Inst("add", r1= 2, r2=2, r3=3), Inst("sub", r1= 4, r2=4, r3=4), Inst("sub", r1= 0, r2=2, r3=3)]
+instrucciones = [Inst("add", r1= 1, r2=2, r3=2), Inst("add", r1= 2, r2=1, r3=3), Inst("sub", r1= 4, r2=4, r3=4), Inst("sub", r1= 0, r2=2, r3=3)]
 #print(instrucciones[0].fu_type)
 s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              n_ss = 10, fu_type= "INT", name = "INT_1",
