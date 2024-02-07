@@ -9,7 +9,7 @@ class Register:
         self.number = i  # numero de registro
         self.td = 0  # tiempo en llegar value desde fu
         self.fu = None  # fu de donde proveendrá el value
-        self.value = i
+        self.value = i+2
         self.type = None
 
     def __str__(self):

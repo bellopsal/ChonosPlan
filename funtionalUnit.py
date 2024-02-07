@@ -25,10 +25,8 @@ class FU:
 
     def operation(self, CBD):
         operand1 = self.ss_side.value
-        if self.ss_side.bitMux == 2:
-            operand2 = CBD.get(self.ss_side.FU2)
-        else:
-            operand2 = self.pile_side.value
+
+        operand2 = self.pile_side.value
 
         print("o1: " + str(operand1))
         print("o2: " + str(operand2))
@@ -63,8 +61,8 @@ class FU:
         return f"{self.name}  queue: " + res + "CBD"
 
     def one_clock_cycle(self, CBD):
-        self.ss_side = self.SS.one_clock_cycle(CBD)
-        self.pile_side = self.pile.one_clock_cycle(CBD)
+        self.ss_side, bitMux, FU2= self.SS.one_clock_cycle(CBD)
+        self.pile_side = self.pile.one_clock_cycle(CBD, bitMux,FU2)
 
         # Update the values inside each SS, BRT and pile and moving them one down
         self.BRT.one_clock_cycle()

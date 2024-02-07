@@ -63,6 +63,7 @@ class SS:
 
     def one_clock_cycle(self,CBD):
         # Update internal values of SS
+        bitMux, FU2 = self.l_ss[1].bitMux, self.l_ss[1].FU2
         for e in self.l_ss:
             e.one_clock_cycle(CBD)
 
@@ -70,7 +71,7 @@ class SS:
         res = self.l_ss[0]
         self.l_ss.pop(0)
 
-        return res
+        return res, bitMux, FU2
 
 
 
@@ -167,7 +168,11 @@ class Pile:
         return self.pile[i]
 
 
-    def one_clock_cycle(self, CBD):
+    def one_clock_cycle(self, CBD, bitMux, FU2):
+        if bitMux == 2:
+            self.pile[1].value = CBD.get(FU2)
+            self.pile[1].RP = -1
+
         for element in self.pile:
             element.one_clock_cycle(CBD)
 
@@ -178,12 +183,12 @@ class Pile:
         return res
 
     def update(self, CDB):
-        for element in self.pile:
-            if element.RP == 0:
-                element.value = CDB
-                element.RP = -1
+    #     for element in self.pile:
+    #         if element.RP == 0:
+    #             element.value = CDB.get(FU2)
+    #             element.RP = -1
 
-        with open(csv, "a") as f:
+        with open(self.csv, "a") as f:
             write = csv.writer(f)
             fields = ["Element", "RP", "FU",  "value"]
             rows = [[str(i), self.pile[i].RP, self.pile[i].fu,self.pile[i].value] for i

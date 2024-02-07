@@ -6,7 +6,7 @@ from Program import Instruction as Inst
 instrucciones = [Inst("add", r1= 1, r2=2, r3=2), Inst("add", r1= 2, r2=1, r3=3), Inst("sub", r1= 4, r2=4, r3=4), Inst("sub", r1= 0, r2=2, r3=3)]
 #print(instrucciones[0].fu_type)
 s = Simulador.Simulador_1_FU(list_program = instrucciones,
-                             n_ss = 10, fu_type= "INT", name = "INT_1",
+                             n_ss = 5, fu_type= "INT", name = "INT_1",
                              n_registers = 5, b_scoreboard = 1, pile_size = 3, memory_size=32)
 
 

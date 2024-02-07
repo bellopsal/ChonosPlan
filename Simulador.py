@@ -57,7 +57,7 @@ class Simulador_1_FU:
 
             if inst.fu_type == "add" or inst.fu_type =="mult":
                 [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = self.registers.td_calculation(inst.r2, inst.r3)
-                #print([ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv])
+                print([ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv])
             elif inst.fu_type == "store":
                 [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = self.registers.td_calculation(inst.rd, inst.rs1)
 
@@ -74,7 +74,9 @@ class Simulador_1_FU:
 
             n = self.findFirstEmptyBRT(fu, ts_max)
 
-            if ts_max == 0: bitMux = 0
+            if ts_max == 0:
+                bitMux = 0
+                value_pile = self.registers.R[reg_max].value
             else:
                 if n == 0 : bitMux = 2
                 if n > 0 : bitMux = 1
@@ -83,9 +85,9 @@ class Simulador_1_FU:
             td = td + n
             ts_max_aux = ts_max
             ts_max = ts_max + n
-            if ts_max == 0:
-                self.updatePile_case0(fu=fu, position=ts_max, value= self.registers.R[reg_max].value)
-            if bitMux == 1 :
+            if ts_max_aux == 0:
+                self.updatePile_case0(fu=fu, position=ts_max, value= value_pile)
+            if bitMux == 1:
                 self.updatePile_case1(fu,ts_max, ts_max_aux, FU2)
 
 
