@@ -29,9 +29,6 @@ class FU:
 
         operand2 = self.pile_side.value
 
-        print("o1: " + str(operand1))
-        print("o2: " + str(operand2))
-
         if self.ss_side.type_operation == "add":
             self.operationQueue[0] = operand1 + operand2
 
@@ -68,7 +65,7 @@ class FU:
             if n == 0: bitMux = 2
             if n > 0: bitMux = 1
 
-        if n > self.pile_size: res = 0
+        if n > self.pile_size-1: res = 0
         else:
             res = 1
             td = td + n

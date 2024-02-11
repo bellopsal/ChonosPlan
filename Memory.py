@@ -29,9 +29,8 @@ class Memory:
     def __str__(self):
         txt = "---Memory---\n"
         l = [self.memory[n:n + 8] for n in range(0, self.size, 8)]
-        r = [self.ready[n:n + 8] for n in range(0, self.size, 8)]
         for i in range(len(l)):
-            txt = txt + f"{i} | {str(l[i])} ({str(r[i])})\n"
+            txt = txt + f"{i} | {str(l[i])} \n"
         return txt
 
     def dump_csv(self):

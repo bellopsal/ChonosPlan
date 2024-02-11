@@ -44,5 +44,15 @@ class Instruction:
             if operation in values:
                 self.fu_type = key
 
+    def __str__(self):
+        txt = self.function + " "
+        if self.r1 != None: txt = txt + "R"+str(self.r1) + ", "
+        if self.r2 != None: txt = txt + "R"+str(self.r2) + ", "
+        if self.r2 != None: txt = txt + "R"+str(self.r3) + ""
+        if self.rd != None: txt = txt + "R"+str(self.rd) + ", "
+        if self.inm != None: txt = txt + str(self.inm) +"("
+        if self.rs1 != None: txt = txt + "R"+str(self.rs1) + ")"
+        return txt
+
 
 

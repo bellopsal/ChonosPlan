@@ -47,7 +47,7 @@ class FU:
                 if n == 0: bitMux = 2
                 if n > 0: bitMux = 1
 
-            if n > self.pile_size:
+            if n > self.pile_size - 1:
                 res = 0
             else:
                 res = 1

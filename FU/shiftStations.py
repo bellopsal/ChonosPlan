@@ -79,7 +79,7 @@ class SS:
     def get(self,i):
         return self.l_ss[i]
 
-    def update_i(self, i, bitMux, FU1, FU2, RP, value, type_operation, inv, inm):
+    def update_i(self, i, bitMux, FU1, FU2, RP, value, type_operation, inv, inm= None):
         self.l_ss[i].bitMux = bitMux
         self.l_ss[i].FU1 = FU1
         self.l_ss[i].FU2 = FU2
