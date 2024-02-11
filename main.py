@@ -6,12 +6,15 @@ from Program import Instruction as Inst
 #instrucciones = [Inst("add", r1= 1, r2=2, r3=2), Inst("add", r1= 2, r2=1, r3=3), Inst("sub", r1= 4, r2=4, r3=4), Inst("sub", r1= 0, r2=2, r3=3)]
 #print(instrucciones[0].fu_type)
 
-instrucciones = [Inst("add", r1= 1, r2=2, r3=2),  Inst("mul", r1= 4, r2=4, r3=4), Inst("div", r1 = 2, r2=4, r3 = 1)]
+#instrucciones = [Inst("add", r1= 1, r2=2, r3=2),  Inst("mul", r1= 4, r2=4, r3=4), Inst("div", r1 = 2, r2=4, r3 = 1)]
 
+instrucciones= [Inst("sb", r1 = 1, inm = 0, rs1=3), Inst("lb", r1 = 0, inm = 0, rs1=3)]
 
 s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              n_ss = 8, fu_type= "INT", name = "INT_1",
                              n_registers = 5, b_scoreboard = 1, pile_size = 3, memory_size=32)
+
+s.memory.putValues([*range(32)])
 
 
 print(s.fu_add.operationQueue)
@@ -25,12 +28,15 @@ for i in range(12):
     print(f"-------------{i} --------------")
     s.one_clock_cycle()
     print(s.registers)
+    print(s.memory)
+    print(s.fu_store.SS)
+    print(s.fu_store.pile)
     #print(s.registers.scoreboard)
     #print(s.fu_add.strBRT())
     #print(s.fu_add.operationQueue)
-    print(s.fu_mult.SS)
+    #print(s.fu_mult.SS)
     # print(s.registers)
-    print(s.fu_add.pile)
+    #print(s.fu_add.pile)
     #print(s.fu_add.strOperationQueue())
     #print(s.CDB)
 

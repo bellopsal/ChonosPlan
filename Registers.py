@@ -67,7 +67,7 @@ class Registers:
     def get_type(self, i):
         return self.R[i].type
 
-    def td_calculation(self, source1, source2):
+    def td_calculation_type1(self, source1, source2):
 
         t1 = self.R[source1].td
         t2 = self.R[source2].td
@@ -96,11 +96,14 @@ class Registers:
 
         return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
 
-    # def update(self, CDB):
-    #     for reg in self.R:
-    #         if reg.disp == 0 and reg.td == 0:
-    #             reg.value = CDB
-    #             reg.disp = 1
+
+    def td_calculation_type2(self, source):
+
+        ts = self.R[source].td
+        FU = self.R[source].fu
+
+        return [ts, FU]
+
 
     def update_scoreboard(self):
         if self.b_scoreboard:

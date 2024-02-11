@@ -3,7 +3,8 @@ import csv
 
 class Memory:
     def __init__(self, size):
-        self.memory = [0]*size
+        self.memory = [0] * size
+        self.ready = [0] * size
         self.size = size
 
         with open("memory.csv", "w") as f:
@@ -11,21 +12,29 @@ class Memory:
             write.writerow(range(size))
             write.writerow(self.memory)
 
+    def one_clock_cycle(self):
+        self.ready = [e - 1 if e > 0 else e for e in self.ready]
+
+    def putValues(self, values):
+        self.memory = values
+
+
+    def put(self, pos, value, ready):
+        self.memory[pos] = value
+        self.ready[pos] = ready
+
+    def get(self, pos):
+        return self.memory[pos]
+
     def __str__(self):
         txt = "---Memory---\n"
-        l = [self.memory[n:n+8] for n in range(0,self.size, 8)]
+        l = [self.memory[n:n + 8] for n in range(0, self.size, 8)]
+        r = [self.ready[n:n + 8] for n in range(0, self.size, 8)]
         for i in range(len(l)):
-            txt = txt + f"{i} | {str(l[i])} \n"
+            txt = txt + f"{i} | {str(l[i])} ({str(r[i])})\n"
         return txt
-
-    def get(self,i):
-        return self.memory[i]
-
-    def put(self, i, value):
-        self.memory[i]=value
 
     def dump_csv(self):
         with open("memory.csv", "a") as f:
             write = csv.writer(f)
             write.writerow(self.memory)
-

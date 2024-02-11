@@ -12,6 +12,7 @@ class FU:
     def __init__(self, name, fu_type, ss_size, latency, pile_size):
         self.name = name
         self.type = fu_type
+        self.pile_size = pile_size
         self.SS = shiftStations.SS(ss_size)
         self.BRT = BRT.BRT(ss_size, latency)
         self.latency = latency
@@ -46,7 +47,58 @@ class FU:
             else: self.operationQueue[0] = operand1 / operand2
 
 
+    def newInstruction(self, inst, registers):
+        [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = registers.td_calculation_type1(inst.r2, inst.r3)
+        td = ts_max + self.latency
 
+        if ts_min == 0:
+            value = registers.R[reg_min].value
+            RP = -1
+
+        else:
+            value = None
+            RP = ts_min
+
+        n = self.findFirstEmptyBRT( ts_max)
+
+        if ts_max == 0:
+            bitMux = 0
+            value_pile = registers.R[reg_max].value
+        else:
+            if n == 0: bitMux = 2
+            if n > 0: bitMux = 1
+
+        if n > self.pile_size: res = 0
+        else:
+            res = 1
+            td = td + n
+            ts_max_aux = ts_max
+            ts_max = ts_max + n
+            if ts_max_aux == 0:
+                self.updatePile_case0(position=ts_max, value=value_pile)
+            if bitMux == 1:
+                self.updatePile_case1(ts_max, ts_max_aux, FU2)
+
+            #         # actualizamos registros, fu con los valores de la nueva instrucción
+
+            registers.new_inst(destino=inst.r1, td=td, fu_name=self.type)
+            self.BRT.occupy_i(ts_max)
+            self.SS.update_i(i=ts_max, bitMux=bitMux, FU1=FU1, FU2=FU2,
+                             RP=RP, value=value, type_operation=inst.function, inv=inv)
+
+        return res
+
+
+    def findFirstEmptyBRT(self,ts_max):
+        n = self.BRT.find_first_free_after(ts_max)
+        return n
+    def updatePile_case1(self, position, RP, FU):
+        self.pile.pile[position].RP = RP
+        self.pile.pile[position].fu = FU
+
+    def updatePile_case0(self, position, value):
+        self.pile.pile[position].value = value
+        self.pile.pile[position].RP = -1
 
     def moveOperationQueue(self):
 
