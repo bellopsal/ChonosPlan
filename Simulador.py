@@ -109,11 +109,7 @@ class Simulador_1_FU:
         return table
 
 
-
-
-
-    def display(self):
-
+    def display_ints(self):
         if self.PC < self.program.n:
             text = Text()
             text.append("PC: ", style= "bold magenta")
@@ -123,6 +119,16 @@ class Simulador_1_FU:
         else:
             text = Text()
             text.append("There are no more instrucctions!", style= "bold magenta")
+
+        console = Console()
+
+        console.print(text)
+
+
+
+    def display(self):
+
+
 
 
         table_add = self.display_SS("Functional Unit: ADD", fu = self.fu_add)
@@ -143,15 +149,16 @@ class Simulador_1_FU:
 
 
         console = Console()
-        console.print(text)
         console.print(table_fu)
 
         memory = Table(title= "MEMORY")
         memory.add_column("Line", justify="center")
         memory.add_column("values", justify="center")
+        memory.add_column("ready", justify="center")
         l = [self.memory.memory[n:n + 8] for n in range(0, self.memory.size, 8)]
+        r = [self.memory.ready[n:n + 8] for n in range(0, self.memory.size, 8)]
         for i in range(len(l)):
-            memory.add_row(str(i), str(l[i]))
+            memory.add_row(str(i), str(l[i]), str(r[i]))
 
         register = Table(title = "REGISTERS")
         register.add_column("Register", justify="center")

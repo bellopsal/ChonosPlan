@@ -178,5 +178,5 @@ class FU:
         self.SS.update(CDB)
 
     def findFirstEmptyBRT(self,ts_max):
-        n = self.BRT.find_first_free_after(ts_max)
+        n = self.BRT.findFirstAfter(ts_max)
         return n

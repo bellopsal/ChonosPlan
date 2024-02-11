@@ -25,9 +25,10 @@ s.memory.putValues([*range(32)])
 
 for i in range(12):
     print(f"-------------{i+2} ------------------------------------------------------------------------------------------------")
-
+    s.display_ints()
     s.one_clock_cycle()
     s.display()
+
 
     #print(s.registers)
     #print(s.memory)

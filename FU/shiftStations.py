@@ -184,16 +184,16 @@ class Pile:
 
         return res
 
-    def update(self, CDB):
-    #     for element in self.pile:
-    #         if element.RP == 0:
-    #             element.value = CDB.get(FU2)
-    #             element.RP = -1
-
-        with open(self.csv, "a") as f:
-            write = csv.writer(f)
-            fields = ["Element", "RP", "FU",  "value"]
-            rows = [[str(i), self.pile[i].RP, self.pile[i].fu,self.pile[i].value] for i
-                    in range(self.n - 1, -1, -1)]
-            write.writerow(fields)
-            write.writerows(rows)
+    # def update(self, CDB):
+    # #     for element in self.pile:
+    # #         if element.RP == 0:
+    # #             element.value = CDB.get(FU2)
+    # #             element.RP = -1
+    #
+    #     with open(self.csv, "a") as f:
+    #         write = csv.writer(f)
+    #         fields = ["Element", "RP", "FU",  "value"]
+    #         rows = [[str(i), self.pile[i].RP, self.pile[i].fu,self.pile[i].value] for i
+    #                 in range(self.n - 1, -1, -1)]
+    #         write.writerow(fields)
+    #         write.writerows(rows)

@@ -47,34 +47,34 @@ class FU:
     def newInstruction(self, inst, registers):
         [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = registers.td_calculation_type1(inst.r2, inst.r3)
         td = ts_max + self.latency
+        n = self.findFirstEmptyBRT(ts_max)
 
-        if ts_min == 0:
-            value = registers.R[reg_min].value
-            RP = -1
 
+        if n > self.pile_size-1 or n == -1: res = 0
         else:
-            value = None
-            RP = ts_min
+            if ts_min == 0:
+                value = registers.R[reg_min].value
+                RP = -1
 
-        n = self.findFirstEmptyBRT( ts_max)
+            else:
+                value = None
+                RP = ts_min
 
-        if ts_max == 0:
-            bitMux = 0
-            value_pile = registers.R[reg_max].value
-        else:
-            if n == 0: bitMux = 2
-            if n > 0: bitMux = 1
+            if ts_max == 0:
+                bitMux = 0
+                value_pile = registers.R[reg_max].value
+            else:
+                if n == 0: bitMux = 2
+                if n > 0: bitMux = 1
 
-        if n > self.pile_size-1: res = 0
-        else:
             res = 1
             td = td + n
             ts_max_aux = ts_max
             ts_max = ts_max + n
             if ts_max_aux == 0:
-                self.updatePile_case0(position=ts_max, value=value_pile)
+                self.updatePile(position=ts_max, value=value_pile)
             if bitMux == 1:
-                self.updatePile_case1(ts_max, ts_max_aux, FU2)
+                self.updatePile(position=ts_max, RP= ts_max_aux, FU = FU2)
 
             #         # actualizamos registros, fu con los valores de la nueva instrucción
 
@@ -87,11 +87,12 @@ class FU:
 
 
     def findFirstEmptyBRT(self,ts_max):
-        n = self.BRT.find_first_free_after(ts_max)
+        n = self.BRT.findFirstAfter(ts_max)
         return n
-    def updatePile_case1(self, position, RP, FU):
+    def updatePile(self, position, RP = -1, FU = None, value = None):
         self.pile.pile[position].RP = RP
         self.pile.pile[position].fu = FU
+        self.pile.pile[position].value = value
 
     def updatePile_case0(self, position, value):
         self.pile.pile[position].value = value
@@ -102,9 +103,6 @@ class FU:
         self.operationQueue.pop(-1)
         self.operationQueue.insert(0, None)
         cbd = self.operationQueue[-1]
-        #print("move cbd"+ str(cbd))
-        #print(self.operationQueue)
-
         return cbd
 
     def strBRT(self):
