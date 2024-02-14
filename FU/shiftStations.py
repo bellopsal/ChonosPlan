@@ -5,9 +5,9 @@ class ShiftStation:
     def __init__(self):
         #self.bitInUse = 0   # if the ss is in use ( with data in it)
         #self.bitAvail = 0  # first operand available 1 or not
-        self.bitMux = 0 # 0 if second taken from Register
-                            # 1 if second taken from pile
-                            # 2 if taken from CDB
+        self.bitMux = 0  # 0 if second taken from Register
+                        # 1 if second taken from pile
+                        # 2 if taken from CDB
 
         self.inv = False # true if last operand is the first in order
         self.inm = None

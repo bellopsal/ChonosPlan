@@ -3,12 +3,14 @@ from Program import Instruction as Inst
 
 #instrucciones = [["add ", "1", "2", "3"], ["add ", "2", "1", "3"], ["add ", "0", "2", "3"]]
 
-instrucciones = [Inst("sb", r1 = 1, inm = 0, rs1=3),Inst("add", r1= 1, r2=2, r3=2), Inst("add", r1= 2, r2=1, r3=3), Inst("lb", r1 = 0, inm = 0, rs1=3), Inst("sub", r1= 4, r2=4, r3=4), Inst("sub", r1= 0, r2=2, r3=3)]
+#instrucciones = [Inst("sb", r1 = 1, inm = 0, rs1=3),Inst("add", r1= 1, r2=2, r3=2), Inst("add", r1= 2, r2=1, r3=3), Inst("lb", r1 = 0, inm = 0, rs1=3), Inst("sub", r1= 4, r2=4, r3=4), Inst("sub", r1= 0, r2=2, r3=3)]
 #print(instrucciones[0].fu_type)
 
 #instrucciones = [Inst("add", r1= 1, r2=2, r3=2),  Inst("mul", r1= 4, r2=4, r3=4), Inst("div", r1 = 2, r2=4, r3 = 1)]
 
 #instrucciones= [Inst("sb", r1 = 1, inm = 0, rs1=3), Inst("lb", r1 = 0, inm = 0, rs1=3)]
+
+instrucciones = [Inst("add", r1= 1, r2=1, r3=2),Inst("mul", r1= 2, r2=1, r3=3), Inst("add", r1= 3, r2=2, r3=1), Inst("mul", r1= 4, r2=3, r3=2),Inst("add", r1= 0, r2=0, r3=1),Inst("mul", r1= 3, r2=3, r3=3), Inst("mul", r1= 0, r2=3, r3=3),Inst("mul", r1= 1, r2=0, r3=0) , Inst("add", r1= 3, r2=1, r3=1) ]
 
 s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              n_ss = 8, fu_type= "INT", name = "INT_1",

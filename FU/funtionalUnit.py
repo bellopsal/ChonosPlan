@@ -13,6 +13,7 @@ class FU:
         self.name = name
         self.type = fu_type
         self.pile_size = pile_size
+        self.ss_size = ss_size
         self.SS = shiftStations.SS(ss_size)
         self.BRT = BRT.BRT(ss_size, latency)
         self.latency = latency
@@ -50,7 +51,7 @@ class FU:
         n = self.findFirstEmptyBRT(ts_max)
 
 
-        if n > self.pile_size-1 or n == -1: res = 0
+        if ts_max > self.ss_size-1 or n == -1: res = 0
         else:
             if ts_min == 0:
                 value = registers.R[reg_min].value
@@ -71,17 +72,20 @@ class FU:
             td = td + n
             ts_max_aux = ts_max
             ts_max = ts_max + n
-            if ts_max_aux == 0:
-                self.updatePile(position=ts_max, value=value_pile)
-            if bitMux == 1:
-                self.updatePile(position=ts_max, RP= ts_max_aux, FU = FU2)
+            if ts_max > self.pile_size - 1 and bitMux==1: res = 0
+            else:
+                if ts_max_aux == 0:
+                    self.updatePile(position=ts_max, value=value_pile)
+                if bitMux == 1:
+                    self.updatePile(position=ts_max, RP= ts_max_aux, FU = FU2)
 
-            #         # actualizamos registros, fu con los valores de la nueva instrucción
+                #         # actualizamos registros, fu con los valores de la nueva instrucción
 
-            registers.new_inst(destino=inst.r1, td=td, fu_name=self.type)
-            self.BRT.occupy_i(ts_max)
-            self.SS.update_i(i=ts_max, bitMux=bitMux, FU1=FU1, FU2=FU2,
-                             RP=RP, value=value, type_operation=inst.function, inv=inv)
+                registers.new_inst(destino=inst.r1, td=td, fu_name=self.type)
+                self.BRT.occupy_i(ts_max)
+                self.SS.update_i(i=ts_max, bitMux=bitMux, FU1=FU1, FU2=FU2,
+                                 RP=RP, value=value, type_operation=inst.function, inv=inv)
+
 
         return res
 
