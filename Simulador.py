@@ -172,7 +172,7 @@ class Simulador_1_FU:
 
 
 
-        console.print(memory)
+        #console.print(memory)
         console.print(register)
 
 

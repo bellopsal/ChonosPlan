@@ -15,7 +15,7 @@ class ShiftStation:
 
         self.FU1 = None  # which FU will generate first operand
         self.FU2 = None  # which FU will generate last operand
-        self.RP = -1  # when first operand will be ready
+        self.RP = - 1  # when first operand will be ready
         self.value = None  # first operand
 
         self.type_operation = None

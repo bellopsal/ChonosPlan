@@ -10,7 +10,15 @@ from Program import Instruction as Inst
 
 #instrucciones= [Inst("sb", r1 = 1, inm = 0, rs1=3), Inst("lb", r1 = 0, inm = 0, rs1=3)]
 
-instrucciones = [Inst("add", r1= 1, r2=1, r3=2),Inst("mul", r1= 2, r2=1, r3=3), Inst("add", r1= 3, r2=2, r3=1), Inst("mul", r1= 4, r2=3, r3=2),Inst("add", r1= 0, r2=0, r3=1),Inst("mul", r1= 3, r2=3, r3=3), Inst("mul", r1= 0, r2=3, r3=3),Inst("mul", r1= 1, r2=0, r3=0) , Inst("add", r1= 3, r2=1, r3=1) ]
+instrucciones = [Inst("add", r1= 1, r2=1, r3=2),
+                 Inst("mul", r1= 2, r2=1, r3=3),
+                 Inst("add", r1= 3, r2=2, r3=1),
+                 Inst("mul", r1= 4, r2=3, r3=2),
+                 Inst("add", r1= 0, r2=0, r3=1),
+                 Inst("mul", r1= 3, r2=3, r3=3),
+                 Inst("mul", r1= 0, r2=3, r3=3),
+                 Inst("mul", r1= 1, r2=0, r3=0) ,
+                 Inst("add", r1= 3, r2=1, r3=1) ]
 
 s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              n_ss = 8, fu_type= "INT", name = "INT_1",
@@ -26,7 +34,7 @@ s.memory.putValues([*range(32)])
 #print ("-------------empieza --------------")
 
 for i in range(12):
-    print(f"-------------{i+2} ------------------------------------------------------------------------------------------------")
+    print(f"-------------T{i+1} ------------------------------------------------------------------------------------------------")
     s.display_ints()
     s.one_clock_cycle()
     s.display()
