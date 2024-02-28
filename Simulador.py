@@ -50,18 +50,21 @@ class Simulador_1_FU:
 
 
     def one_clock_cycle(self):
+        #Do the operation in the FU
+        self.fus_add =[fu.operation(self.CDB) for fu in self.fus_add]
+        self.fus_mult = [fu.operation(self.CDB) for fu in self.fus_mult]
+        self.fus_store = [fu.operation(self.CDB,self.memory) for fu in self.fus_store]
 
-
-
-        self.fu_add.operation(self.CDB)
-        self.fu_mult.operation(self.CDB)
-        self.fu_store.operation(self.CDB, self.memory)
-
+        #Update the operation Queue
         self.CDB.update(add=self.fu_add.moveOperationQueue(), store=self.fu_store.moveOperationQueue(), mult=self.fu_mult.moveOperationQueue())
         self.registers.one_clock_cycle(self.CDB)
-        self.fu_add.one_clock_cycle(self.CDB)
-        self.fu_mult.one_clock_cycle(self.CDB)
-        self.fu_store.one_clock_cycle(self.CDB)
+
+        # One clock init cycle
+        for i in range(self.n_add): self.fus_add[i].one_clock_cycle(self.CDB)
+        for i in range(self.n_mult): self.fus_mult[i].one_clock_cycle(self.CDB)
+        for i in range(self.n_store): self.fus_store[i].one_clock_cycle(self.CDB)
+
+
         res = 1
 
 
