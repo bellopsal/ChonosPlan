@@ -13,16 +13,31 @@ from rich.text import Text
 
 class Simulador_1_FU:
 
-    def __init__(self, list_program, n_ss, fu_type, name, n_registers, b_scoreboard,pile_size, memory_size):
+    def __init__(self, list_program, n_ss, n_registers, b_scoreboard, pile_size, memory_size,
+                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m):
         # set of instructions
         self.program = Program.Program(list_program)
         self.memory = Memory.Memory(memory_size)
         self.ss_size = n_ss
         self.pile_size = pile_size
+        self.n_add = n_add
+        self.n_mult = n_mult
+        self.n_store = n_store
+        self.m = m
 
-        self.fu_add = funtionalUnit.FU("add", "add", n_ss, pile_size=pile_size, latency = 2)
-        self.fu_mult = funtionalUnit.FU("mult", "mult", n_ss, pile_size=pile_size, latency = 3)
-        self.fu_store = funtionalUnitStore.FU("store", "store", n_ss, pile_size=pile_size, latency = 3)
+        self.fus_add = []
+        self.fus_mult = []
+        self.fus_store = []
+
+        for i in range(n_add):
+            self.fus_add.append(funtionalUnit.FU(f"add_{i}", "add", n_ss, pile_size=pile_size, latency=latency_add))
+
+        for i in range(n_mult):
+            self.fus_mult.append(funtionalUnit.FU(f"mult_{i}", "mult", n_ss, pile_size=pile_size, latency=latency_mult))
+
+        for i in range(n_store):
+            self.fus_store.append(funtionalUnitStore.FU(f"store_{i}", "store", n_ss, pile_size=pile_size, latency=latency_store))
+
 
         self.registers = Registers.Registers(n_registers, b_scoreboard)
         self.CDB = CDB.CDB()
@@ -36,14 +51,7 @@ class Simulador_1_FU:
 
     def one_clock_cycle(self):
 
-        #Operation queue, Move the values one space and put it on the CBD
-        #self.CDB.update(add=self.fu_add.moveOperationQueue(), store=self.fu_store.moveOperationQueue(), mult=self.fu_mult.moveOperationQueue())
 
-
-        # update timestamps and get values from CBD
-        #self.registers.one_clock_cycle(self.CDB)
-        #self.fu_add.one_clock_cycle(self.CDB)
-        #print(self.CDB)
 
         self.fu_add.operation(self.CDB)
         self.fu_mult.operation(self.CDB)
@@ -79,7 +87,7 @@ class Simulador_1_FU:
 
 
     def display_SS(self, title, fu, store = False):
-        table = Table()
+        table = Table(title = title)
         table.add_column("SS", justify="center")
         table.add_column("bMux", justify="center")
         table.add_column("RP", justify="center")
@@ -128,28 +136,22 @@ class Simulador_1_FU:
 
     def display(self):
 
+        table_adds = Table(title="Functional Unit: ADD")
+        for i in range(self.n_add):
+            table_adds.add_column(self.display_SS(f"ADD_{i}", fu = self.fus_add[i]))
 
+        table_mult = Table(title="Functional Unit: MULT")
+        for i in range(self.n_mult):
+            table_mult.add_column(self.display_SS(f"MULT_{i}", fu=self.fus_mult[i]))
 
-
-        table_add = self.display_SS("Functional Unit: ADD", fu = self.fu_add)
-        table_mult = self.display_SS("Functional Unit: MULT", fu = self.fu_mult)
-        table_store = self.display_SS("Functional Unit: STORE", store= True, fu = self.fu_store)
-
-        pile_add = self.display_pile(fu=self.fu_add, )
-        pile_mult = self.display_pile(fu=self.fu_mult)
-        pile_store = self.display_pile(fu=self.fu_store)
-
-        table_fu = Table()
-        table_fu.add_column("Functional Unit: ADD", justify="center", no_wrap=True)
-        table_fu.add_column("Functional Unit: Mult",justify="center", no_wrap=True)
-        table_fu.add_column("Functional Unit: Store",justify="center", no_wrap=True)
-
-        table_fu.add_row(table_add, table_mult, table_store)
-        table_fu.add_row(pile_add, pile_mult, pile_store)
-
+        table_store = Table(title="Functional Unit: STORE")
+        for i in range(self.n_store):
+            table_store.add_column(self.display_SS(f"STORE_{i}", fu=self.fus_store[i]))
 
         console = Console()
-        console.print(table_fu)
+        console.print(table_adds)
+        console.print(table_mult)
+        console.print(table_store)
 
         memory = Table(title= "MEMORY")
         memory.add_column("Line", justify="center")

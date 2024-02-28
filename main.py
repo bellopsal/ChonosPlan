@@ -21,11 +21,22 @@ instrucciones = [Inst("add", r1= 1, r2=1, r3=2),
                  Inst("add", r1= 3, r2=1, r3=1) ]
 
 s = Simulador.Simulador_1_FU(list_program = instrucciones,
-                             n_ss = 8, fu_type= "INT", name = "INT_1",
-                             n_registers = 5, b_scoreboard = 1, pile_size = 3, memory_size=32)
+                             n_ss = 8,
+                             n_registers = 5,
+                             b_scoreboard = 1,
+                             pile_size = 3,
+                             memory_size=32,
+                             n_add = 4,
+                             n_mult= 3,
+                             n_store = 2,
+                             latency_add = 2,
+                             latency_mult =3,
+                             latency_store= 2,
+                             m=1
+                             )
 
 s.memory.putValues([*range(32)])
-
+s.display()
 
 #print(s.fu_add.operationQueue)
 #print(s.memory)
@@ -33,7 +44,7 @@ s.memory.putValues([*range(32)])
 #print(s.fu_add.strBRT())
 #print ("-------------empieza --------------")
 
-for i in range(12):
+for i in range(0):
     print(f"-------------T{i+1} ------------------------------------------------------------------------------------------------")
     s.display_ints()
     s.one_clock_cycle()
