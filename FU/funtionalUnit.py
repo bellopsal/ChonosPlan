@@ -25,9 +25,8 @@ class FU:
         self.ss_side = shiftStations.ShiftStation()
         self.pile_side = shiftStations.PileElement()
 
-    def operation(self, CBD):
+    def operation(self):
         operand1 = self.ss_side.value
-
         operand2 = self.pile_side.value
 
         if self.ss_side.type_operation == "add":
@@ -44,6 +43,12 @@ class FU:
             if self.ss_side.inv: self.operationQueue[0] = operand2 / operand1
             else: self.operationQueue[0] = operand1 / operand2
 
+    def calculateN(self, inst, registers):
+
+        [ts_max, _, _, _, _, _, _] = registers.td_calculation_type1(inst.r2, inst.r3)
+        n = self.findFirstEmptyBRT(ts_max)
+
+        return n
 
     def newInstruction(self, inst, registers):
         [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = registers.td_calculation_type1(inst.r2, inst.r3)
@@ -81,7 +86,7 @@ class FU:
 
                 #         # actualizamos registros, fu con los valores de la nueva instrucción
 
-                registers.new_inst(destino=inst.r1, td=td, fu_name=self.type)
+                registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
                 self.BRT.occupy_i(ts_max)
                 self.SS.update_i(i=ts_max, bitMux=bitMux, FU1=FU1, FU2=FU2,
                                  RP=RP, value=value, type_operation=inst.function, inv=inv)

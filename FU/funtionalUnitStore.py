@@ -25,6 +25,10 @@ class FU:
         self.ss_side = shiftStations.ShiftStation()
         self.pile_side = shiftStations.PileElement()
 
+    def calculateN(self, inst, registers):
+        [ts_max, _, _, _, _, _, _] = registers.td_calculation_type1(inst.r1, inst.rs1)
+        return self.findFirstEmptyBRT(ts_max)
+
     def newInstruction(self, inst, registers):
         if inst.function == "sb":
             [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = registers.td_calculation_type1(inst.r1, inst.rs1)
@@ -90,7 +94,7 @@ class FU:
                 if bitMux == 1:
                     self.updatePile_case1(ts_max, ts_max_aux, FU)
 
-                registers.new_inst(destino=inst.r1, td=td, fu_name=self.type)
+                registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
                 self.BRT.occupy_i(ts_max)
                 self.SS.update_i(i=ts_max, bitMux=bitMux,  FU2=FU, FU1= FU, RP = -1, value= None, inv = False, inm = inst.inm,
                                   type_operation=inst.function)
@@ -98,7 +102,7 @@ class FU:
 
         return res
 
-    def operation(self, CBD, mem):
+    def operation(self, mem):
         operand1 = self.ss_side.value  # first to arrive
         inm = self.ss_side.inm
 
@@ -129,11 +133,9 @@ class FU:
 
         self.operationQueue.pop(-1)
         self.operationQueue.insert(0, None)
-        cbd = self.operationQueue[-1]
-        #print("move cbd"+ str(cbd))
-        #print(self.operationQueue)
+        cdb = self.operationQueue[-1]
 
-        return cbd
+        return cdb
 
     def updatePile_case1(self, position, RP, FU):
         self.pile.pile[position].RP = RP

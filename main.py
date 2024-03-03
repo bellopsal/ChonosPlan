@@ -44,7 +44,7 @@ s.display()
 #print(s.fu_add.strBRT())
 #print ("-------------empieza --------------")
 
-for i in range(0):
+for i in range(12):
     print(f"-------------T{i+1} ------------------------------------------------------------------------------------------------")
     s.display_ints()
     s.one_clock_cycle()

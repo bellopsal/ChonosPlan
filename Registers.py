@@ -40,7 +40,10 @@ class Registers:
     def one_clock_cycle(self, CBD):
         for reg in self.R:
             if reg.td == 1:
-                reg.value = CBD.get(reg.fu)
+                separated_list = reg.fu.split("_")
+                type = separated_list[0].strip()
+                index = int(separated_list[1].strip())
+                reg.value = CBD.get(type, index)
                 reg.fu = None
                 reg.td = 0
             if reg.td > 0:

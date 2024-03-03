@@ -1,5 +1,10 @@
 import csv
 
+def CDBhelper(FU,CDB):
+    sep_list = FU.split("_")
+    fu = sep_list[0].strip()
+    index = int(sep_list[1].strip())
+    return CDB.get(fu,index)
 
 class ShiftStation:
     def __init__(self):
@@ -20,12 +25,14 @@ class ShiftStation:
 
         self.type_operation = None
 
-    def one_clock_cycle(self, CBD):
+    def one_clock_cycle(self, CDB):
         if self.RP == 1:
             self.RP = -1
-            self.value = CBD.get(self.FU1)
+            self.value = CDBhelper(self.FU1,CDB)
         elif self.RP > 1:
             self.RP = self.RP - 1
+
+
 
 
 
@@ -62,11 +69,11 @@ class SS:
 
 
 
-    def one_clock_cycle(self,CBD):
+    def one_clock_cycle(self,CDB):
         # Update internal values of SS
         bitMux, FU2 = self.l_ss[1].bitMux, self.l_ss[1].FU2
         for e in self.l_ss:
-            e.one_clock_cycle(CBD)
+            e.one_clock_cycle(CDB)
 
         self.l_ss.append(ShiftStation())
         res = self.l_ss[0]
@@ -116,10 +123,10 @@ class PileElement:
         #self.bitUse = -1
         self.RP = RP
 
-    def one_clock_cycle(self, CBD):
+    def one_clock_cycle(self, CDB):
         if self.RP == 1:
             self.RP = -1
-            self.value = CBD.get(self.fu)
+            self.value = CDBhelper(self.fu,CDB)
         elif self.RP > 1:
             self.RP = self.RP - 1
 
@@ -170,13 +177,13 @@ class Pile:
         return self.pile[i]
 
 
-    def one_clock_cycle(self, CBD, bitMux, FU2):
+    def one_clock_cycle(self, CDB, bitMux, FU2):
         if bitMux == 2:
-            self.pile[1].value = CBD.get(FU2)
+            self.pile[1].value = CDBhelper(FU2, CDB)
             self.pile[1].RP = -1
 
         for element in self.pile:
-            element.one_clock_cycle(CBD)
+            element.one_clock_cycle(CDB)
 
         self.pile.append(PileElement())
         res = self.pile[0]

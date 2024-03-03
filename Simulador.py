@@ -51,12 +51,14 @@ class Simulador_1_FU:
 
     def one_clock_cycle(self):
         #Do the operation in the FU
-        self.fus_add =[fu.operation(self.CDB) for fu in self.fus_add]
-        self.fus_mult = [fu.operation(self.CDB) for fu in self.fus_mult]
-        self.fus_store = [fu.operation(self.CDB,self.memory) for fu in self.fus_store]
+        for fu in self.fus_add: fu.operation()
+        for fu in self.fus_mult: fu.operation()
+        for fu in self.fus_store: fu.operation(self.memory)
+
 
         #Update the operation Queue
-        self.CDB.update(add=self.fu_add.moveOperationQueue(), store=self.fu_store.moveOperationQueue(), mult=self.fu_mult.moveOperationQueue())
+        self.CDB.update(add=self.moveOperationQueue(self.fus_add), store=self.moveOperationQueue(self.fus_store),
+                        mult=self.moveOperationQueue(self.fus_mult))
         self.registers.one_clock_cycle(self.CDB)
 
         # One clock init cycle
@@ -69,24 +71,46 @@ class Simulador_1_FU:
 
 
         if self.PC < self.program.n:
-            # if there are still instructions in the program
-
-            inst = self.program.get(self.PC)
-            fu = self.getFU(inst.fu_type)
-
-            res = fu.newInstruction(inst, self.registers)
-
+             # if there are still instructions in the program
+            res = self.newInstruction()
         self.PC = self.PC + res
 
-    def getFU(self, fu_type):
+    def moveOperationQueue(self, fus):
+        res = [fu.moveOperationQueue() for fu in fus]
+        return res
+
+    def find_first_non_negative_position(self, lst):
+        for idx, num in enumerate(lst):
+            if num >= 0:
+                return idx
+        return None  # If no non-negative value is found
+
+    def newInstruction(self):
+        inst = self.program.get(self.PC)
+        fu_type = inst.fu_type
+        fu_free = []
+        if fu_type == "add": fu_free = [fu.calculateN(inst,self.registers) for fu in self.fus_add]
+        if fu_type == "mult": fu_free = [fu.calculateN(inst, self.registers) for fu in self.fus_mult]
+        if fu_type == "store": fu_free = [fu.calculateN(inst, self.registers) for fu in self.fus_store]
+
+        index = self.find_first_non_negative_position(fu_free)
+
+        if index is None: res = 0
+        else:
+            fu = self.getFU(inst.fu_type, index)
+            res = fu.newInstruction(inst, self.registers)
+
+        return res
+
+    def getFU(self, fu_type, index):
         if fu_type == "add":
-            return self.fu_add
+            return self.fus_add[index]
 
         if fu_type == "store":
-            return self.fu_store
+            return self.fus_store[index]
 
         if fu_type == "mult":
-            return self.fu_mult
+            return self.fus_mult[index]
 
 
     def display_SS(self, title, fu, store = False):
