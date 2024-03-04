@@ -18,8 +18,8 @@ class FU:
         self.BRT = BRT.BRT(ss_size, latency)
         self.latency = latency
         self.pile = shiftStations.Pile(pile_size)
-        self.operationQueue = [None]*latency
-        #self.operationQueue = [1, 2, 3]
+        self.operationQueue = [None] * latency
+        # self.operationQueue = [1, 2, 3]
 
         # Registers that are going to be used for the operation next
         self.ss_side = shiftStations.ShiftStation()
@@ -33,15 +33,19 @@ class FU:
             self.operationQueue[0] = operand1 + operand2
 
         if self.ss_side.type_operation == "sub":
-            if self.ss_side.inv: self.operationQueue[0] = operand2 - operand1
-            else: self.operationQueue[0] = operand1 - operand2
+            if self.ss_side.inv:
+                self.operationQueue[0] = operand2 - operand1
+            else:
+                self.operationQueue[0] = operand1 - operand2
 
         if self.ss_side.type_operation == "mul":
             self.operationQueue[0] = operand1 * operand2
 
         if self.ss_side.type_operation == "div":
-            if self.ss_side.inv: self.operationQueue[0] = operand2 / operand1
-            else: self.operationQueue[0] = operand1 / operand2
+            if self.ss_side.inv:
+                self.operationQueue[0] = operand2 / operand1
+            else:
+                self.operationQueue[0] = operand1 / operand2
 
     def calculateN(self, inst, registers):
 
@@ -51,54 +55,69 @@ class FU:
         return n
 
     def newInstruction(self, inst, registers):
-        [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = registers.td_calculation_type1(inst.r2, inst.r3)
-        td = ts_max + self.latency
-        n = self.findFirstEmptyBRT(ts_max)
-
-
-        if ts_max > self.ss_size-1 or n == -1: res = 0
+        registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3)
+        if len(registersCalculation) == 1:
+            return 0
         else:
-            if ts_min == 0:
-                value = registers.R[reg_min].value
-                RP = -1
+
+            ts_max = registersCalculation[0]
+            ts_min = registersCalculation[1]
+            reg_max = registersCalculation[2]
+            reg_min = registersCalculation[3]
+            FU1 = registersCalculation[4]
+            FU2 = registersCalculation[5]
+            inv = registersCalculation[6]
+
+            td = ts_max + self.latency
+            n = self.findFirstEmptyBRT(ts_max)
+
+            if ts_max > self.ss_size - 1 or n == -1:
+                res = 0
+                # Block next inst that have r1 as source
+                registers.block(inst.r1)
 
             else:
-                value = None
-                RP = ts_min
+                if ts_min == 0:
+                    value = registers.R[reg_min].value
+                    RP = -1
 
-            if ts_max == 0:
-                bitMux = 0
-                value_pile = registers.R[reg_max].value
-            else:
-                if n == 0: bitMux = 2
-                if n > 0: bitMux = 1
+                else:
+                    value = None
+                    RP = ts_min
 
-            res = 1
-            td = td + n
-            ts_max_aux = ts_max
-            ts_max = ts_max + n
-            if ts_max > self.pile_size - 1 and bitMux==1: res = 0
-            else:
-                if ts_max_aux == 0:
-                    self.updatePile(position=ts_max, value=value_pile)
-                if bitMux == 1:
-                    self.updatePile(position=ts_max, RP= ts_max_aux, FU = FU2)
+                if ts_max == 0:
+                    bitMux = 0
+                    value_pile = registers.R[reg_max].value
+                else:
+                    if n == 0: bitMux = 2
+                    if n > 0: bitMux = 1
 
-                #         # actualizamos registros, fu con los valores de la nueva instrucción
+                res = 1
+                td = td + n
+                ts_max_aux = ts_max
+                ts_max = ts_max + n
+                if ts_max > self.pile_size - 1 and bitMux == 1:
+                    res = 0
+                else:
+                    if ts_max_aux == 0:
+                        self.updatePile(position=ts_max, value=value_pile)
+                    if bitMux == 1:
+                        self.updatePile(position=ts_max, RP=ts_max_aux, FU=FU2)
 
-                registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
-                self.BRT.occupy_i(ts_max)
-                self.SS.update_i(i=ts_max, bitMux=bitMux, FU1=FU1, FU2=FU2,
-                                 RP=RP, value=value, type_operation=inst.function, inv=inv)
+                    #         # actualizamos registros, fu con los valores de la nueva instrucción
 
+                    registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                    self.BRT.occupy_i(ts_max)
+                    self.SS.update_i(i=ts_max, bitMux=bitMux, FU1=FU1, FU2=FU2,
+                                     RP=RP, value=value, type_operation=inst.function, inv=inv)
 
-        return res
+            return res
 
-
-    def findFirstEmptyBRT(self,ts_max):
+    def findFirstEmptyBRT(self, ts_max):
         n = self.BRT.findFirstAfter(ts_max)
         return n
-    def updatePile(self, position, RP = -1, FU = None, value = None):
+
+    def updatePile(self, position, RP=-1, FU=None, value=None):
         self.pile.pile[position].RP = RP
         self.pile.pile[position].fu = FU
         self.pile.pile[position].value = value
@@ -124,12 +143,11 @@ class FU:
         return f"{self.name}  queue: " + res + "CBD"
 
     def one_clock_cycle(self, CBD):
-        self.ss_side, bitMux, FU2= self.SS.one_clock_cycle(CBD)
-        self.pile_side = self.pile.one_clock_cycle(CBD, bitMux,FU2)
+        self.ss_side, bitMux, FU2 = self.SS.one_clock_cycle(CBD)
+        self.pile_side = self.pile.one_clock_cycle(CBD, bitMux, FU2)
 
         # Update the values inside each SS, BRT and pile and moving them one down
         self.BRT.one_clock_cycle()
-
 
     def calculate(self, CDB, registers):
         if self.ss_side.bitInUse == 1:

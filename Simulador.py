@@ -53,7 +53,7 @@ class Simulador_1_FU:
     def one_clock_cycle(self):
         #Pointer
         self.PC.one_clock_cycle()
-        
+
         #Do the operation in the FU
         for fu in self.fus_add: fu.operation()
         for fu in self.fus_mult: fu.operation()
@@ -77,7 +77,7 @@ class Simulador_1_FU:
             instIndex = self.PC.newInstruction()
             if instIndex < self.program.n:
                  # if there are still instructions in the program
-                res = self.newInstruction()
+                res = self.newInstruction(instIndex)
                 if res == 0:
                     self.PC.instBlock()
 
@@ -92,8 +92,8 @@ class Simulador_1_FU:
                 return idx
         return None  # If no non-negative value is found
 
-    def newInstruction(self):
-        inst = self.program.get(self.PC)
+    def newInstruction(self, instIndex):
+        inst = self.program.get(instIndex)
         fu_type = inst.fu_type
         fu_free = []
         if fu_type == "add": fu_free = [fu.calculateN(inst,self.registers) for fu in self.fus_add]
@@ -152,12 +152,12 @@ class Simulador_1_FU:
 
 
     def display_ints(self):
-        if self.PC < self.program.n:
+        if self.PC.m < self.program.n:
             text = Text()
             text.append("PC: ", style= "bold magenta")
             text.append(str(self.PC)+"\n", style = "bold")
             text.append("Instruction: ", style="bold magenta")
-            text.append(str(self.program.get(self.PC)), style = "bold")
+            #text.append(str(self.program.get(self.PC.m)), style = "bold")
         else:
             text = Text()
             text.append("There are no more instrucctions!", style= "bold magenta")

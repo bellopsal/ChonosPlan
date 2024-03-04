@@ -11,6 +11,7 @@ class Register:
         self.fu = None  # fu de donde proveendrá el value
         self.value = i+2
         self.type = None
+        self.block = False
 
     def __str__(self):
         return f"R{self.number}: +{self.td} ({self.fu}) value: {self.value}"
@@ -57,6 +58,11 @@ class Registers:
         self.R[destino].td = td
         self.R[destino].fu = fu_name
         self.R[destino].value = None
+        self.R[destino].block = False
+
+    def block(self, register):
+        self.R[register].block = True
+
 
     def get_R_i(self, i):
         return self.R[i]
@@ -72,32 +78,35 @@ class Registers:
 
     def td_calculation_type1(self, source1, source2):
 
-        t1 = self.R[source1].td
-        t2 = self.R[source2].td
-
-        # primero tengo que actualizar los registros que serán destino
-        # asi tengo en cuenta el tiempo anterior y en el caso de escalaridad
-        # no perder el orden de las instrucciones!!!
-        if t1 >= t2:
-            ts_max = t1
-            ts_min = t2
-            reg_max = source1
-            reg_min = source2
-            inv = True
-
+        if self.R[source1].block or self.R[source1].block:
+            return [True]
         else:
-            ts_max = t2
-            ts_min = t1
-            reg_max = source2
-            reg_min = source1
-            inv = False
+            t1 = self.R[source1].td
+            t2 = self.R[source2].td
+
+            # primero tengo que actualizar los registros que serán destino
+            # asi tengo en cuenta el tiempo anterior y en el caso de escalaridad
+            # no perder el orden de las instrucciones!!!
+            if t1 >= t2:
+                ts_max = t1
+                ts_min = t2
+                reg_max = source1
+                reg_min = source2
+                inv = True
+
+            else:
+                ts_max = t2
+                ts_min = t1
+                reg_max = source2
+                reg_min = source1
+                inv = False
 
 
 
-        FU1 = self.R[reg_min].fu
-        FU2 = self.R[reg_max].fu
+            FU1 = self.R[reg_min].fu
+            FU2 = self.R[reg_max].fu
 
-        return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
+            return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
 
 
     def td_calculation_type2(self, source):
