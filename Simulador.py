@@ -1,8 +1,10 @@
 import CDB
 import Memory
+import Pointer
 import Program
 from FU import funtionalUnit, funtionalUnitStore
 import Registers
+
 
 from rich.console import Console
 from rich.table import Table
@@ -23,7 +25,7 @@ class Simulador_1_FU:
         self.n_add = n_add
         self.n_mult = n_mult
         self.n_store = n_store
-        self.m = m
+        self.PC = Pointer.PC(m)
 
         self.fus_add = []
         self.fus_mult = []
@@ -41,7 +43,6 @@ class Simulador_1_FU:
 
         self.registers = Registers.Registers(n_registers, b_scoreboard)
         self.CDB = CDB.CDB()
-        self.PC = 0
         self.b_scoreboard = b_scoreboard
 
     def dump_csv(self):
@@ -50,6 +51,9 @@ class Simulador_1_FU:
 
 
     def one_clock_cycle(self):
+        #Pointer
+        self.PC.one_clock_cycle()
+        
         #Do the operation in the FU
         for fu in self.fus_add: fu.operation()
         for fu in self.fus_mult: fu.operation()
@@ -69,11 +73,14 @@ class Simulador_1_FU:
 
         res = 1
 
+        for _ in range(self.PC.m):
+            instIndex = self.PC.newInstruction()
+            if instIndex < self.program.n:
+                 # if there are still instructions in the program
+                res = self.newInstruction()
+                if res == 0:
+                    self.PC.instBlock()
 
-        if self.PC < self.program.n:
-             # if there are still instructions in the program
-            res = self.newInstruction()
-        self.PC = self.PC + res
 
     def moveOperationQueue(self, fus):
         res = [fu.moveOperationQueue() for fu in fus]
