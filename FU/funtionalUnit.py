@@ -87,11 +87,7 @@ class FU:
                     RP = ts_min
 
 
-                if ts_max == 0:
-                    bitMux = 0
-                else:
-                    if n == 0: bitMux = 2
-                    if n > 0: bitMux = 1
+
 
                 if ts_max == 0: value_pile = registers.R[reg_max].value
 
@@ -99,15 +95,25 @@ class FU:
                 td = td + n
                 ts_max_aux = ts_max
                 ts_max = ts_max + n
-                print(f"n{n}")
 
-                print(f"ts_max{ts_max}")
-                if ts_max > self.pile_size - 1 and (bitMux == 1 or bitMux == 0):
+                if ts_max > self.pile_size - 1 or n == -1:
+                    bitMux = 4
+                elif ts_max_aux == 0:
+                    value_pile = registers.R[reg_max].value
+                    if n == 0: bitMux = 0
+                    else: bitMux = 1
+                else:
+                    if n == 0: bitMux = 2
+                    else: bitMux = 3
+
+
+
+                if bitMux == 4:
                     res = 0
                 else:
-                    if bitMux == 0 :
+                    if bitMux == 0 or bitMux == 1 :
                         self.updatePile(position=ts_max, value=value_pile)
-                    if bitMux == 1:
+                    if bitMux == 3:
                         self.updatePile(position=ts_max, RP=ts_max_aux, FU=FU2)
 
                     #         # actualizamos registros, fu con los valores de la nueva instrucción
@@ -155,19 +161,3 @@ class FU:
         # Update the values inside each SS, BRT and pile and moving them one down
         self.BRT.one_clock_cycle()
 
-    def calculate(self, CDB, registers):
-        if self.ss_side.bitInUse == 1:
-            if self.ss_side.bitMux == 0:
-                return self.ss_side.value + registers.get_value(int(self.ss_side.FU2))
-            elif self.ss_side.bitMux == 1:
-                return self.ss_side.value + CDB
-            else:
-                return self.ss_side.value + self.pile_side
-
-    def update(self, CDB):
-        # update pile
-        for i in range(len(self.pile)):
-            if self.pile[i][1] == 0:
-                self.pile[i] = (CDB, None)
-
-        self.SS.update(CDB)

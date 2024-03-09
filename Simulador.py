@@ -73,16 +73,15 @@ class Simulador_1_FU:
 
         res = 1
 
-        print(self.PC.PC)
+
 
         for _ in range(self.PC.m):
             instIndex = self.PC.newInstruction()
             if instIndex < self.program.n:
                 inst = self.program.get(instIndex)
-                print(inst)
                  # if there are still instructions in the program
                 res = self.newInstruction(instIndex)
-                print(f"res{res}")
+
                 if res == 0:
                     self.PC.instBlock()
 
@@ -110,9 +109,9 @@ class Simulador_1_FU:
         if fu_type == "mult": fu_free = [fu.calculateN(inst, self.registers) for fu in self.fus_mult]
         if fu_type == "store": fu_free = [fu.calculateN(inst, self.registers) for fu in self.fus_store]
 
-        print(f"fu_free {fu_free}")
+
         index = self.find_lowest_positive_index(fu_free)
-        print(f"index {index}")
+
 
 
         if index is None: res = 0
@@ -185,10 +184,12 @@ class Simulador_1_FU:
         console = Console()
         if badd:
             table_adds = Table(title="Functional Unit: ADD")
+            table_adds_pile = Table(title="Pile: ADD")
             for i in range(self.n_add):
                 table_adds.add_column(self.display_SS(f"ADD_{i}", fu = self.fus_add[i]))
-                table_adds.add_row(self.display_pile(fu = self.fus_add[i]))
+                table_adds_pile.add_column(self.display_pile(fu=self.fus_add[i]))
             console.print(table_adds)
+            console.print(table_adds_pile)
 
         if bmux:
             table_mult = Table(title="Functional Unit: MULT")
