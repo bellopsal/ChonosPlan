@@ -56,6 +56,7 @@ class FU:
 
     def newInstruction(self, inst, registers):
         registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3)
+
         if len(registersCalculation) == 1:
             return 0
         else:
@@ -85,21 +86,26 @@ class FU:
                     value = None
                     RP = ts_min
 
+
                 if ts_max == 0:
                     bitMux = 0
-                    value_pile = registers.R[reg_max].value
                 else:
                     if n == 0: bitMux = 2
                     if n > 0: bitMux = 1
+
+                if ts_max == 0: value_pile = registers.R[reg_max].value
 
                 res = 1
                 td = td + n
                 ts_max_aux = ts_max
                 ts_max = ts_max + n
-                if ts_max > self.pile_size - 1 and bitMux == 1:
+                print(f"n{n}")
+
+                print(f"ts_max{ts_max}")
+                if ts_max > self.pile_size - 1 and (bitMux == 1 or bitMux == 0):
                     res = 0
                 else:
-                    if ts_max_aux == 0:
+                    if bitMux == 0 :
                         self.updatePile(position=ts_max, value=value_pile)
                     if bitMux == 1:
                         self.updatePile(position=ts_max, RP=ts_max_aux, FU=FU2)

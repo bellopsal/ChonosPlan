@@ -73,11 +73,16 @@ class Simulador_1_FU:
 
         res = 1
 
+        print(self.PC.PC)
+
         for _ in range(self.PC.m):
             instIndex = self.PC.newInstruction()
             if instIndex < self.program.n:
+                inst = self.program.get(instIndex)
+                print(inst)
                  # if there are still instructions in the program
                 res = self.newInstruction(instIndex)
+                print(f"res{res}")
                 if res == 0:
                     self.PC.instBlock()
 
@@ -86,21 +91,29 @@ class Simulador_1_FU:
         res = [fu.moveOperationQueue() for fu in fus]
         return res
 
-    def find_first_non_negative_position(self, lst):
-        for idx, num in enumerate(lst):
-            if num >= 0:
-                return idx
-        return None  # If no non-negative value is found
+    def find_lowest_positive_index(self, l):
+        lowest_positive = None
+        lowest_positive_index = None
+
+        for i, num in enumerate(l):
+            if num >= 0 and (lowest_positive is None or num < lowest_positive):
+                lowest_positive = num
+                lowest_positive_index = i
+
+        return lowest_positive_index
 
     def newInstruction(self, instIndex):
         inst = self.program.get(instIndex)
         fu_type = inst.fu_type
         fu_free = []
-        if fu_type == "add": fu_free = [fu.calculateN(inst,self.registers) for fu in self.fus_add]
+        if fu_type == "add": fu_free = [fu.calculateN(inst, self.registers) for fu in self.fus_add]
         if fu_type == "mult": fu_free = [fu.calculateN(inst, self.registers) for fu in self.fus_mult]
         if fu_type == "store": fu_free = [fu.calculateN(inst, self.registers) for fu in self.fus_store]
 
-        index = self.find_first_non_negative_position(fu_free)
+        print(f"fu_free {fu_free}")
+        index = self.find_lowest_positive_index(fu_free)
+        print(f"index {index}")
+
 
         if index is None: res = 0
         else:
@@ -168,33 +181,42 @@ class Simulador_1_FU:
 
 
 
-    def display(self):
-
-        table_adds = Table(title="Functional Unit: ADD")
-        for i in range(self.n_add):
-            table_adds.add_column(self.display_SS(f"ADD_{i}", fu = self.fus_add[i]))
-
-        table_mult = Table(title="Functional Unit: MULT")
-        for i in range(self.n_mult):
-            table_mult.add_column(self.display_SS(f"MULT_{i}", fu=self.fus_mult[i]))
-
-        table_store = Table(title="Functional Unit: STORE")
-        for i in range(self.n_store):
-            table_store.add_column(self.display_SS(f"STORE_{i}", fu=self.fus_store[i]))
-
+    def display(self, badd = True, bmux = False, bstore = False, bmemory = False):
         console = Console()
-        console.print(table_adds)
-        console.print(table_mult)
-        console.print(table_store)
+        if badd:
+            table_adds = Table(title="Functional Unit: ADD")
+            for i in range(self.n_add):
+                table_adds.add_column(self.display_SS(f"ADD_{i}", fu = self.fus_add[i]))
+                table_adds.add_row(self.display_pile(fu = self.fus_add[i]))
+            console.print(table_adds)
 
-        memory = Table(title= "MEMORY")
-        memory.add_column("Line", justify="center")
-        memory.add_column("values", justify="center")
-        memory.add_column("ready", justify="center")
-        l = [self.memory.memory[n:n + 8] for n in range(0, self.memory.size, 8)]
-        r = [self.memory.ready[n:n + 8] for n in range(0, self.memory.size, 8)]
-        for i in range(len(l)):
-            memory.add_row(str(i), str(l[i]), str(r[i]))
+        if bmux:
+            table_mult = Table(title="Functional Unit: MULT")
+            for i in range(self.n_mult):
+                table_mult.add_column(self.display_SS(f"MULT_{i}", fu=self.fus_mult[i]))
+
+            console.print(table_mult)
+
+        if bstore:
+            table_store = Table(title="Functional Unit: STORE")
+            for i in range(self.n_store):
+                table_store.add_column(self.display_SS(f"STORE_{i}", fu=self.fus_store[i]))
+            console.print(table_store)
+
+
+
+
+
+        if bmemory:
+            memory = Table(title= "MEMORY")
+            memory.add_column("Line", justify="center")
+            memory.add_column("values", justify="center")
+            memory.add_column("ready", justify="center")
+            l = [self.memory.memory[n:n + 8] for n in range(0, self.memory.size, 8)]
+            r = [self.memory.ready[n:n + 8] for n in range(0, self.memory.size, 8)]
+            for i in range(len(l)):
+                memory.add_row(str(i), str(l[i]), str(r[i]))
+            console.print(memory)
 
         register = Table(title = "REGISTERS")
         register.add_column("Register", justify="center")
@@ -208,7 +230,7 @@ class Simulador_1_FU:
 
 
 
-        #console.print(memory)
+
         console.print(register)
 
 

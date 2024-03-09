@@ -78,7 +78,7 @@ class Registers:
 
     def td_calculation_type1(self, source1, source2):
 
-        if self.R[source1].block or self.R[source1].block:
+        if self.R[source1].block or self.R[source1].block :
             return [True]
         else:
             t1 = self.R[source1].td
