@@ -76,9 +76,9 @@ class Registers:
     def get_type(self, i):
         return self.R[i].type
 
-    def td_calculation_type1(self, source1, source2):
+    def td_calculation_type1(self, source1, source2, destiny):
 
-        if self.R[source1].block or self.R[source1].block :
+        if self.R[source1].block or self.R[source1].block  or self.R[destiny].block:
             return [True]
         else:
             t1 = self.R[source1].td

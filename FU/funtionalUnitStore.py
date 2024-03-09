@@ -26,12 +26,12 @@ class FU:
         self.pile_side = shiftStations.PileElement()
 
     def calculateN(self, inst, registers):
-        [ts_max, _, _, _, _, _, _] = registers.td_calculation_type1(inst.r1, inst.rs1)
+        [ts_max, _, _, _, _, _, _] = registers.td_calculation_type1(inst.r1, inst.rs1, inst.r1)
         return self.findFirstEmptyBRT(ts_max)
 
     def newInstruction(self, inst, registers):
         if inst.function == "sb":
-            [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = registers.td_calculation_type1(inst.r1, inst.rs1)
+            [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv] = registers.td_calculation_type1(inst.r1, inst.rs1,inst.r1)
             td = ts_max + self.latency
 
             if ts_min == 0:

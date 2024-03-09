@@ -22,13 +22,13 @@ from Program import Instruction as Inst
 #                  Inst("add", r1= 3, r2=1, r3=1) ]
 
 instrucciones = [Inst("add", r1= 1, r2=1, r3=2),
+                Inst("add", r1= 2, r2=1, r3=3),
                 Inst("add", r1= 1, r2=2, r3=3),
+                Inst("add", r1= 2, r2=1, r3=3),
                 Inst("add", r1= 1, r2=2, r3=3),
-                Inst("add", r1= 1, r2=2, r3=3),
-                Inst("add", r1= 1, r2=2, r3=3),
+                 Inst("add", r1=2, r2=1, r3=3),
                  Inst("add", r1=1, r2=2, r3=3),
-                 Inst("add", r1=1, r2=2, r3=3),
-                 Inst("add", r1=1, r2=2, r3=3),
+                 Inst("add", r1=4, r2=2, r3=3),
                  Inst("add", r1=1, r2=2, r3=3),
                  Inst("add", r1=1, r2=2, r3=3)
                  ]
@@ -59,7 +59,6 @@ s.display()
 
 for i in range(12):
     print(f"-------------T{i+1} ------------------------------------------------------------------------------------------------")
-    s.display_ints()
     s.one_clock_cycle()
     s.display()
 

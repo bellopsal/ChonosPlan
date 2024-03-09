@@ -25,7 +25,7 @@ class Simulador_1_FU:
         self.n_add = n_add
         self.n_mult = n_mult
         self.n_store = n_store
-        self.PC = Pointer.PC(m)
+        self.PC = Pointer.PC(m, self.program.n)
 
         self.fus_add = []
         self.fus_mult = []
@@ -71,19 +71,17 @@ class Simulador_1_FU:
         for i in range(self.n_store): self.fus_store[i].one_clock_cycle(self.CDB)
 
 
-        res = 1
 
+        if len(self.PC.PC) > 0:
+            for _ in range(len(self.PC.PC)):
+                instIndex = self.PC.newInstruction()
+                if instIndex < self.program.n:
+                    inst = self.program.get(instIndex)
+                     # if there are still instructions in the program
+                    res = self.newInstruction(instIndex)
 
-
-        for _ in range(self.PC.m):
-            instIndex = self.PC.newInstruction()
-            if instIndex < self.program.n:
-                inst = self.program.get(instIndex)
-                 # if there are still instructions in the program
-                res = self.newInstruction(instIndex)
-
-                if res == 0:
-                    self.PC.instBlock()
+                    if res == 0:
+                        self.PC.instBlock()
 
 
     def moveOperationQueue(self, fus):
@@ -169,7 +167,9 @@ class Simulador_1_FU:
             text.append("PC: ", style= "bold magenta")
             text.append(str(self.PC)+"\n", style = "bold")
             text.append("Instruction: ", style="bold magenta")
-            #text.append(str(self.program.get(self.PC.m)), style = "bold")
+            inst_list = [str(self.program.get(i)) for i in self.PC.PC]
+
+            text.append(str(inst_list), style = "bold")
         else:
             text = Text()
             text.append("There are no more instrucctions!", style= "bold magenta")
@@ -181,6 +181,7 @@ class Simulador_1_FU:
 
 
     def display(self, badd = True, bmux = False, bstore = False, bmemory = False):
+        self.display_ints()
         console = Console()
         if badd:
             table_adds = Table(title="Functional Unit: ADD")

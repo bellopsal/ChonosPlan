@@ -49,13 +49,13 @@ class FU:
 
     def calculateN(self, inst, registers):
 
-        [ts_max, _, _, _, _, _, _] = registers.td_calculation_type1(inst.r2, inst.r3)
+        [ts_max, _, _, _, _, _, _] = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
         n = self.findFirstEmptyBRT(ts_max)
 
         return n
 
     def newInstruction(self, inst, registers):
-        registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3)
+        registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
 
         if len(registersCalculation) == 1:
             return 0
