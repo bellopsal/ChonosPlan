@@ -39,7 +39,7 @@ s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              b_scoreboard = 1,
                              pile_size = 3,
                              memory_size=32,
-                             n_add = 2,
+                             n_add = 4,
                              n_mult= 3,
                              n_store = 2,
                              latency_add = 2,
@@ -49,7 +49,7 @@ s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              )
 
 s.memory.putValues([*range(32)])
-s.display()
+s.display2()
 
 #print(s.fu_add.operationQueue)
 #print(s.memory)
@@ -60,7 +60,7 @@ s.display()
 for i in range(12):
     print(f"-------------T{i+1} ------------------------------------------------------------------------------------------------")
     s.one_clock_cycle()
-    s.display()
+    s.display2()
 
 
     #print(s.registers)
