@@ -86,6 +86,7 @@ class Simulador_1_FU:
 
                     if res == 0:
                         self.PC.instBlock()
+                        self.registers.instBlock([inst.r1,inst.r2, inst.r3])
 
 
     def moveOperationQueue(self, fus):
@@ -99,8 +100,8 @@ class Simulador_1_FU:
         for i, num in enumerate(l):
             if num >= 0 and (lowest_positive is None or num < lowest_positive):
                 lowest_positive = num
-                lowest_positive_index =[i]
-            if num >= 0 and num == lowest_positive:
+                lowest_positive_index = [i]
+            elif num >= 0 and num == lowest_positive:
                 lowest_positive = num
                 lowest_positive_index.append(i)
 
@@ -122,13 +123,18 @@ class Simulador_1_FU:
 
 
         indexes = self.find_lowest_positive_index(fu_free)
-        print(indexes)
+        #print(indexes)
+        #print(selectionOrder)
 
-        if indexes is []: res = 0
+        if len(indexes) == 0: res = 0
         else:
             index = self.selection(indexes, selectionOrder)
+            print(index)
             fu = self.getFU(inst.fu_type, index)
             res = fu.newInstruction(inst, self.registers)
+            #print(inst)
+            #print(selectionOrder)
+            #print(res)
 
         return res
 
@@ -187,8 +193,9 @@ class Simulador_1_FU:
 
 
     def display_ints(self):
-        if self.PC.m < self.program.n:
-            text = Text()
+        text = Text()
+        if self.PC.PC is None: text.append("Loading instructions")
+        elif self.PC.m < self.program.n :
             text.append("PC: ", style= "bold magenta")
             text.append(str(self.PC)+"\n", style = "bold")
             text.append("Instruction: ", style="bold magenta")
@@ -196,7 +203,6 @@ class Simulador_1_FU:
 
             text.append(str(inst_list), style = "bold")
         else:
-            text = Text()
             text.append("There are no more instrucctions!", style= "bold magenta")
 
         console = Console()
@@ -251,9 +257,10 @@ class Simulador_1_FU:
         register.add_column("TD", justify="center")
         register.add_column("FU", justify="center")
         register.add_column("value", justify="center")
+        register.add_column("locked", justify="center")
 
         for reg in self.registers.R:
-            register.add_row("R"+str(reg.number), "+"+str(reg.td), reg.fu, str(reg.value) )
+            register.add_row("R"+str(reg.number), "+"+str(reg.td), reg.fu, str(reg.value), str(reg.block))
 
         console.print(register)
 
@@ -299,9 +306,10 @@ class Simulador_1_FU:
         register.add_column("TD", justify="center")
         register.add_column("FU", justify="center")
         register.add_column("value", justify="center")
+        register.add_column("locked", justify="center")
 
         for reg in self.registers.R:
-            register.add_row("R"+str(reg.number), "+"+str(reg.td), reg.fu, str(reg.value) )
+            register.add_row("R"+str(reg.number), "+"+str(reg.td), reg.fu, str(reg.value), str(reg.block) )
 
 
 

@@ -25,7 +25,7 @@ class HoldStation:
         self.RP2 = - 1  # when first operand will be ready
 
         self.value1 = None  # first operand
-        self.value1 = None  # first operand
+        self.value2= None  # first operand
 
         self.type_operation = None
 

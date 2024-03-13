@@ -49,8 +49,8 @@ class FU:
 
     def calculateN(self, inst, registers):
 
-        [ts_max, _, _, _, _, _, _] = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
-        n = self.findFirstEmptyBRT(ts_max)
+        l = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
+        n = self.findFirstEmptyBRT(l[0])
 
         return n
 
@@ -95,8 +95,8 @@ class FU:
                 td = td + n
                 ts_max_aux = ts_max
                 ts_max = ts_max + n
-
-                if ts_max > self.pile_size - 1 or n == -1:
+                print(f"n{n}")
+                if (ts_max > self.pile_size - 1 and n>0) or n == -1:
                     bitMux = 4
                 elif ts_max_aux == 0:
                     value_pile = registers.R[reg_max].value
@@ -105,6 +105,9 @@ class FU:
                 else:
                     if n == 0: bitMux = 2
                     else: bitMux = 3
+
+                print(f"bitMux:{bitMux}")
+
 
 
 

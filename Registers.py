@@ -78,7 +78,7 @@ class Registers:
 
     def td_calculation_type1(self, source1, source2, destiny):
 
-        if self.R[source1].block or self.R[source1].block  or self.R[destiny].block:
+        if self.R[source1].block or self.R[source1].block or self.R[destiny].block:
             return [True]
         else:
             t1 = self.R[source1].td
@@ -108,6 +108,11 @@ class Registers:
 
             return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
 
+    def instBlock(self, lBlock):
+        for r in lBlock:
+            self.R[r].block=True
+            self.R[r].block = True
+            self.R[r].block = True
 
     def td_calculation_type2(self, source):
 

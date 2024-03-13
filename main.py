@@ -1,6 +1,9 @@
 import Simulador
 from Program import Instruction as Inst
 
+
+
+
 #instrucciones = [["add ", "1", "2", "3"], ["add ", "2", "1", "3"], ["add ", "0", "2", "3"]]
 
 #instrucciones = [Inst("sb", r1 = 1, inm = 0, rs1=3),Inst("add", r1= 1, r2=2, r3=2), Inst("add", r1= 2, r2=1, r3=3), Inst("lb", r1 = 0, inm = 0, rs1=3), Inst("sub", r1= 4, r2=4, r3=4), Inst("sub", r1= 0, r2=2, r3=3)]
@@ -23,7 +26,7 @@ from Program import Instruction as Inst
 
 instrucciones = [Inst("add", r1= 1, r2=1, r3=2),
                 Inst("add", r1= 2, r2=1, r3=3),
-                Inst("add", r1= 1, r2=2, r3=3),
+                Inst("add", r1= 1, r2=3, r3=3),
                 Inst("add", r1= 2, r2=1, r3=3),
                 Inst("add", r1= 1, r2=2, r3=3),
                  Inst("add", r1=2, r2=1, r3=3),
@@ -39,7 +42,7 @@ s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              b_scoreboard = 1,
                              pile_size = 3,
                              memory_size=32,
-                             n_add = 4,
+                             n_add = 2,
                              n_mult= 3,
                              n_store = 2,
                              latency_add = 2,
@@ -49,7 +52,7 @@ s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              )
 
 s.memory.putValues([*range(32)])
-s.display2()
+s.display2(bmux=False)
 
 #print(s.fu_add.operationQueue)
 #print(s.memory)
@@ -57,10 +60,10 @@ s.display2()
 #print(s.fu_add.strBRT())
 #print ("-------------empieza --------------")
 
-for i in range(12):
+for i in range(6):
     print(f"-------------T{i+1} ------------------------------------------------------------------------------------------------")
     s.one_clock_cycle()
-    s.display2()
+    s.display2(bmux=False) 
 
 
     #print(s.registers)

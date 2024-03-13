@@ -1,7 +1,7 @@
 class PC:
     def __init__(self, m, programSize):
         self.m = m
-        self.PC = list(range(self.m))
+        self.PC = None
         self.pointer = 0
         self.inst_blocked = list()
         self.programSize = programSize
@@ -14,14 +14,15 @@ class PC:
         self.inst_blocked.append(self.PC[self.pointer - 1])
 
     def one_clock_cycle(self):
-        if len(self.PC) > 0:
+        if self.PC is None: self.PC = list(range(self.m))
+        elif len(self.PC) > 0:
             self.pointer = 0
             last = self.PC[-1] + 1
 
             self.PC = self.inst_blocked.copy()
             self.inst_blocked = list()
 
-            while len(self.PC) < self.m and last < self.programSize :
+            while len(self.PC) < self.m and last < self.programSize:
                 self.PC.append(last)
                 last = last + 1
 
