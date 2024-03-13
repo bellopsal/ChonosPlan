@@ -60,7 +60,7 @@ s.display2(bmux=False)
 #print(s.fu_add.strBRT())
 #print ("-------------empieza --------------")
 
-for i in range(6):
+for i in range(12):
     print(f"-------------T{i+1} ------------------------------------------------------------------------------------------------")
     s.one_clock_cycle()
     s.display2(bmux=False) 

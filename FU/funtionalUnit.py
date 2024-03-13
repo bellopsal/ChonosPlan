@@ -75,7 +75,7 @@ class FU:
             if ts_max > self.ss_size - 1 or n == -1:
                 res = 0
                 # Block next inst that have r1 as source
-                registers.block(inst.r1)
+                registers.lock(inst.r1)
 
             else:
                 if ts_min == 0:

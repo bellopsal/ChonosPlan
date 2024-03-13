@@ -11,10 +11,10 @@ class Register:
         self.fu = None  # fu de donde proveendrá el value
         self.value = i+2
         self.type = None
-        self.block = False
+        self.lock = False
 
     def __str__(self):
-        return f"R{self.number}: +{self.td} ({self.fu}) value: {self.value}"
+        return f"R{self.number}: +{self.td} ({self.fu}) value: {self.value} lock: {self.lock}"
 
 
 
@@ -40,6 +40,7 @@ class Registers:
 
     def one_clock_cycle(self, CBD):
         for reg in self.R:
+            reg.lock = False
             if reg.td == 1:
                 separated_list = reg.fu.split("_")
                 type = separated_list[0].strip()
@@ -47,6 +48,7 @@ class Registers:
                 reg.value = CBD.get(type, index)
                 reg.fu = None
                 reg.td = 0
+
             if reg.td > 0:
                 reg.td = reg.td - 1
 
@@ -58,11 +60,13 @@ class Registers:
         self.R[destino].td = td
         self.R[destino].fu = fu_name
         self.R[destino].value = None
-        self.R[destino].block = False
+        self.R[destino].lock = False
 
-    def block(self, register):
-        self.R[register].block = True
+    def lock(self, register):
+        self.R[register].lock = True
 
+    def unlock(self):
+        for r in self.R: r.lock = False
 
     def get_R_i(self, i):
         return self.R[i]
@@ -78,7 +82,7 @@ class Registers:
 
     def td_calculation_type1(self, source1, source2, destiny):
 
-        if self.R[source1].block or self.R[source1].block or self.R[destiny].block:
+        if self.R[source1].lock or self.R[source1].lock or self.R[destiny].lock:
             return [True]
         else:
             t1 = self.R[source1].td
@@ -110,9 +114,9 @@ class Registers:
 
     def instBlock(self, lBlock):
         for r in lBlock:
-            self.R[r].block=True
-            self.R[r].block = True
-            self.R[r].block = True
+            self.R[r].lock=True
+            self.R[r].lock = True
+            self.R[r].lock = True
 
     def td_calculation_type2(self, source):
 

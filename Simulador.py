@@ -58,6 +58,7 @@ class Simulador_1_FU:
         #Pointer
         self.PC.one_clock_cycle()
 
+
         #Do the operation in the FU
         for fu in self.fus_add: fu.operation()
         for fu in self.fus_mult: fu.operation()
@@ -67,7 +68,9 @@ class Simulador_1_FU:
         #Update the operation Queue
         self.CDB.update(add=self.moveOperationQueue(self.fus_add), store=self.moveOperationQueue(self.fus_store),
                         mult=self.moveOperationQueue(self.fus_mult))
+
         self.registers.one_clock_cycle(self.CDB)
+        print(self.registers)
 
         # One clock init cycle
         for i in range(self.n_add): self.fus_add[i].one_clock_cycle(self.CDB)
@@ -260,7 +263,7 @@ class Simulador_1_FU:
         register.add_column("locked", justify="center")
 
         for reg in self.registers.R:
-            register.add_row("R"+str(reg.number), "+"+str(reg.td), reg.fu, str(reg.value), str(reg.block))
+            register.add_row("R" + str(reg.number), "+" + str(reg.td), reg.fu, str(reg.value), str(reg.lock))
 
         console.print(register)
 
@@ -309,7 +312,7 @@ class Simulador_1_FU:
         register.add_column("locked", justify="center")
 
         for reg in self.registers.R:
-            register.add_row("R"+str(reg.number), "+"+str(reg.td), reg.fu, str(reg.value), str(reg.block) )
+            register.add_row("R" + str(reg.number), "+" + str(reg.td), reg.fu, str(reg.value), str(reg.lock))
 
 
 
