@@ -54,7 +54,7 @@ class FU:
 
         return n
 
-    def newInstruction(self, inst,instIndex, registers):
+    def newInstruction(self, inst,instIndex , registers):
         registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
 
         if len(registersCalculation) == 1:
@@ -72,59 +72,43 @@ class FU:
             td = ts_max + self.latency
             n = self.findFirstEmptyBRT(ts_max)
 
-            if ts_max > self.ss_size - 1 or n == -1:
+            res = 1
+            td = td + n
+            position = ts_max + n
+            print(f"ts_max {ts_max}")
+            print(f"position {position}")
+            print(f"n {n}")
+
+
+            if n == -1 or (position > self.pile_size - 1 and n>0):
+                #Bloqueos totales: no cabe en ss o no cabe posicion pila
                 res = 0
-                # Block next inst that have r1 as source
+                bitMux = 4
                 registers.lock(inst.r1)
 
             else:
+                if ts_max == 0:
+                    value_pile = registers.R[reg_max].value
+                    self.updatePile(position=ts_max, value=value_pile)
+                    if n == 0: bitMux = 0
+                    else: bitMux = 1
+
+                if ts_max > 0:
+                    if n == 0 : bitMux = 2
+                    else:
+                        bitMux = 3
+                        self.updatePile(position=position, RP=ts_max, FU=FU2)
                 if ts_min == 0:
                     value = registers.R[reg_min].value
                     RP = -1
-
-                else:
+                if ts_min > 0:
                     value = None
                     RP = ts_min
 
-
-
-
-                if ts_max == 0: value_pile = registers.R[reg_max].value
-
-                res = 1
-                td = td + n
-                ts_max_aux = ts_max
-                ts_max = ts_max + n
-                print(f"n{n}")
-                if (ts_max > self.pile_size - 1 and n>0) or n == -1:
-                    bitMux = 4
-                elif ts_max_aux == 0:
-                    value_pile = registers.R[reg_max].value
-                    if n == 0: bitMux = 0
-                    else: bitMux = 1
-                else:
-                    if n == 0: bitMux = 2
-                    else: bitMux = 3
-
-                print(f"bitMux:{bitMux}")
-
-
-
-
-                if bitMux == 4:
-                    res = 0
-                else:
-                    if bitMux == 0 or bitMux == 1 :
-                        self.updatePile(position=ts_max, value=value_pile)
-                    if bitMux == 3:
-                        self.updatePile(position=ts_max, RP=ts_max_aux, FU=FU2)
-
-                    #         # actualizamos registros, fu con los valores de la nueva instrucción
-
-                    registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
-                    self.BRT.occupy_i(ts_max)
-                    self.SS.update_i(i=ts_max, bitMux=bitMux, FU1=FU1, FU2=FU2,
-                                     RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv)
+                registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                self.BRT.occupy_i(position)
+                self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
+                                 RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv)
 
             return res
 

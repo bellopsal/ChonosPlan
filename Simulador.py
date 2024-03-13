@@ -16,7 +16,7 @@ from rich.text import Text
 class Simulador_1_FU:
 
     def __init__(self, list_program, n_ss, n_registers, b_scoreboard, pile_size, memory_size,
-                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m):
+                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m, HS = False, n_hs = 3):
         # set of instructions
         self.program = Program.Program(list_program)
         self.memory = Memory.Memory(memory_size)
@@ -126,8 +126,6 @@ class Simulador_1_FU:
 
 
         indexes = self.find_lowest_positive_index(fu_free)
-        #print(indexes)
-        #print(selectionOrder)
 
         if len(indexes) == 0: res = 0
         else:
@@ -135,9 +133,7 @@ class Simulador_1_FU:
             print(index)
             fu = self.getFU(inst.fu_type, index)
             res = fu.newInstruction(inst,instIndex, self.registers)
-            #print(inst)
-            #print(selectionOrder)
-            #print(res)
+
 
         return res
 
