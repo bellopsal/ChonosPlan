@@ -54,7 +54,7 @@ class FU:
 
         return n
 
-    def newInstruction(self, inst, registers):
+    def newInstruction(self, inst,instIndex, registers):
         registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
 
         if len(registersCalculation) == 1:
@@ -124,7 +124,7 @@ class FU:
                     registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
                     self.BRT.occupy_i(ts_max)
                     self.SS.update_i(i=ts_max, bitMux=bitMux, FU1=FU1, FU2=FU2,
-                                     RP=RP, value=value, type_operation=inst.function, inv=inv)
+                                     RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv)
 
             return res
 

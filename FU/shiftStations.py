@@ -25,6 +25,8 @@ class ShiftStation:
 
         self.type_operation = None
 
+        self.instruction = None
+
     def one_clock_cycle(self, CDB):
         if self.RP == 1:
             self.RP = -1
@@ -86,7 +88,7 @@ class SS:
     def get(self,i):
         return self.l_ss[i]
 
-    def update_i(self, i, bitMux, FU1, FU2, RP, value, type_operation, inv, inm= None):
+    def update_i(self, i, bitMux, FU1, FU2, RP, value, type_operation, inv, instruction, inm= None):
         self.l_ss[i].bitMux = bitMux
         self.l_ss[i].FU1 = FU1
         self.l_ss[i].FU2 = FU2
@@ -94,6 +96,7 @@ class SS:
         self.l_ss[i].value = value
         self.l_ss[i].inv = inv
         self.l_ss[i].inm = inm
+        self.l_ss[i].instruction = instruction
         self.l_ss[i].type_operation = type_operation
 
 

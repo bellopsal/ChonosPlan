@@ -134,7 +134,7 @@ class Simulador_1_FU:
             index = self.selection(indexes, selectionOrder)
             print(index)
             fu = self.getFU(inst.fu_type, index)
-            res = fu.newInstruction(inst, self.registers)
+            res = fu.newInstruction(inst,instIndex, self.registers)
             #print(inst)
             #print(selectionOrder)
             #print(res)
@@ -171,13 +171,14 @@ class Simulador_1_FU:
         table.add_column("FU1", justify="center")
         table.add_column("FU2", justify="center")
         table.add_column("value", justify="center")
+        table.add_column("instIndex", justify="center")
         if store: table.add_column("inm", justify="center")
 
         for i in range(self.ss_size-1 , -1, -1):
             ss = fu.SS.l_ss[i]
 
-            if store: table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), ss.FU1, ss.FU2, str(ss.value), str(ss.inm))
-            else: table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), ss.FU1, ss.FU2, str(ss.value))
+            if store: table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), ss.FU1, ss.FU2, str(ss.value),str(ss.instruction),str(ss.inm))
+            else: table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), ss.FU1, ss.FU2, str(ss.value),str(ss.instruction))
 
         return table
 
