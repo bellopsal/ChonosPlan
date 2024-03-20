@@ -63,7 +63,7 @@ s.display2(bmux=False)
 for i in range(6):
     print(f"-------------T{i+1} ------------------------------------------------------------------------------------------------")
     s.one_clock_cycle()
-    s.display2(bmux=False) 
+    s.display2(bmux=False)
 
 
     #print(s.registers)
