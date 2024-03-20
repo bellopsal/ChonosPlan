@@ -2,7 +2,7 @@ import CDB
 import Memory
 import Pointer
 import Program
-from FU import funtionalUnit, funtionalUnitStore
+from FU import funtionalUnit, funtionalUnitStore, holdStations
 import Registers
 
 
@@ -16,7 +16,7 @@ from rich.text import Text
 class Simulador_1_FU:
 
     def __init__(self, list_program, n_ss, n_registers, b_scoreboard, pile_size, memory_size,
-                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m):
+                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m, n_hs = 10, b_hs = False):
         # set of instructions
         self.program = Program.Program(list_program)
         self.memory = Memory.Memory(memory_size)
@@ -30,6 +30,13 @@ class Simulador_1_FU:
         self.fus_add = []
         self.fus_mult = []
         self.fus_store = []
+
+        if b_hs:
+            self.hs_add = holdStations.HS(n_hs)
+            self.b_hs = b_hs
+
+
+
 
         self.add_selecionOrder = list(range(n_add))
         self.mult_selecionOrder = list(range(n_mult))
@@ -214,6 +221,8 @@ class Simulador_1_FU:
     def display(self, badd = True, bmux = True, bstore = False, bmemory = False):
         self.display_ints()
         console = Console()
+
+        if self.
 
         if badd:
             table_adds = Table(title="Functional Unit: ADD")

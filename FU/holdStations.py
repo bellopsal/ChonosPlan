@@ -6,6 +6,10 @@ def CDBhelper(FU,CDB):
     index = int(sep_list[1].strip())
     return CDB.get(fu,index)
 
+
+
+
+
 class HoldStation:
     def __init__(self):
         #self.bitInUse = 0   # if the ss is in use ( with data in it)
@@ -15,7 +19,6 @@ class HoldStation:
                         # 2 if taken from CDB
         self.inm = None
         self.inv = False
-        self.bitUse = False
 
 
         self.FU1 = None  # which FU will generate first operand
@@ -62,14 +65,8 @@ class HS:
         # the first ss is the one ex in this cycle
         self.l_hs = [HoldStation() for i in range(n_hs)]
         self.n = n_hs
-        self.csv = "hs.csv"
+        self.occupied = [0]*n_hs
 
-        with open("hs.csv", "w") as f:
-            write = csv.writer(f)
-            fields = ["SS", "bitMux","RP1","RP2","FU1", "FU2", "value1","value1"]
-            rows = [[str(i), self.l_hs[i].bitMux, self.l_hs[i].RP1, self.l_hs[i].RP2, self.l_hs[i].FU1, self.l_hs[i].FU2, self.l_hs[i].value1,self.l_hs[i].value2] for i in range(n_hs - 1, -1, -1)]
-            write.writerow(fields)
-            write.writerows(rows)
 
 
     def get(self,i):
@@ -89,7 +86,7 @@ class HS:
     def one_clock_cycle(self,CDB,n_ss, n_pile):
         exitHS = []
         for e in self.l_hs:
-            exitHS.append(e.one_clock_cycle(CDB, n_ss, n_pile))
+            e.one_clock_cycle(CDB, n_ss, n_pile)
 
         return exitHS
 
