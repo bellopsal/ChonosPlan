@@ -65,6 +65,7 @@ class Simulador_1_FU:
         #Pointer
         self.PC.one_clock_cycle()
 
+
         #Do the operation in the FU
         for fu in self.fus_add: fu.operation()
         for fu in self.fus_mult: fu.operation()
@@ -74,7 +75,9 @@ class Simulador_1_FU:
         #Update the operation Queue
         self.CDB.update(add=self.moveOperationQueue(self.fus_add), store=self.moveOperationQueue(self.fus_store),
                         mult=self.moveOperationQueue(self.fus_mult))
+
         self.registers.one_clock_cycle(self.CDB)
+        print(self.registers)
 
         # One clock init cycle
         for i in range(self.n_add): self.fus_add[i].one_clock_cycle(self.CDB)
@@ -130,18 +133,14 @@ class Simulador_1_FU:
 
 
         indexes = self.find_lowest_positive_index(fu_free)
-        #print(indexes)
-        #print(selectionOrder)
 
         if len(indexes) == 0: res = 0
         else:
             index = self.selection(indexes, selectionOrder)
             print(index)
             fu = self.getFU(inst.fu_type, index)
-            res = fu.newInstruction(inst, self.registers)
-            #print(inst)
-            #print(selectionOrder)
-            #print(res)
+            res = fu.newInstruction(inst,instIndex, self.registers)
+
 
         return res
 
@@ -175,13 +174,14 @@ class Simulador_1_FU:
         table.add_column("FU1", justify="center")
         table.add_column("FU2", justify="center")
         table.add_column("value", justify="center")
+        table.add_column("instIndex", justify="center")
         if store: table.add_column("inm", justify="center")
 
         for i in range(self.ss_size-1 , -1, -1):
             ss = fu.SS.l_ss[i]
 
-            if store: table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), ss.FU1, ss.FU2, str(ss.value), str(ss.inm))
-            else: table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), ss.FU1, ss.FU2, str(ss.value))
+            if store: table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), ss.FU1, ss.FU2, str(ss.value),str(ss.instruction),str(ss.inm))
+            else: table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), ss.FU1, ss.FU2, str(ss.value),str(ss.instruction))
 
         return table
 
@@ -269,7 +269,7 @@ class Simulador_1_FU:
         register.add_column("locked", justify="center")
 
         for reg in self.registers.R:
-            register.add_row("R"+str(reg.number), "+"+str(reg.td), reg.fu, str(reg.value), str(reg.block))
+            register.add_row("R" + str(reg.number), "+" + str(reg.td), reg.fu, str(reg.value), str(reg.lock))
 
         console.print(register)
 
@@ -318,7 +318,7 @@ class Simulador_1_FU:
         register.add_column("locked", justify="center")
 
         for reg in self.registers.R:
-            register.add_row("R"+str(reg.number), "+"+str(reg.td), reg.fu, str(reg.value), str(reg.block) )
+            register.add_row("R" + str(reg.number), "+" + str(reg.td), reg.fu, str(reg.value), str(reg.lock))
 
 
 
