@@ -34,12 +34,7 @@ class Simulador_1_FU:
 
         self.b_hs = b_hs
         if b_hs:
-            self.hs = holdStations.HS(n_hs)
-
-
-
-
-
+            self.hs = holdStations.HS(n_hs, n_ss, pile_size)
 
         self.add_selecionOrder = list(range(n_add))
         self.mult_selecionOrder = list(range(n_mult))
@@ -80,12 +75,18 @@ class Simulador_1_FU:
                         mult=self.moveOperationQueue(self.fus_mult))
 
         self.registers.one_clock_cycle(self.CDB)
-        print(self.registers)
+
+        print(self.CDB)
+
+
 
         # One clock init cycle
         for i in range(self.n_add): self.fus_add[i].one_clock_cycle(self.CDB)
         for i in range(self.n_mult): self.fus_mult[i].one_clock_cycle(self.CDB)
         for i in range(self.n_store): self.fus_store[i].one_clock_cycle(self.CDB)
+
+        toUpdateSS = self.hs.one_clock_cycle(self.CDB)
+        if len(toUpdateSS)>0: self.fromHSToSS(toUpdateSS)
 
 
 
@@ -102,9 +103,32 @@ class Simulador_1_FU:
                         self.registers.instBlock([inst.r1,inst.r2, inst.r3])
 
 
+
+
     def moveOperationQueue(self, fus):
         res = [fu.moveOperationQueue() for fu in fus]
         return res
+
+    def fromHSToSS(self,lUpdate):
+        for e in lUpdate:
+            hs = self.hs.l_hs[e]
+            aux = hs.destination.split("_")
+            print(aux)
+            fu_type, fu_pos = aux[0].strip(), int(aux[1].strip())
+
+            if fu_type =="add": fu = self.fus_add[fu_pos]
+            if fu_type == "mult": fu = self.fus_mult[fu_pos]
+            if fu_type == "store": fu = self.fus_store[fu_pos]
+
+            if hs.casePile:
+                i = self.pile_size-1
+                fu.SS.update_i(i = i, bitMux=hs.bitMux, FU1=hs.FU1, RP = hs.RP1,FU2=hs.FU2, value=hs.value1, type_operation=hs.type_operation,inv = hs.inv,inm=hs.inm)
+                fu.updatePile(position=i, RP=hs.RP2, FU=hs.FU2, value = hs.value2)
+
+            else:
+                i = self.ss_size - 1
+                fu.SS.update_i(i=i, bitMux=hs.bitMux, RP = hs.RP1, FU1=hs.FU1, FU2=hs.FU2, value=hs.value1,
+                            type_operation=hs.type_operation, inv=hs.inv, inm=hs.inm)
 
     def find_lowest_positive_index(self, l):
         lowest_positive = None
@@ -137,12 +161,15 @@ class Simulador_1_FU:
 
         indexes = self.find_lowest_positive_index(fu_free)
 
-        if len(indexes) == 0: res = 0
+        if len(indexes) == 0:
+            # if there are no elements in the indexes its means that there are no free slots in the next 4 slots
+            # this is a complete lock in our instruction
+            res = 0
+            self.registers.lock(inst.r1)
         else:
             index = self.selection(indexes, selectionOrder)
-            print(index)
             fu = self.getFU(inst.fu_type, index)
-            res = fu.newInstruction(inst,instIndex, self.registers)
+            res = fu.newInstruction(inst,instIndex, self.registers, self.hs)
 
 
         return res
@@ -190,23 +217,25 @@ class Simulador_1_FU:
 
     def display_HS(self):
         table = Table(title = "Hold Stations")
+        table.add_column("occupied", justify="center")
         table.add_column("HS", justify="center")
+        table.add_column("bitMux", justify="center")
         table.add_column("RP1", justify="center")
         table.add_column("RP2", justify="center")
+        table.add_column("position", justify="center")
+        table.add_column("destination", justify="center")
         table.add_column("FU1", justify="center")
         table.add_column("FU2", justify="center")
         table.add_column("value1", justify="center")
         table.add_column("value2", justify="center")
-        table.add_column("occupied", justify="center")
+
 
 
 
         for i in range(self.hs.n):
             hs = self.hs.l_hs[i]
-            table.add_row(f"HS{i}", str(hs.RP1), str(hs.RP2),
-                          hs.FU1, hs.FU2, str(hs.value1), str(hs.value2),str(self.hs.occupied[i]))
-
-
+            table.add_row(str(self.hs.occupied[i]),f"HS{i}",str(hs.bitMux), str(hs.RP1), str(hs.RP2),str(hs.position),str(hs.destination),
+                          hs.FU1, hs.FU2, str(hs.value1), str(hs.value2))
 
 
         return table

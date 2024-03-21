@@ -19,7 +19,7 @@ class BRT:
     #     self.table[i:i+self.latency] = [1]*self.latency
 
     def findFirstAfter(self, ts_max):
-        for index in range(ts_max, len(self.table)):
+        for index in range(ts_max, ts_max+4):
             if self.table[index] == 0:
                 return index-ts_max
         return -1

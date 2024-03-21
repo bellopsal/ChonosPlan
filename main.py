@@ -42,7 +42,7 @@ s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              b_scoreboard = 1,
                              pile_size = 3,
                              memory_size=32,
-                             n_add = 3,
+                             n_add = 4,
                              n_mult= 3,
                              n_store = 2,
                              latency_add = 2,
@@ -61,7 +61,7 @@ s.display2(bmux=False)
 #print(s.fu_add.strBRT())
 #print ("-------------empieza --------------")
 
-for i in range(12):
+for i in range(15):
     print(f"-------------T{i+1} ------------------------------------------------------------------------------------------------")
     s.one_clock_cycle()
     s.display2(bmux=False)
