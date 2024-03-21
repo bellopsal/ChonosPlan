@@ -16,7 +16,7 @@ from rich.text import Text
 class Simulador_1_FU:
 
     def __init__(self, list_program, n_ss, n_registers, b_scoreboard, pile_size, memory_size,
-                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m, n_hs = 10, b_hs = False):
+                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m, n_hs = 10, b_hs = False, n_cycles= 120):
         # set of instructions
         self.program = Program.Program(list_program)
         self.memory = Memory.Memory(memory_size)
@@ -26,6 +26,7 @@ class Simulador_1_FU:
         self.n_mult = n_mult
         self.n_store = n_store
         self.PC = Pointer.PC(m, self.program.n)
+        self.n_cycles = n_cycles
 
         self.fus_add = []
         self.fus_mult = []
@@ -45,13 +46,13 @@ class Simulador_1_FU:
         self.store_selecionOrder = list(range(n_store))
 
         for i in range(n_add):
-            self.fus_add.append(funtionalUnit.FU(f"add_{i}", "add", n_ss, pile_size=pile_size, latency=latency_add))
+            self.fus_add.append(funtionalUnit.FU(f"add_{i}", "add", n_ss, pile_size=pile_size, latency=latency_add, n_cycles=n_cycles))
 
         for i in range(n_mult):
-            self.fus_mult.append(funtionalUnit.FU(f"mult_{i}", "mult", n_ss, pile_size=pile_size, latency=latency_mult))
+            self.fus_mult.append(funtionalUnit.FU(f"mult_{i}", "mult", n_ss, pile_size=pile_size, latency=latency_mult,n_cycles=n_cycles))
 
         for i in range(n_store):
-            self.fus_store.append(funtionalUnitStore.FU(f"store_{i}", "store", n_ss, pile_size=pile_size, latency=latency_store))
+            self.fus_store.append(funtionalUnitStore.FU(f"store_{i}", "store", n_ss, pile_size=pile_size, latency=latency_store, n_cycles=n_cycles))
 
 
         self.registers = Registers.Registers(n_registers, b_scoreboard)

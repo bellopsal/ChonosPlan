@@ -9,13 +9,13 @@ n = 10  # numero pila
 
 
 class FU:
-    def __init__(self, name, fu_type, ss_size, latency, pile_size):
+    def __init__(self, name, fu_type, ss_size, latency, pile_size, n_cycles):
         self.name = name
         self.type = fu_type
         self.pile_size = pile_size
         self.ss_size = ss_size
         self.SS = shiftStations.SS(ss_size)
-        self.BRT = BRT.BRT(ss_size, latency)
+        self.BRT = BRT.BRT(n_cycles, latency)
         self.latency = latency
         self.pile = shiftStations.Pile(pile_size)
         self.operationQueue = [None] * latency
@@ -80,7 +80,7 @@ class FU:
             print(f"n {n}")
 
 
-            if n == -1 or (position > self.pile_size - 1 and n>0):
+            if n == -1 or (position > self.pile_size - 1 and n>0) or position > self.ss_size:
                 #Bloqueos totales: no cabe en ss o no cabe posicion pila
                 res = 0
                 bitMux = 4

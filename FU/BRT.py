@@ -1,8 +1,8 @@
 # Binary Reservation Table
 
 class BRT:
-    def __init__(self, n_ss, latency):
-        self.table = [0]*n_ss
+    def __init__(self, n_cycles, latency):
+        self.table = [0] * n_cycles
         #self.latency = latency
 
     def __str__(self):
