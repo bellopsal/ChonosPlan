@@ -48,7 +48,8 @@ s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              latency_add = 2,
                              latency_mult =3,
                              latency_store= 2,
-                             m=4
+                             m=4,
+                             b_hs= True
                              )
 
 s.memory.putValues([*range(32)])

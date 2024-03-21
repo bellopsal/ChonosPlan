@@ -31,9 +31,11 @@ class Simulador_1_FU:
         self.fus_mult = []
         self.fus_store = []
 
+        self.b_hs = b_hs
         if b_hs:
-            self.hs_add = holdStations.HS(n_hs)
-            self.b_hs = b_hs
+            self.hs = holdStations.HS(n_hs)
+
+
 
 
 
@@ -185,6 +187,33 @@ class Simulador_1_FU:
 
         return table
 
+    def display_HS(self):
+        table = Table(title = "Hold Stations")
+        table.add_column("HS", justify="center")
+        table.add_column("RP1", justify="center")
+        table.add_column("RP2", justify="center")
+        table.add_column("FU1", justify="center")
+        table.add_column("FU2", justify="center")
+        table.add_column("value1", justify="center")
+        table.add_column("value2", justify="center")
+        table.add_column("occupied", justify="center")
+
+
+
+        for i in range(self.hs.n):
+            hs = self.hs.l_hs[i]
+            table.add_row(f"HS{i}", str(hs.RP1), str(hs.RP2),
+                          hs.FU1, hs.FU2, str(hs.value1), str(hs.value2),str(self.hs.occupied[i]))
+
+
+
+
+        return table
+
+
+
+
+
     def display_pile(self, fu, title):
         table = Table(title= title)
         table.add_column("P", justify="center")
@@ -222,7 +251,7 @@ class Simulador_1_FU:
         self.display_ints()
         console = Console()
 
-        if self.
+
 
         if badd:
             table_adds = Table(title="Functional Unit: ADD")
@@ -276,6 +305,8 @@ class Simulador_1_FU:
     def display2(self, badd = True, bmux = True, bstore = False, bmemory = False):
         self.display_ints()
         console = Console()
+        if self.b_hs:
+            console.print((self.display_HS()))
 
         if badd:
             alu_renderables = [Panel(Group(self.display_SS(f"ADD_{i}", fu=self.fus_add[i]),
