@@ -33,8 +33,7 @@ class Simulador_1_FU:
         self.fus_store = []
 
         self.b_hs = b_hs
-        if b_hs:
-            self.hs = holdStations.HS(n_hs, n_ss, pile_size)
+        self.hs = holdStations.HS(n_hs, n_ss, pile_size)
 
         self.add_selecionOrder = list(range(n_add))
         self.mult_selecionOrder = list(range(n_mult))
@@ -85,8 +84,9 @@ class Simulador_1_FU:
         for i in range(self.n_mult): self.fus_mult[i].one_clock_cycle(self.CDB)
         for i in range(self.n_store): self.fus_store[i].one_clock_cycle(self.CDB)
 
-        toUpdateSS = self.hs.one_clock_cycle(self.CDB)
-        if len(toUpdateSS)>0: self.fromHSToSS(toUpdateSS)
+        if self.b_hs:
+            toUpdateSS = self.hs.one_clock_cycle(self.CDB)
+            if len(toUpdateSS)>0: self.fromHSToSS(toUpdateSS)
 
 
 
@@ -169,7 +169,7 @@ class Simulador_1_FU:
         else:
             index = self.selection(indexes, selectionOrder)
             fu = self.getFU(inst.fu_type, index)
-            res = fu.newInstruction(inst,instIndex, self.registers, self.hs)
+            res = fu.newInstruction(inst,instIndex, self.registers, self.hs, self.b_hs)
 
 
         return res

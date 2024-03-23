@@ -54,7 +54,7 @@ class FU:
 
         return n
 
-    def newInstruction(self, inst,instIndex , registers, hs):
+    def newInstruction(self, inst,instIndex , registers, hs, b_hs):
         registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
 
         if len(registersCalculation) == 1:
@@ -86,34 +86,37 @@ class FU:
 
             elif (position > self.pile_size - 1 and n>0) or position > self.ss_size - 1:
                 # two cases: there is a need for store the data in a pile or the time exceed the ss
-                print("case")
-                freeHS = hs.freeHS()
-                if(freeHS == -1):
-                    # caso de bloqueo total!!! There are no free HS
-                    res = 0
-                    bitMux = 4
+                if b_hs:
+                    freeHS = hs.freeHS()
+                    if(freeHS == -1):
+                        # caso de bloqueo total!!! There are no free HS
+                        res = 0
+                        bitMux = 4
+                    else:
+
+                        value1 = None
+                        value2 = None
+                        casePile = False
+                        bitMux = 5
+
+                        if ts_max != position: # alternativamente n == 0
+                            casePile = True
+                            bitMux = 6
+
+                        if ts_min == 0:
+                            value1 = registers.R[reg_min].value
+                            RP1 = -1
+                        if ts_max == 0:
+                            value2 = registers.R[reg_max].value
+                            RP1 = -1
+                        hs.update(i = freeHS, RP1=ts_min, RP2 = ts_max, position = position, value1 = value1, destination = self.name,
+                                  value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, casePile = casePile, type_operation=inst.function)
+
+                        registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                        self.BRT.occupy_i(position)
+
                 else:
-
-                    value1 = None
-                    value2 = None
-                    casePile = False
-                    bitMux = 5
-
-                    if ts_max != position: # alternativamente n == 0
-                        casePile = True
-                        bitMux = 6
-
-                    if ts_min == 0:
-                        value1 = registers.R[reg_min].value
-                        RP1 = -1
-                    if ts_max == 0:
-                        value2 = registers.R[reg_max].value
-                        RP1 = -1
-                    hs.update(i = freeHS, RP1=ts_min, RP2 = ts_max, position = position, value1 = value1, destination = self.name,
-                              value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, casePile = casePile, type_operation=inst.function)
-
-                    registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
-                    self.BRT.occupy_i(position)
+                    res = 0
 
 
 
