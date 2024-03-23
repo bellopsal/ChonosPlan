@@ -49,7 +49,7 @@ s = Simulador.Simulador_1_FU(list_program = instrucciones,
                              latency_mult =3,
                              latency_store= 2,
                              m=5,
-                             b_hs= False,
+                             b_hs= True,
 
                              )
 
