@@ -1,8 +1,8 @@
 # Binary Reservation Table
 
 class BRT:
-    def __init__(self, n_ss, latency):
-        self.table = [0]*n_ss
+    def __init__(self, n_cycles, latency):
+        self.table = [0] * n_cycles
         #self.latency = latency
 
     def __str__(self):
@@ -19,7 +19,7 @@ class BRT:
     #     self.table[i:i+self.latency] = [1]*self.latency
 
     def findFirstAfter(self, ts_max):
-        for index in range(ts_max, len(self.table)):
+        for index in range(ts_max, ts_max+4):
             if self.table[index] == 0:
                 return index-ts_max
         return -1

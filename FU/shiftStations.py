@@ -1,7 +1,10 @@
 import csv
 
 def CDBhelper(FU,CDB):
+    print(CDB)
+    print(FU)
     sep_list = FU.split("_")
+    print(sep_list)
     fu = sep_list[0].strip()
     index = int(sep_list[1].strip())
     return CDB.get(fu,index)
@@ -88,7 +91,7 @@ class SS:
     def get(self,i):
         return self.l_ss[i]
 
-    def update_i(self, i, bitMux, FU1, FU2, RP, value, type_operation, inv, instruction, inm= None):
+    def update_i(self, i, bitMux, FU1, FU2, RP, value, type_operation, inv, instruction= None, inm= None):
         self.l_ss[i].bitMux = bitMux
         self.l_ss[i].FU1 = FU1
         self.l_ss[i].FU2 = FU2
@@ -181,7 +184,7 @@ class Pile:
 
 
     def one_clock_cycle(self, CDB, bitMux, FU2):
-        if bitMux == 2:
+        if bitMux == 2 or bitMux == 5:
             self.pile[1].value = CDBhelper(FU2, CDB)
             self.pile[1].RP = -1
 

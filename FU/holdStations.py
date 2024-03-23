@@ -1,10 +1,17 @@
 import csv
 
+
+
+
 def CDBhelper(FU,CDB):
     sep_list = FU.split("_")
     fu = sep_list[0].strip()
     index = int(sep_list[1].strip())
     return CDB.get(fu,index)
+
+
+
+
 
 class HoldStation:
     def __init__(self):
@@ -15,8 +22,9 @@ class HoldStation:
                         # 2 if taken from CDB
         self.inm = None
         self.inv = False
-        self.bitUse = False
 
+        self.destination = None
+        self.position = None
 
         self.FU1 = None  # which FU will generate first operand
         self.FU2 = None  # which FU will generate second operand
@@ -28,28 +36,33 @@ class HoldStation:
         self.value2= None  # first operand
 
         self.type_operation = None
+        self.casePile = False
 
-    def one_clock_cycle(self, CDB, n_ss, n_pile):
-        res = None
-        if self.bitUse:
-            if self.RP1 == 1:
-                self.RP1 = -1
-                self.value1 = CDBhelper(self.FU1,CDB)
-            elif self.RP1 > 1:
-                self.RP1 = self.RP1 - 1
 
-            if self.RP2 == 1:
-                self.RP2 = -1
-                self.value2 = CDBhelper(self.FU2,CDB)
-            elif self.RP2 > 1:
-                self.RP2 = self.RP2 - 1
+    def one_clock_cycle(self, CDB, updateSS, updatePile):
+        res = False
+        self.position = self.position - 1
 
-            if self.RP2 < n_pile and self.RP1 < n_ss:
-                res = self
-                self.bitUse = False
+        if self.RP1 == 1:
+            self.RP1 = -1
+            self.value1 = CDBhelper(self.FU1,CDB)
+        elif self.RP1 > 1:
+            self.RP1 = self.RP1 - 1
+
+        if self.RP2 == 1:
+            print("entra")
+            print(f"fu2{self.FU2}")
+            self.RP2 = -1
+            self.value2 = CDBhelper(self.FU2,CDB)
+            print(f"value2{self.value2}")
+        elif self.RP2 > 1:
+            self.RP2 = self.RP2 - 1
+
+        if (self.casePile and self.position == updatePile) or (not self.casePile and self.position == updateSS):
+            # time to update SS
+            res = True
+
         return res
-
-
 
 
 
@@ -58,18 +71,41 @@ class HoldStation:
 
 
 class HS:
-    def __init__(self, n_hs):
+    def __init__(self, n_hs, n_ss, pile_size):
         # the first ss is the one ex in this cycle
         self.l_hs = [HoldStation() for i in range(n_hs)]
         self.n = n_hs
-        self.csv = "hs.csv"
+        self.occupied = [0]*n_hs
 
-        with open("hs.csv", "w") as f:
-            write = csv.writer(f)
-            fields = ["SS", "bitMux","RP1","RP2","FU1", "FU2", "value1","value1"]
-            rows = [[str(i), self.l_hs[i].bitMux, self.l_hs[i].RP1, self.l_hs[i].RP2, self.l_hs[i].FU1, self.l_hs[i].FU2, self.l_hs[i].value1,self.l_hs[i].value2] for i in range(n_hs - 1, -1, -1)]
-            write.writerow(fields)
-            write.writerows(rows)
+        self.updateSS = n_ss -1
+        self.updatePile = pile_size -1
+
+
+    def freeHS(self):
+        for index, value in enumerate(self.occupied):
+            if value == 0:
+                return index
+        return -1
+
+
+    def update(self,i, bitMux, inv,RP1, RP2,destination,position, value1, value2 , FU1 , FU2 , casePile, type_operation):
+        hs = self.l_hs[i]
+        hs.bitUse = True
+        hs.bitMux = bitMux
+        hs.inv = inv
+        hs.RP1 = RP1
+        hs.RP2 = RP2
+        hs.value1 = value1
+        hs.value2 = value2
+        hs.FU1 = FU1
+        hs.FU2 = FU2
+        hs.destination = destination
+        hs.position = position
+        hs.casePile = casePile
+        hs.type_operation = type_operation
+        self.occupied[i] = 1
+
+
 
 
     def get(self,i):
@@ -86,19 +122,28 @@ class HS:
 
 
 
-    def one_clock_cycle(self,CDB,n_ss, n_pile):
-        exitHS = []
-        for e in self.l_hs:
-            exitHS.append(e.one_clock_cycle(CDB, n_ss, n_pile))
+    def one_clock_cycle(self,CDB):
+        res = []
+        #only update if ocuppied
+        for i in range(self.n):
+            if self.occupied[i] == 1:
+                update =self.l_hs[i].one_clock_cycle(CDB, self.updateSS, self.updatePile)
+                if update:
+                    res.append(i)
+                    self.occupied[i] = 0
+        return res
 
-        return exitHS
+
+
+
+
 
 
 
     def get(self,i):
         return self.l_hs[i]
 
-    def update_i(self, i, bitMux, FU1, FU2, RP1,RP2, value1,value2, type_operation, inv,bitUse, inm= None):
+    def update_i(self, i, bitMux, FU1, FU2, RP1,RP2, value1,value2, type_operation, inv, destination, inm= None):
         self.l_hs[i].bitMux = bitMux
         self.l_hs[i].FU1 = FU1
         self.l_hs[i].FU2 = FU2
@@ -108,6 +153,7 @@ class HS:
         self.l_hs[i].value2 = value2
         self.l_hs[i].inv = inv
         self.l_hs[i].inm = inm
+        self.l_hs[i].destination = destination
         self.l_hs[i].type_operation = type_operation
 
 

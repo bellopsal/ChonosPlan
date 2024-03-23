@@ -9,13 +9,13 @@ n = 10  # numero pila
 
 
 class FU:
-    def __init__(self, name, fu_type, ss_size, latency, pile_size):
+    def __init__(self, name, fu_type, ss_size, latency, pile_size, n_cycles):
         self.name = name
         self.type = fu_type
         self.pile_size = pile_size
         self.ss_size = ss_size
         self.SS = shiftStations.SS(ss_size)
-        self.BRT = BRT.BRT(ss_size, latency)
+        self.BRT = BRT.BRT(n_cycles, latency)
         self.latency = latency
         self.pile = shiftStations.Pile(pile_size)
         self.operationQueue = [None] * latency
@@ -54,7 +54,7 @@ class FU:
 
         return n
 
-    def newInstruction(self, inst,instIndex , registers):
+    def newInstruction(self, inst,instIndex , registers, hs, b_hs):
         registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
 
         if len(registersCalculation) == 1:
@@ -75,21 +75,56 @@ class FU:
             res = 1
             td = td + n
             position = ts_max + n
-            print(f"ts_max {ts_max}")
-            print(f"position {position}")
-            print(f"n {n}")
+
+            print(position)
 
 
-            if n == -1 or (position > self.pile_size - 1 and n>0):
-                #Bloqueos totales: no cabe en ss o no cabe posicion pila
+            if n == -1:
+                # this case will never happen
                 res = 0
                 bitMux = 4
-                registers.lock(inst.r1)
+
+            elif (position > self.pile_size - 1 and n>0) or position > self.ss_size - 1:
+                # two cases: there is a need for store the data in a pile or the time exceed the ss
+                if b_hs:
+                    freeHS = hs.freeHS()
+                    if(freeHS == -1):
+                        # caso de bloqueo total!!! There are no free HS
+                        res = 0
+                        bitMux = 4
+                    else:
+
+                        value1 = None
+                        value2 = None
+                        casePile = False
+                        bitMux = 5
+
+                        if ts_max != position: # alternativamente n == 0
+                            casePile = True
+                            bitMux = 6
+
+                        if ts_min == 0:
+                            value1 = registers.R[reg_min].value
+                            RP1 = -1
+                        if ts_max == 0:
+                            value2 = registers.R[reg_max].value
+                            RP1 = -1
+                        hs.update(i = freeHS, RP1=ts_min, RP2 = ts_max, position = position, value1 = value1, destination = self.name,
+                                  value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, casePile = casePile, type_operation=inst.function)
+
+                        registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                        self.BRT.occupy_i(position)
+
+                else:
+                    res = 0
+
+
+
 
             else:
                 if ts_max == 0:
                     value_pile = registers.R[reg_max].value
-                    self.updatePile(position=ts_max, value=value_pile)
+                    self.updatePile(position=position, value=value_pile)
                     if n == 0: bitMux = 0
                     else: bitMux = 1
 

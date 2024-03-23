@@ -2,7 +2,7 @@ import CDB
 import Memory
 import Pointer
 import Program
-from FU import funtionalUnit, funtionalUnitStore
+from FU import funtionalUnit, funtionalUnitStore, holdStations
 import Registers
 
 
@@ -16,7 +16,7 @@ from rich.text import Text
 class Simulador_1_FU:
 
     def __init__(self, list_program, n_ss, n_registers, b_scoreboard, pile_size, memory_size,
-                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m, HS = False, n_hs = 3):
+                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m, n_hs = 10, b_hs = False, n_cycles= 120):
         # set of instructions
         self.program = Program.Program(list_program)
         self.memory = Memory.Memory(memory_size)
@@ -26,23 +26,27 @@ class Simulador_1_FU:
         self.n_mult = n_mult
         self.n_store = n_store
         self.PC = Pointer.PC(m, self.program.n)
+        self.n_cycles = n_cycles
 
         self.fus_add = []
         self.fus_mult = []
         self.fus_store = []
+
+        self.b_hs = b_hs
+        self.hs = holdStations.HS(n_hs, n_ss, pile_size)
 
         self.add_selecionOrder = list(range(n_add))
         self.mult_selecionOrder = list(range(n_mult))
         self.store_selecionOrder = list(range(n_store))
 
         for i in range(n_add):
-            self.fus_add.append(funtionalUnit.FU(f"add_{i}", "add", n_ss, pile_size=pile_size, latency=latency_add))
+            self.fus_add.append(funtionalUnit.FU(f"add_{i}", "add", n_ss, pile_size=pile_size, latency=latency_add, n_cycles=n_cycles))
 
         for i in range(n_mult):
-            self.fus_mult.append(funtionalUnit.FU(f"mult_{i}", "mult", n_ss, pile_size=pile_size, latency=latency_mult))
+            self.fus_mult.append(funtionalUnit.FU(f"mult_{i}", "mult", n_ss, pile_size=pile_size, latency=latency_mult,n_cycles=n_cycles))
 
         for i in range(n_store):
-            self.fus_store.append(funtionalUnitStore.FU(f"store_{i}", "store", n_ss, pile_size=pile_size, latency=latency_store))
+            self.fus_store.append(funtionalUnitStore.FU(f"store_{i}", "store", n_ss, pile_size=pile_size, latency=latency_store, n_cycles=n_cycles))
 
 
         self.registers = Registers.Registers(n_registers, b_scoreboard)
@@ -70,12 +74,19 @@ class Simulador_1_FU:
                         mult=self.moveOperationQueue(self.fus_mult))
 
         self.registers.one_clock_cycle(self.CDB)
-        print(self.registers)
+
+        print(self.CDB)
+
+
 
         # One clock init cycle
         for i in range(self.n_add): self.fus_add[i].one_clock_cycle(self.CDB)
         for i in range(self.n_mult): self.fus_mult[i].one_clock_cycle(self.CDB)
         for i in range(self.n_store): self.fus_store[i].one_clock_cycle(self.CDB)
+
+        if self.b_hs:
+            toUpdateSS = self.hs.one_clock_cycle(self.CDB)
+            if len(toUpdateSS)>0: self.fromHSToSS(toUpdateSS)
 
 
 
@@ -92,9 +103,32 @@ class Simulador_1_FU:
                         self.registers.instBlock([inst.r1,inst.r2, inst.r3])
 
 
+
+
     def moveOperationQueue(self, fus):
         res = [fu.moveOperationQueue() for fu in fus]
         return res
+
+    def fromHSToSS(self,lUpdate):
+        for e in lUpdate:
+            hs = self.hs.l_hs[e]
+            aux = hs.destination.split("_")
+            print(aux)
+            fu_type, fu_pos = aux[0].strip(), int(aux[1].strip())
+
+            if fu_type =="add": fu = self.fus_add[fu_pos]
+            if fu_type == "mult": fu = self.fus_mult[fu_pos]
+            if fu_type == "store": fu = self.fus_store[fu_pos]
+
+            if hs.casePile:
+                i = self.pile_size-1
+                fu.SS.update_i(i = i, bitMux=hs.bitMux, FU1=hs.FU1, RP = hs.RP1,FU2=hs.FU2, value=hs.value1, type_operation=hs.type_operation,inv = hs.inv,inm=hs.inm)
+                fu.updatePile(position=i, RP=hs.RP2, FU=hs.FU2, value = hs.value2)
+
+            else:
+                i = self.ss_size - 1
+                fu.SS.update_i(i=i, bitMux=hs.bitMux, RP = hs.RP1, FU1=hs.FU1, FU2=hs.FU2, value=hs.value1,
+                            type_operation=hs.type_operation, inv=hs.inv, inm=hs.inm)
 
     def find_lowest_positive_index(self, l):
         lowest_positive = None
@@ -127,12 +161,15 @@ class Simulador_1_FU:
 
         indexes = self.find_lowest_positive_index(fu_free)
 
-        if len(indexes) == 0: res = 0
+        if len(indexes) == 0:
+            # if there are no elements in the indexes its means that there are no free slots in the next 4 slots
+            # this is a complete lock in our instruction
+            res = 0
+            self.registers.lock(inst.r1)
         else:
             index = self.selection(indexes, selectionOrder)
-            print(index)
             fu = self.getFU(inst.fu_type, index)
-            res = fu.newInstruction(inst,instIndex, self.registers)
+            res = fu.newInstruction(inst,instIndex, self.registers, self.hs, self.b_hs)
 
 
         return res
@@ -178,6 +215,35 @@ class Simulador_1_FU:
 
         return table
 
+    def display_HS(self):
+        table = Table(title = "Hold Stations")
+        table.add_column("occupied", justify="center")
+        table.add_column("HS", justify="center")
+        table.add_column("bitMux", justify="center")
+        table.add_column("RP1", justify="center")
+        table.add_column("RP2", justify="center")
+        table.add_column("position", justify="center")
+        table.add_column("destination", justify="center")
+        table.add_column("FU1", justify="center")
+        table.add_column("FU2", justify="center")
+        table.add_column("value1", justify="center")
+        table.add_column("value2", justify="center")
+
+
+
+
+        for i in range(self.hs.n):
+            hs = self.hs.l_hs[i]
+            table.add_row(str(self.hs.occupied[i]),f"HS{i}",str(hs.bitMux), str(hs.RP1), str(hs.RP2),str(hs.position),str(hs.destination),
+                          hs.FU1, hs.FU2, str(hs.value1), str(hs.value2))
+
+
+        return table
+
+
+
+
+
     def display_pile(self, fu, title):
         table = Table(title= title)
         table.add_column("P", justify="center")
@@ -214,6 +280,8 @@ class Simulador_1_FU:
     def display(self, badd = True, bmux = True, bstore = False, bmemory = False):
         self.display_ints()
         console = Console()
+
+
 
         if badd:
             table_adds = Table(title="Functional Unit: ADD")
@@ -267,6 +335,8 @@ class Simulador_1_FU:
     def display2(self, badd = True, bmux = True, bstore = False, bmemory = False):
         self.display_ints()
         console = Console()
+        if self.b_hs:
+            console.print((self.display_HS()))
 
         if badd:
             alu_renderables = [Panel(Group(self.display_SS(f"ADD_{i}", fu=self.fus_add[i]),
