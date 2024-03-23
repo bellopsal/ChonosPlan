@@ -114,7 +114,7 @@ class Registers:
 
     def instBlock(self, lBlock):
         for r in lBlock:
-            self.R[r].lock=True
+            self.R[r].lock= True
             self.R[r].lock = True
             self.R[r].lock = True
 
