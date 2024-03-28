@@ -334,9 +334,9 @@ class Simulador_1_FU:
 
     def display2(self, badd = True, bmux = True, bstore = False, bmemory = False):
         self.display_ints()
-        console = Console()
+        console = Console(record=True)
         if self.b_hs:
-            console.print((self.display_HS()))
+            console.print(self.display_HS(), justify="center")
 
         if badd:
             alu_renderables = [Panel(Group(self.display_SS(f"ADD_{i}", fu=self.fus_add[i]),
@@ -386,6 +386,10 @@ class Simulador_1_FU:
 
 
         console.print(register)
+
+        console.save_html("test.html")
+        console.save_svg("test.svg")
+        console.save_text("test.txt")
 
 
 
