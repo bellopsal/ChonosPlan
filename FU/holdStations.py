@@ -50,11 +50,8 @@ class HoldStation:
             self.RP1 = self.RP1 - 1
 
         if self.RP2 == 1:
-            print("entra")
-            print(f"fu2{self.FU2}")
             self.RP2 = -1
             self.value2 = CDBhelper(self.FU2,CDB)
-            print(f"value2{self.value2}")
         elif self.RP2 > 1:
             self.RP2 = self.RP2 - 1
 

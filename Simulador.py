@@ -15,8 +15,8 @@ from rich.text import Text
 
 class Simulador_1_FU:
 
-    def __init__(self, list_program, n_ss, n_registers, b_scoreboard, pile_size, memory_size,
-                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m, n_hs = 10, b_hs = False, n_cycles= 120):
+    def __init__(self, list_program, n_ss, n_registers,  pile_size, memory_size,
+                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m, n_hs = 10, b_hs = False, n_cycles= 120, b_scoreboard = 1):
         # set of instructions
         self.program = Program.Program(list_program)
         self.memory = Memory.Memory(memory_size)
@@ -75,7 +75,6 @@ class Simulador_1_FU:
 
         self.registers.one_clock_cycle(self.CDB)
 
-        print(self.CDB)
 
 
 
@@ -113,7 +112,7 @@ class Simulador_1_FU:
         for e in lUpdate:
             hs = self.hs.l_hs[e]
             aux = hs.destination.split("_")
-            print(aux)
+
             fu_type, fu_pos = aux[0].strip(), int(aux[1].strip())
 
             if fu_type =="add": fu = self.fus_add[fu_pos]
@@ -334,7 +333,7 @@ class Simulador_1_FU:
 
     def display2(self, badd = True, bmux = True, bstore = False, bmemory = False):
         self.display_ints()
-        console = Console(record=True)
+        console = Console(record=True, width=230 , height = 200)
         if self.b_hs:
             console.print(self.display_HS(), justify="center")
 
