@@ -1,3 +1,4 @@
+import Program
 import Simulador
 from Program import Instruction as Inst
 
@@ -12,4 +13,8 @@ instrucciones = [Inst(operation="add", tag = "bucle", r1= 1, r2=1, r3=2),
                  Inst(operation="mul", r1= 1, r2=0, r3=0) ,
                  Inst(operation="add", r1= 3, r2=1, r3=1) ]
 
-print(instrucciones[0])
+instrucciones = Program.Program("exampleOP.csv")
+
+print(instrucciones.instructions[3])
+print(instrucciones.instructions[4])
+print(instrucciones.instructions[5])

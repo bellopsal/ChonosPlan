@@ -9,6 +9,7 @@
 import csv
 
 typeInstructions = {
+    "jump": ["j","beq"],
     "add": ["add", "sub", "addi", "subi"],
     "mult": ["mul", "div","muli", "divi"],
     "store": ["lb", "sb"]
@@ -42,10 +43,15 @@ class Program:
                                    r3=int(row["r3"]) if row["r3"] is not None and row["r3"].strip() else None,
                                    rd=int(row["rd"]) if row["rd"] is not None and row["rd"].strip() else None,
                                    rs1=int(row["rs1"]) if row["rs1"] is not None and row["rs1"].strip() else None,
-                                   inm=int(row["inm"]) if row["inm"] is not None and row["inm"].strip() else None)
-                self.instructions.append(inst)
+                                   inm=int(row["inm"]) if row["inm"] is not None and row["inm"].strip() else None,
+                                   offset=row["offset"] if row["offset"] is not None and row["offset"].strip() else None,
+                                   BTB=bool(int(row["BTB"])) if row["BTB"] is not None and row["BTB"].strip() else True)
+
                 if tag != None:
                     self.dict_names[tag]=self.n
+
+
+                self.instructions.append(inst)
 
                 self.n = self.n + 1
 
@@ -65,7 +71,7 @@ class Program:
 
 class Instruction:
 
-    def __init__(self , operation,tag = None, r1=None, r2=None, r3=None, rd=None, rs1=None, inm=None):
+    def __init__(self , operation,tag = None, r1=None, r2=None, r3=None, rd=None, rs1=None, inm=None, offset = None, BTB= True):
         self.tag = tag
         self.r1 = r1
         self.r2 = r2
@@ -73,6 +79,9 @@ class Instruction:
         self.rd = rd
         self.rs1 = rs1
         self.inm = inm
+
+        self.offset = offset
+        self.BTB = BTB
 
         self.function = operation
 
@@ -90,6 +99,8 @@ class Instruction:
         if self.rd != None: txt = txt + "R"+str(self.rd) + ", "
         if self.inm != None: txt = txt + str(self.inm) +"("
         if self.rs1 != None: txt = txt + "R"+str(self.rs1) + ")"
+        if self.offset != None: txt = txt + "" + str(self.offset)
+        if self.fu_type=="jump": txt = txt+ f"(BTB: {self.BTB})"
         return txt
 
 
