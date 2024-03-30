@@ -15,11 +15,11 @@ from rich.text import Text
 
 class Simulador_1_FU:
 
-    def __init__(self, list_program, n_ss, n_registers,  pile_size, memory_size,
+    def __init__(self, program, n_ss, n_registers,  pile_size, memory_size,
                  n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m, n_hs = 10, b_hs = False, n_cycles= 120, b_scoreboard = 1):
         # set of instructions
         self.recent_cycle = 0
-        self.program = Program.Program(list_program)
+        self.program = program
         self.memory = Memory.Memory(memory_size)
         self.ss_size = n_ss
         self.pile_size = pile_size
@@ -262,15 +262,14 @@ class Simulador_1_FU:
     def display_ints(self):
         text = Text()
         if self.PC.PC is None: text.append("Loading instructions")
-        elif self.PC.m < self.program.n :
+        elif self.PC.last >= self.PC.programSize: text.append("There are no more instructions")
+        else:
             text.append("PC: ", style= "bold magenta")
             text.append(str(self.PC)+"\n", style = "bold")
             text.append("Instruction: ", style="bold magenta")
             inst_list = [str(self.program.get(i)) for i in self.PC.PC]
 
             text.append(str(inst_list), style = "bold")
-        else:
-            text.append("There are no more instrucctions!", style= "bold magenta")
 
         console = Console( width=250 , height = 200)
 

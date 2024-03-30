@@ -1,6 +1,9 @@
+import os
 import tkinter as tk
 #from tkinter.tix import ScrolledWindow
+from tkinter import filedialog
 
+import Program
 import Simulador
 from Program import Instruction as Inst
 from tkinter.scrolledtext import ScrolledText
@@ -23,13 +26,23 @@ class ConsoleRedirector:
         pass
 
 
+
+
+
 class app:
+
     def __init__(self, master):
         self.image = None
         self.master = master
         self.frame_a = tk.Frame()
         self.frame_b = tk.Frame()
 
+        self.frame_inst = tk.Frame()
+        self.file_name_label = tk.Label(self.frame_inst, text="No file selected")
+        self.file_name_label.pack(fill=tk.Y, side=tk.RIGHT)
+        self.button_inst = tk.Button(self.frame_inst, text="Import Instructions csv", command=self.open_file)
+        self.button_inst.pack(fill=tk.Y, side=tk.LEFT)
+        self.frame_inst.pack()
 
         self.frame_n_ss = tk.Frame()
         self.n_ss_l = tk.Label(master = self.frame_n_ss, text="nº of SS:")
@@ -148,6 +161,7 @@ class app:
 
 
 
+
         self.start_button = tk.Button(master, text="START", command=self.start)
         self.start_button.pack()
 
@@ -183,7 +197,7 @@ class app:
                          Inst("mul", r1=1, r2=0, r3=0),
                          Inst("add", r1=3, r2=1, r3=1)]
 
-        self.simulador =Simulador.Simulador_1_FU(list_program = instrucciones,
+        self.simulador =Simulador.Simulador_1_FU(program = self.program,
                              n_ss = int(self.n_ss.get()),
                              n_registers = int(self.n_registers.get()),
 
@@ -221,6 +235,7 @@ class app:
         self.text_widget.pack_forget()
         self.re_start_button.pack_forget()
 
+        self.frame_inst.pack()
         self.frame_n_ss.pack()
         self.frame_n_registers.pack()
         self.frame_pile_size.pack()
@@ -241,6 +256,7 @@ class app:
 
     def hide(self):
         # Hide all the values
+        self.frame_inst.pack_forget()
         self.frame_n_ss.pack_forget()
         self.frame_n_registers.pack_forget()
         self.frame_pile_size.pack_forget()
@@ -256,7 +272,15 @@ class app:
         self.frame_n_hs.pack_forget()
         self.frame_n_cycle.pack_forget()
 
-
+    def open_file(self):
+        file_path = filedialog.askopenfilename()
+        if file_path:
+            file_name = os.path.basename(file_path)
+            self.file_name_label.config(text="Selected file: " + file_name)
+            self.program = Program.Program(file_path)
+            print("Selected file:", file_path)
+        else:
+            print("No file selected")
 
 
 

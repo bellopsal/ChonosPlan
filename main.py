@@ -1,5 +1,6 @@
 import Simulador
 from Program import Instruction as Inst
+import Program
 
 
 
@@ -12,17 +13,20 @@ from Program import Instruction as Inst
 #instrucciones = [Inst("add", r1= 1, r2=2, r3=2),  Inst("mul", r1= 4, r2=4, r3=4), Inst("div", r1 = 2, r2=4, r3 = 1)]
 
 #instrucciones= [Inst("sb", r1 = 1, inm = 0, rs1=3), Inst("lb", r1 = 0, inm = 0, rs1=3)]
+'''
+instrucciones = [Inst(operation="add",tag = "bucle" ,r1= 1, r2=1, r3=2),
+                Inst(operation="add", r1= 3, r2=2, r3=1),
+                 Inst(operation="mul", r1= 2, r2=1, r3=3),
 
-instrucciones = [Inst("add", r1= 1, r2=1, r3=2),
-                Inst("add", r1= 3, r2=2, r3=1),
-                 Inst("mul", r1= 2, r2=1, r3=3),
+                 Inst(operation="mul", r1= 4, r2=3, r3=2),
+                 Inst(operation="add", r1= 0, r2=0, r3=1),
+                 Inst(operation="mul", r1= 3, r2=3, r3=3),
+                 Inst(operation="mul", r1= 0, r2=3, r3=3),
+                 Inst(operation="mul", r1= 1, r2=0, r3=0) ,
+                 Inst(operation="add", r1= 3, r2=1, r3=1) ]
 
-                 Inst("mul", r1= 4, r2=3, r3=2),
-                 Inst("add", r1= 0, r2=0, r3=1),
-                 Inst("mul", r1= 3, r2=3, r3=3),
-                 Inst("mul", r1= 0, r2=3, r3=3),
-                 Inst("mul", r1= 1, r2=0, r3=0) ,
-                 Inst("add", r1= 3, r2=1, r3=1) ]
+'''
+instrucciones = Program.Program("exampleOP.csv")
 
 # instrucciones = [Inst("add", r1= 1, r2=1, r3=2),
 #                 Inst("add", r1= 2, r2=1, r3=3),
@@ -36,7 +40,7 @@ instrucciones = [Inst("add", r1= 1, r2=1, r3=2),
 #                  Inst("add", r1=1, r2=2, r3=3)
 #                  ]
 
-s = Simulador.Simulador_1_FU(list_program = instrucciones,
+s = Simulador.Simulador_1_FU(program = instrucciones,
                              n_ss = 8,
                              n_registers = 5,
                              b_scoreboard = 1,
@@ -53,8 +57,11 @@ s = Simulador.Simulador_1_FU(list_program = instrucciones,
 
                              )
 
-s.memory.putValues([*range(32)])
-s.display2(bmux=False)
+print(s.program.dict_names)
+print(s.program.instructions[1])
+
+#s.memory.putValues([*range(32)])
+#s.display2(bmux=False)∫
 
 
 
