@@ -56,13 +56,17 @@ s = Simulador.Simulador_1_FU(list_program = instrucciones,
 s.memory.putValues([*range(32)])
 s.display2(bmux=False)
 
+
+
+
+
 #print(s.fu_add.operationQueue)
 #print(s.memory)
 
 #print(s.fu_add.strBRT())
 #print ("-------------empieza --------------")
 
-for i in range(15):
+for i in range(2):
     print(f"-------------T{i+1} ------------------------------------------------------------------------------------------------")
     s.one_clock_cycle()
     s.display2(bmux=True)

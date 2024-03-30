@@ -76,7 +76,6 @@ class FU:
             td = td + n
             position = ts_max + n
 
-            print(position)
 
 
             if n == -1:

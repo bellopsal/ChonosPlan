@@ -1,10 +1,7 @@
 import csv
 
 def CDBhelper(FU,CDB):
-    print(CDB)
-    print(FU)
     sep_list = FU.split("_")
-    print(sep_list)
     fu = sep_list[0].strip()
     index = int(sep_list[1].strip())
     return CDB.get(fu,index)
