@@ -1,0 +1,2 @@
+tag,operation,r1,r2,r3,rd,rs1,inm,offset,BTB
+,muli,3,2,,,,2,,

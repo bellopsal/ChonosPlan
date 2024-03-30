@@ -50,7 +50,6 @@ class Program:
                 if tag != None:
                     self.dict_names[tag]=self.n
 
-
                 self.instructions.append(inst)
 
                 self.n = self.n + 1
@@ -97,8 +96,8 @@ class Instruction:
         if self.r2 != None: txt = txt + "R"+str(self.r2) + ", "
         if self.r3 != None: txt = txt + "R"+str(self.r3) + ""
         if self.rd != None: txt = txt + "R"+str(self.rd) + ", "
-        if self.inm != None: txt = txt + str(self.inm) +"("
-        if self.rs1 != None: txt = txt + "R"+str(self.rs1) + ")"
+        if self.inm != None: txt = txt + str(self.inm)
+        if self.rs1 != None: txt = txt + "R"+str(self.rs1)
         if self.offset != None: txt = txt + "" + str(self.offset)
         if self.fu_type=="jump": txt = txt+ f"(BTB: {self.BTB})"
         return txt

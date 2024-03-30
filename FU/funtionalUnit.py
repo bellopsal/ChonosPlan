@@ -29,33 +29,39 @@ class FU:
         operand1 = self.ss_side.value
         operand2 = self.pile_side.value
 
-        if self.ss_side.type_operation == "add":
+        if str(self.ss_side.type_operation).startswith("add") :
             self.operationQueue[0] = operand1 + operand2
 
-        if self.ss_side.type_operation == "sub":
+        if str(self.ss_side.type_operation).startswith("sub") :
             if self.ss_side.inv:
                 self.operationQueue[0] = operand2 - operand1
             else:
                 self.operationQueue[0] = operand1 - operand2
 
-        if self.ss_side.type_operation == "mul":
+        if str(self.ss_side.type_operation).startswith("mul"):
             self.operationQueue[0] = operand1 * operand2
 
-        if self.ss_side.type_operation == "div":
+        if str(self.ss_side.type_operation).startswith("div"):
             if self.ss_side.inv:
                 self.operationQueue[0] = operand2 / operand1
             else:
                 self.operationQueue[0] = operand1 / operand2
 
     def calculateN(self, inst, registers):
-
-        l = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
+        if inst.function.endswith("i"):
+            l = registers.td_calculation_type1(inst.r2, inst.inm, inst.r1)
+        else:
+            l = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
         n = self.findFirstEmptyBRT(l[0])
 
         return n
 
     def newInstruction(self, inst,instIndex , registers, hs, b_hs):
-        registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
+        if inst.function.endswith("i"):
+            registersCalculation = registers.td_calculation_type1_inm(inst.r2, inst.inm, inst.r1)
+
+        else:
+            registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
 
         if len(registersCalculation) == 1:
             return 0
@@ -101,7 +107,9 @@ class FU:
                         if ts_max != position: # alternativamente n == 0
                             casePile = True
                             bitMux = 6
-
+                        if ts_min == -1:
+                            value1 = inst.inm
+                            RP1 = -1
                         if ts_min == 0:
                             value1 = registers.R[reg_min].value
                             RP1 = -1
@@ -132,6 +140,9 @@ class FU:
                     else:
                         bitMux = 3
                         self.updatePile(position=position, RP=ts_max, FU=FU2)
+                if ts_min == -1:
+                    value = inst.inm
+                    RP = -1
                 if ts_min == 0:
                     value = registers.R[reg_min].value
                     RP = -1

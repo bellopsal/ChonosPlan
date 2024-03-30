@@ -82,7 +82,7 @@ class Registers:
 
     def td_calculation_type1(self, source1, source2, destiny):
 
-        if self.R[source1].lock or self.R[source1].lock or self.R[destiny].lock:
+        if self.R[source1].lock or self.R[source2].lock or self.R[destiny].lock:
             return [True]
         else:
             t1 = self.R[source1].td
@@ -111,6 +111,29 @@ class Registers:
             FU2 = self.R[reg_max].fu
 
             return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
+
+    def td_calculation_type1_inm(self, source1, inm, destiny):
+
+        if self.R[source1].lock or self.R[destiny].lock:
+            return [True]
+        else:
+            t1 = self.R[source1].td
+
+            # primero tengo que actualizar los registros que serán destino
+            # asi tengo en cuenta el tiempo anterior y en el caso de escalaridad
+            # no perder el orden de las instrucciones!!!
+
+            ts_max = t1
+            ts_min = -1
+            reg_max = source1
+            reg_min = "inm"
+            inv = True
+
+
+            FU1 = "inm"
+            FU2 = self.R[reg_max].fu
+
+            return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv]
 
     def instBlock(self, lBlock):
         for r in lBlock:
