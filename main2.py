@@ -27,120 +27,149 @@ class app:
     def __init__(self, master):
         self.image = None
         self.master = master
+        self.frame_a = tk.Frame()
+        self.frame_b = tk.Frame()
 
 
-        self.n_ss_l = tk.Label(master, text="nº of SS:")
-        self.n_ss_l.pack()
-        self.n_ss = tk.Entry(master)
-        self.n_ss.pack()
+        self.frame_n_ss = tk.Frame()
+        self.n_ss_l = tk.Label(master = self.frame_n_ss, text="nº of SS:")
+        self.n_ss_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.n_ss = tk.Entry(master = self.frame_n_ss)
+        self.n_ss.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_ss.insert(0, "8")
+        self.frame_n_ss.pack()
 
-        self.n_registers_l = tk.Label(master, text="nº of registers:")
-        self.n_registers_l.pack()
-        self.n_registers = tk.Entry(master)
-        self.n_registers.pack()
+        self.frame_n_registers = tk.Frame()
+        self.n_registers_l = tk.Label(master = self.frame_n_registers, text="nº of registers:")
+        self.n_registers_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.n_registers = tk.Entry(master = self.frame_n_registers)
+        self.n_registers.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_registers.insert(0, "5")
+        self.frame_n_registers.pack()
 
-        self.pile_size_l = tk.Label(master, text="Pile size:")
-        self.pile_size_l.pack()
-        self.pile_size = tk.Entry(master)
-        self.pile_size.pack()
+        self.frame_pile_size = tk.Frame()
+        self.pile_size_l = tk.Label(master = self.frame_pile_size, text="Pile size:")
+        self.pile_size_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.pile_size = tk.Entry(master = self.frame_pile_size)
+        self.pile_size.pack(fill=tk.Y, side=tk.RIGHT)
         self.pile_size.insert(0, "3")
+        self.frame_pile_size.pack()
 
-        self.memory_size_l = tk.Label(master, text="Memory size:")
-        self.memory_size_l.pack()
-        self.memory_size = tk.Entry(master)
-        self.memory_size.pack()
+        self.frame_memory_size = tk.Frame()
+        self.memory_size_l = tk.Label(master = self.frame_memory_size, text="Memory size:")
+        self.memory_size_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.memory_size = tk.Entry(master = self.frame_memory_size)
+        self.memory_size.pack(fill=tk.Y, side=tk.RIGHT)
         self.memory_size.insert(0, "32")
+        self.frame_memory_size.pack()
 
-        self.n_add_l = tk.Label(master, text="Nº of add FU :")
-        self.n_add_l.pack()
-        self.n_add = tk.Entry(master)
-        self.n_add.pack()
+        self.frame_n_add = tk.Frame()
+        self.n_add_l = tk.Label(master = self.frame_n_add, text="Nº of add FU :")
+        self.n_add_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.n_add = tk.Entry(master = self.frame_n_add)
+        self.n_add.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_add.insert(0, "4")
+        self.frame_n_add.pack()
 
-        self.latency_add_l = tk.Label(master, text="Latency of add FU :")
-        self.latency_add_l.pack()
-        self.latency_add = tk.Entry(master)
-        self.latency_add.pack()
+        self.frame_latency_add = tk.Frame()
+        self.latency_add_l = tk.Label(master = self.frame_latency_add, text="Latency of add FU :")
+        self.latency_add_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.latency_add = tk.Entry(master = self.frame_latency_add)
+        self.latency_add.pack(fill=tk.Y, side=tk.RIGHT)
         self.latency_add.insert(0, "2")
+        self.frame_latency_add.pack()
 
-        self.n_mult_l = tk.Label(master, text="Nº of mult FU:")
-        self.n_mult_l.pack()
-        self.n_mult = tk.Entry(master)
-        self.n_mult.pack()
+        self.frame_n_mult = tk.Frame()
+        self.n_mult_l = tk.Label(master = self.frame_n_mult, text="Nº of mult FU:")
+        self.n_mult_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.n_mult = tk.Entry(master = self.frame_n_mult)
+        self.n_mult.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_mult.insert(0, "3")
+        self.frame_n_mult.pack()
 
-        self.latency_mult_l = tk.Label(master, text="Latency of mult FU :")
-        self.latency_mult_l.pack()
-        self.latency_mult = tk.Entry(master)
-        self.latency_mult.pack()
+        self.frame_latency_mult = tk.Frame()
+        self.latency_mult_l = tk.Label(master = self.frame_latency_mult, text="Latency of mult FU :")
+        self.latency_mult_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.latency_mult = tk.Entry(master = self.frame_latency_mult)
+        self.latency_mult.pack(fill=tk.Y, side=tk.RIGHT)
         self.latency_mult.insert(0, "3")
+        self.frame_latency_mult.pack()
 
-        self.n_store_l = tk.Label(master, text="Nº of store FU:")
-        self.n_store_l.pack()
-        self.n_store = tk.Entry(master)
-        self.n_store.pack()
+        self.frame_n_store = tk.Frame()
+        self.n_store_l = tk.Label(master = self.frame_n_store, text="Nº of store FU:")
+        self.n_store_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.n_store = tk.Entry(master = self.frame_n_store)
+        self.n_store.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_store.insert(0, "2")
+        self.frame_n_store.pack()
 
-        self.latency_store_l = tk.Label(master, text="Latency of store FU :")
-        self.latency_store_l.pack()
-        self.latency_store = tk.Entry(master)
-        self.latency_store.pack()
+        self.frame_latency_store = tk.Frame()
+        self.latency_store_l = tk.Label(master = self.frame_latency_store, text="Latency of store FU :")
+        self.latency_store_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.latency_store = tk.Entry(master = self.frame_latency_store)
+        self.latency_store.pack(fill=tk.Y, side=tk.RIGHT)
         self.latency_store.insert(0, "2")
+        self.frame_latency_store.pack()
 
-        self.m_l = tk.Label(master, text="Multiplicity:")
-        self.m_l.pack()
-        self.m = tk.Entry(master)
-        self.m.pack()
+        self.frame_m = tk.Frame()
+        self.m_l = tk.Label(master = self.frame_m, text="Multiplicity:")
+        self.m_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.m = tk.Entry(master = self.frame_m)
+        self.m.pack(fill=tk.Y, side=tk.RIGHT)
         self.m.insert(0, "5")
+        self.frame_m.pack()
 
-        self.b_hs_l = tk.Label(master, text="HS?:")
-        self.b_hs_l.pack()
+        self.frame_b_hs = tk.Frame()
+        self.b_hs_l = tk.Label(master = self.frame_b_hs, text="HS?:")
+        self.b_hs_l.pack(fill=tk.Y, side=tk.LEFT)
         self.b_hs = tk.BooleanVar(value=True)
-        self.true_radio = tk.Radiobutton(master, text="True", variable=self.b_hs, value=True)
-        self.true_radio.pack()
+        self.true_radio = tk.Radiobutton(master = self.frame_b_hs, text="True", variable=self.b_hs, value=True)
+        self.true_radio.pack(fill=tk.Y, side=tk.RIGHT)
+        self.false_radio = tk.Radiobutton(master = self.frame_b_hs, text="False", variable=self.b_hs, value=False)
+        self.false_radio.pack(fill=tk.Y, side=tk.RIGHT)
+        self.frame_b_hs.pack()
 
-        self.false_radio = tk.Radiobutton(master, text="False", variable=self.b_hs, value=False)
-        self.false_radio.pack()
-
-        self.n_hs_l = tk.Label(master, text="Nº of HS:")
-        self.n_hs_l.pack()
-        self.n_hs = tk.Entry(master)
-        self.n_hs.pack()
+        self.frame_n_hs = tk.Frame()
+        self.n_hs_l = tk.Label(master = self.frame_n_hs, text="Nº of HS:")
+        self.n_hs_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.n_hs = tk.Entry(master = self.frame_n_hs)
+        self.n_hs.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_hs.insert(0, "10")
+        self.frame_n_add.pack()
 
-        self.n_cycles_l = tk.Label(master, text="Nº of future cycles:")
-        self.n_cycles_l.pack()
-        self.n_cycles = tk.Entry(master)
-        self.n_cycles.pack()
+        self.frame_n_cycle = tk.Frame()
+        self.n_cycles_l = tk.Label(master = self.frame_n_cycle, text="Nº of future cycles:")
+        self.n_cycles_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.n_cycles = tk.Entry(master = self.frame_n_cycle)
+        self.n_cycles.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_cycles.insert(0, "120")
+        self.frame_n_cycle.pack()
 
-        self.b_hs_l = tk.Label(master, text="Keep past cycles?:")
-        self.b_hs_l.pack()
-        self.b_hs = tk.BooleanVar(value=True)
-        self.true_radio = tk.Radiobutton(master, text="True", variable=self.b_hs, value=True)
-        self.true_radio.pack()
-        self._radio = tk.Radiobutton(master, text="True", variable=self.b_hs, value=True)
-        self.true_radio.pack()
 
 
 
         self.start_button = tk.Button(master, text="START", command=self.start)
         self.start_button.pack()
 
-        self.next_cycle_button = tk.Button(self.master, text="next cycle", command=self.next_cycle)
-        self.next_cycle_button.pack()
+
 
 
     def scroll_text(self, *args):
         self.text_widget.yview(*args)
 
     def start(self):
-        self.hide()
+        self.re_start_button = tk.Button(self.master, text="re-start", command=self.re_start)
+        self.re_start_button.pack()
+        self.next_cycle_button = tk.Button(self.master, text="next cycle", command=self.next_cycle)
         self.next_cycle_button.pack()
-        scrollbar = tk.Scrollbar(self.master, command=self.scroll_text)
-        scrollbar.pack(side="right", fill="y")
+        self.hide()
+        self.start_button.pack_forget()
+        self.next_cycle_button.pack()
+        v = tk.Scrollbar(self.master, command=self.scroll_text)
+        v.pack(side="right", fill="y")
+
+        h = tk.Scrollbar(self.master, command=self.scroll_text)
+        h.pack(side="bottom", fill="x")
 
 
         instrucciones = [Inst("add", r1=1, r2=1, r3=2),
@@ -184,66 +213,48 @@ class app:
 
 
 
-
-
-        '''with open("test.html", "r") as f:
-            html_content = f.read()
-
-        self.html_label = HTMLLabel(self.master, html=html_content)
-        #self.html_label.pack()
-        self.html_label.grid(row=0, columnspan=2)'''
-
-        '''
-        with open("test.txt", "r") as f:
-            text_content = f.read()
-
-        # Create text widget and insert content
-        self.text_widget = tk.Text(self.master)
-        self.text_widget.insert(tk.END, text_content)
-        self.text_widget.grid(row=0, columnspan = 2)
-        
-        '''
-
     def next_cycle(self):
         self.simulador.one_clock_cycle()
         self.simulador.display2(bmux=True)
 
+    def re_start(self):
+        self.text_widget.pack_forget()
+        self.re_start_button.pack_forget()
+
+        self.frame_n_ss.pack()
+        self.frame_n_registers.pack()
+        self.frame_pile_size.pack()
+        self.frame_memory_size.pack()
+        self.frame_n_add.pack()
+        self.frame_n_mult.pack()
+        self.frame_n_store.pack()
+        self.frame_latency_add.pack()
+        self.frame_latency_store.pack()
+        self.frame_latency_mult.pack()
+        self.frame_m.pack()
+        self.frame_b_hs.pack()
+        self.frame_n_hs.pack()
+        self.frame_n_cycle.pack()
+
+        self.start_button.pack()
+        self.next_cycle_button.pack_forget()
+
     def hide(self):
         # Hide all the values
-        self.n_ss.pack_forget()
-        self.n_registers.pack_forget()
-        self.pile_size.pack_forget()
-        self.memory_size.pack_forget()
-        self.n_add.pack_forget()
-        self.n_mult.pack_forget()
-        self.n_store.pack_forget()
-        self.latency_add.pack_forget()
-        self.latency_store.pack_forget()
-        self.latency_mult.pack_forget()
-        self.m.pack_forget()
-        self.n_hs.pack_forget()
-        self.true_radio.pack_forget()
-        self.false_radio.pack_forget()
-        self.n_cycles.pack_forget()
-
-        self.n_ss_l.pack_forget()
-        self.n_registers_l.pack_forget()
-        self.pile_size_l.pack_forget()
-        self.memory_size_l.pack_forget()
-        self.n_add_l.pack_forget()
-        self.n_mult_l.pack_forget()
-        self.n_store_l.pack_forget()
-        self.latency_add_l.pack_forget()
-        self.latency_store_l.pack_forget()
-        self.latency_mult_l.pack_forget()
-        self.m_l.pack_forget()
-        self.n_hs_l.pack_forget()
-        self.true_radio.pack_forget()
-        self.false_radio.pack_forget()
-        self.n_cycles_l.pack_forget()
-        self.b_hs_l.pack_forget()
-
-
+        self.frame_n_ss.pack_forget()
+        self.frame_n_registers.pack_forget()
+        self.frame_pile_size.pack_forget()
+        self.frame_memory_size.pack_forget()
+        self.frame_n_add.pack_forget()
+        self.frame_n_mult.pack_forget()
+        self.frame_n_store.pack_forget()
+        self.frame_latency_add.pack_forget()
+        self.frame_latency_store.pack_forget()
+        self.frame_latency_mult.pack_forget()
+        self.frame_m.pack_forget()
+        self.frame_b_hs.pack_forget()
+        self.frame_n_hs.pack_forget()
+        self.frame_n_cycle.pack_forget()
 
 
 

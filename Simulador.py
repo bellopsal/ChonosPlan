@@ -18,6 +18,7 @@ class Simulador_1_FU:
     def __init__(self, list_program, n_ss, n_registers,  pile_size, memory_size,
                  n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m, n_hs = 10, b_hs = False, n_cycles= 120, b_scoreboard = 1):
         # set of instructions
+        self.recent_cycle = 0
         self.program = Program.Program(list_program)
         self.memory = Memory.Memory(memory_size)
         self.ss_size = n_ss
@@ -61,6 +62,7 @@ class Simulador_1_FU:
     def one_clock_cycle(self):
         #Pointer
         self.PC.one_clock_cycle()
+        self.recent_cycle = self.recent_cycle + 1
 
 
         #Do the operation in the FU
@@ -270,7 +272,7 @@ class Simulador_1_FU:
         else:
             text.append("There are no more instrucctions!", style= "bold magenta")
 
-        console = Console()
+        console = Console( width=250 , height = 200)
 
         console.print(text)
 
@@ -332,8 +334,14 @@ class Simulador_1_FU:
         console.print(register)
 
     def display2(self, badd = True, bmux = True, bstore = False, bmemory = False):
+        console = Console(record=True, width=250, height=200)
+
+        console.rule("[bold red]")
+        console.rule(f"[bold red] {self.recent_cycle}")
+        console.rule("[bold red]\n")
+
         self.display_ints()
-        console = Console(record=True, width=230 , height = 200)
+
         if self.b_hs:
             console.print(self.display_HS(), justify="center")
 
