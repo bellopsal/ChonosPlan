@@ -85,7 +85,7 @@ class HS:
         return -1
 
 
-    def update(self,i, bitMux, inv,RP1, RP2,destination,position, value1, value2 , FU1 , FU2 , casePile, type_operation):
+    def update(self,i, bitMux, inv,RP1, RP2,destination,position, value1, value2 , FU1 , FU2 , casePile, type_operation, inm = None):
         hs = self.l_hs[i]
         hs.bitUse = True
         hs.bitMux = bitMux
@@ -95,6 +95,7 @@ class HS:
         hs.value1 = value1
         hs.value2 = value2
         hs.FU1 = FU1
+        hs.inm = inm
         hs.FU2 = FU2
         hs.destination = destination
         hs.position = position

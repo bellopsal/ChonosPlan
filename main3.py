@@ -13,7 +13,7 @@ instrucciones = [Inst(operation="add", tag = "bucle", r1= 1, r2=1, r3=2),
                  Inst(operation="mul", r1= 1, r2=0, r3=0) ,
                  Inst(operation="add", r1= 3, r2=1, r3=1) ]
 
-instrucciones = Program.Program("exampleOP2.csv")
+instrucciones = Program.Program("exampleOP3.csv")
 
 #print(instrucciones.instructions[1])
 #print(instrucciones.instructions[3])
@@ -37,17 +37,14 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
 
                              )
 
+s.memory.putValues([*range(32)])
+
 s.one_clock_cycle()
-s.display_ints()
+s.display2(bmux=True, bstore=True, bmemory=True)
 print("---------------")
 s.one_clock_cycle()
-s.display_ints()
+s.display2(bmux=False, bstore=True, bmemory=True)
 print("---------------")
 s.one_clock_cycle()
-s.display_ints()
+s.display2(bmux=False, bstore=True, bmemory=True)
 print("---------------")
-s.one_clock_cycle()
-s.display2(bmux=True)
-print("---------------")
-s.one_clock_cycle()
-s.display2(bmux=True)

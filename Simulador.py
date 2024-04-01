@@ -2,7 +2,7 @@ import CDB
 import Memory
 import Pointer
 import Program
-from FU import funtionalUnit, OUTfuntionalUnitStore, holdStations
+from FU import funtionalUnit, OUTfuntionalUnitStore, holdStations, funtionalUnitStore
 import Registers
 
 from rich.console import Console, OverflowMethod, Group
@@ -80,7 +80,7 @@ class Simulador_1_FU:
         for fu in self.fus_store: fu.operation(self.memory)
 
         # Update the operation Queue
-        self.CDB.update(add=self.moveOperationQueue(self.fus_add), store=self.moveOperationQueue(self.fus_store),
+        self.CDB.update(add=self.moveOperationQueue(self.fus_add), store=self.moveOperationQueue2(self.fus_store, self.memory),
                         mult=self.moveOperationQueue(self.fus_mult))
 
         self.registers.one_clock_cycle(self.CDB)
@@ -112,6 +112,10 @@ class Simulador_1_FU:
 
     def moveOperationQueue(self, fus):
         res = [fu.moveOperationQueue() for fu in fus]
+        return res
+
+    def moveOperationQueue2(self, fus, mem):
+        res = [fu.moveOperationQueue(mem) for fu in fus]
         return res
 
     def fromHSToSS(self, lUpdate):
@@ -214,10 +218,10 @@ class Simulador_1_FU:
             ss = fu.SS.l_ss[i]
 
             if store:
-                table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), ss.FU1, ss.FU2, str(ss.value), str(ss.instruction),
+                table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), str(ss.FU1), str(ss.FU2), str(ss.value), str(ss.instruction),
                               str(ss.inm))
             else:
-                table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), ss.FU1, ss.FU2, str(ss.value), str(ss.instruction))
+                table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), str(ss.FU1), str(ss.FU2), str(ss.value), str(ss.instruction))
 
         return table
 
@@ -260,7 +264,8 @@ class Simulador_1_FU:
         text = Text()
         if self.PC.PC is None:
             text.append("Loading instructions")
-        elif self.PC.last >= self.PC.programSize:
+        #elif self.PC.last >= self.PC.programSize:
+        elif len(self.PC.PC) == 0:
             text.append("There are no more instructions")
         else:
             text.append("PC: ", style="bold magenta")
@@ -360,11 +365,11 @@ class Simulador_1_FU:
             memory = Table(title="MEMORY")
             memory.add_column("Line", justify="center")
             memory.add_column("values", justify="center")
-            memory.add_column("ready", justify="center")
+
             l = [self.memory.memory[n:n + 8] for n in range(0, self.memory.size, 8)]
-            r = [self.memory.ready[n:n + 8] for n in range(0, self.memory.size, 8)]
+            #r = [self.memory.ready[n:n + 8] for n in range(0, self.memory.size, 8)]
             for i in range(len(l)):
-                memory.add_row(str(i), str(l[i]), str(r[i]))
+                memory.add_row(str(i), str(l[i]))
             console.print(memory)
 
         register = Table(title="REGISTERS")

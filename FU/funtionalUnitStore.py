@@ -19,7 +19,7 @@ class FU:
         self.latency = latency
         self.pile = shiftStations.Pile(pile_size)
         self.operationQueue = [None] * latency
-        self.memoryQueue = [None] * latency
+        self.memoryQueue = [(None,None)] * latency
         # self.operationQueue = [1, 2, 3]
 
         # Registers that are going to be used for the operation next
@@ -41,28 +41,31 @@ class FU:
             else:
                 pos = operand2 + inm
                 value = operand1
-            self.operationQueue[0] = (pos, value)
+            self.memoryQueue[0] = (pos, value)
 
         if self.ss_side.type_operation == "lb":
             pos = inm + operand2
             self.operationQueue[0] = mem.get(pos)
 
     def calculateN(self, inst, registers):
-        if inst.function.endswith("i"):
-            l = registers.td_calculation_type1(inst.r2, inst.inm, inst.r1)
+        if inst.function == "lb":
+            l = registers.td_calculation_type2(inst.rs1, inst.r1)
+
         else:
-            l = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
+            l = registers.td_calculation_type1(inst.r1, inst.rs1, inst.r1)
+
         n = self.findFirstEmptyBRT(l[0])
 
         return n
 
     def newInstruction(self, inst,instIndex , registers, hs, b_hs):
         bitMux = -1
-        if inst.function.endswith("i"):
-            registersCalculation = registers.td_calculation_type1_inm(inst.r2, inst.inm, inst.r1)
-
+        if inst.function == "lb":
+            registersCalculation = registers.td_calculation_type2(inst.rs1, inst.r1)
+            b_lb = True
         else:
-            registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
+            registersCalculation = registers.td_calculation_type1(inst.r1, inst.rs1, inst.r1)
+            b_lb = False
 
         if len(registersCalculation) == 1:
             return 0, 8
@@ -83,6 +86,8 @@ class FU:
             td = td + n
             position = ts_max + n
 
+            inm = inst.inm
+
 
 
             if n == -1:
@@ -102,6 +107,7 @@ class FU:
 
                         value1 = None
                         value2 = None
+
                         casePile = False
                         bitMux = 6
 
@@ -118,9 +124,10 @@ class FU:
                             value2 = registers.R[reg_max].value
                             RP1 = -1
                         hs.update(i = freeHS, RP1=ts_min, RP2 = ts_max, position = position, value1 = value1, destination = self.name,
-                                  value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, casePile = casePile, type_operation=inst.function)
+                                  value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, casePile = casePile, type_operation=inst.function, inm = inm)
 
-                        registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                        if b_lb:
+                            registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
                         self.BRT.occupy_i(position)
 
                 else:
@@ -141,9 +148,6 @@ class FU:
                     else:
                         bitMux = 3
                         self.updatePile(position=position, RP=ts_max, FU=FU2)
-                if ts_min == -1:
-                    value = inst.inm
-                    RP = -1
                 if ts_min == 0:
                     value = registers.R[reg_min].value
                     RP = -1
@@ -151,10 +155,10 @@ class FU:
                     value = None
                     RP = ts_min
 
-                registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                if b_lb: registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
                 self.BRT.occupy_i(position)
                 self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
-                                 RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv)
+                                 RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv, inm = inm)
 
             return res, bitMux
 
@@ -171,11 +175,20 @@ class FU:
         self.pile.pile[position].value = value
         self.pile.pile[position].RP = -1
 
-    def moveOperationQueue(self):
+    def moveOperationQueue(self, mem):
 
         self.operationQueue.pop(-1)
         self.operationQueue.insert(0, None)
         cbd = self.operationQueue[-1]
+
+        self.memoryQueue.pop(-1)
+        self.memoryQueue.insert(0, (None,None))
+        memPut = self.memoryQueue[-1]
+
+        if memPut[0] != None:
+            mem.put(memPut[0], memPut[1])
+
+
         return cbd
 
     def strBRT(self):

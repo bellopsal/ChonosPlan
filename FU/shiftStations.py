@@ -181,7 +181,7 @@ class Pile:
 
 
     def one_clock_cycle(self, CDB, bitMux, FU2):
-        if bitMux == 2 or bitMux == 5:
+        if bitMux == 2 or bitMux == 7:
             self.pile[1].value = CDBhelper(FU2, CDB)
             self.pile[1].RP = -1
 

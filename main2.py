@@ -232,7 +232,7 @@ class app:
         sys.stdout = ConsoleRedirector(self.text_widget)
         sys.stderr = ConsoleRedirector(self.text_widget)
 
-        self.simulador.display2()
+        self.simulador.display2(bmux=True, bstore=True, bmemory=True)
 
     def open_statistics(self):
         self.new_window = tk.Toplevel(self.master)
@@ -264,12 +264,12 @@ class app:
 
     def next_cycle(self):
         self.simulador.one_clock_cycle()
-        self.simulador.display2(bmux=True)
+        self.simulador.display2(bmux=True, bstore=True, bmemory=True)
         self.updateStatistics()
 
     def n_next_cycle(self, n):
         self.simulador.n_next_cycles(n)
-        self.simulador.display2(bmux=True)
+        self.simulador.display2(bmux=True, bstore=True, bmemory=True)
         self.updateStatistics()
 
     def n3_cycles(self):

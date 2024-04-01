@@ -4,7 +4,7 @@ import csv
 class Memory:
     def __init__(self, size):
         self.memory = [0] * size
-        self.ready = [0] * size
+
         self.size = size
 
         with open("memory.csv", "w") as f:
@@ -13,12 +13,13 @@ class Memory:
             write.writerow(self.memory)
 
 
-    def putBuffer(self,position, value):
 
     def putValues(self, values):
         self.memory = values
 
 
+    def put(self, pos, value):
+        self.memory[pos] = value
 
 
     def get(self, pos):

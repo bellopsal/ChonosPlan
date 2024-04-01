@@ -9,7 +9,7 @@ class Register:
         self.number = i  # numero de registro
         self.td = 0  # tiempo en llegar value desde fu
         self.fu = None  # fu de donde proveendrá el value
-        self.value = i+2
+        self.value = i*2
         self.type = None
         self.lock = False
 
@@ -135,18 +135,21 @@ class Registers:
 
             return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv]
 
+
+
+    def td_calculation_type2(self, source, destination):
+        if self.R[source].lock or self.R[destination].lock:
+            return [True]
+        else:
+            ts_max = self.R[source].td
+            FU = self.R[source].fu
+
+        return [ts_max,0 ,source,0, 0, FU, 0]
+
     def instBlock(self, lBlock):
         for r in lBlock:
             if r!= None:
                 self.R[r].lock= True
-
-
-    def td_calculation_type2(self, source):
-
-        ts = self.R[source].td
-        FU = self.R[source].fu
-
-        return [ts, FU]
 
 
     def update_scoreboard(self):
