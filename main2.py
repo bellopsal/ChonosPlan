@@ -172,10 +172,28 @@ class app:
         self.text_widget.yview(*args)
 
     def start(self):
+
         self.re_start_button = tk.Button(self.master, text="re-start", command=self.re_start)
         self.re_start_button.pack()
-        self.next_cycle_button = tk.Button(self.master, text="next cycle", command=self.next_cycle)
-        self.next_cycle_button.pack()
+
+
+        self.button_frame = tk.Frame()
+        self.next_cycle_button = tk.Button(self.button_frame, text="next cycle", command=self.next_cycle)
+        self.next_cycle_button.pack(side=tk.LEFT)
+
+        self.next_cycle_button = tk.Button(self.button_frame, text="3 next cycle", command=self.n3_cycles)
+        self.next_cycle_button.pack(side=tk.LEFT)
+
+        self.next_cycle_button = tk.Button(self.button_frame, text="5 next cycle", command=self.n5_cycles)
+        self.next_cycle_button.pack(side=tk.LEFT)
+
+        self.next_cycle_button = tk.Button(self.button_frame, text="10 next cycle", command=self.n10_cycles)
+        self.next_cycle_button.pack(side=tk.LEFT)
+
+        #self.statistics_button = tk.Button(self.button_frame, text="statistics", command=self.open_statistics)
+        #self.statistics_button.pack(fill=tk.Y, side=tk.RIGHT)
+        self.button_frame.pack()
+
         self.hide()
         self.start_button.pack_forget()
         self.next_cycle_button.pack()
@@ -186,16 +204,7 @@ class app:
         h.pack(side="bottom", fill="x")
 
 
-        instrucciones = [Inst("add", r1=1, r2=1, r3=2),
-                         Inst("add", r1=3, r2=2, r3=1),
-                         Inst("mul", r1=2, r2=1, r3=3),
 
-                         Inst("mul", r1=4, r2=3, r3=2),
-                         Inst("add", r1=0, r2=0, r3=1),
-                         Inst("mul", r1=3, r2=3, r3=3),
-                         Inst("mul", r1=0, r2=3, r3=3),
-                         Inst("mul", r1=1, r2=0, r3=0),
-                         Inst("add", r1=3, r2=1, r3=1)]
 
         self.simulador =Simulador.Simulador_1_FU(program = self.program,
                              n_ss = int(self.n_ss.get()),
@@ -213,27 +222,69 @@ class app:
                              b_hs= self.b_hs.get(),
 
                              )
-
+        self.open_statistics()
 
 
         self.text_widget = tk.Text(self.master, wrap="none")
         self.text_widget.pack(side="left", fill="both", expand=True)
-        #self.text_widget.grid(row=0, column=0)
+
 
         sys.stdout = ConsoleRedirector(self.text_widget)
         sys.stderr = ConsoleRedirector(self.text_widget)
 
         self.simulador.display2()
 
+    def open_statistics(self):
+        self.new_window = tk.Toplevel(self.master)
+        self.new_window.title("Statistics")
+
+
+
+        self.label1 = tk.Label(self.new_window, text=f"Nº cycles: {self.simulador.statistics.cycles}")
+        self.label1.pack()
+
+        self.label2 = tk.Label(self.new_window, text=f"Multiplicity: {self.simulador.m}")
+        self.label2.pack()
+
+        self.label3 = tk.Label(self.new_window, text=f"inst Issued: {self.simulador.statistics.instIssued}")
+        self.label3.pack()
+
+        self.label4 = tk.Label(self.new_window, text=f"Total Locks: {self.simulador.statistics.totalLock}")
+        self.label4.pack()
+
+        self.label5 = tk.Label(self.new_window, text=f"Type Instrucctions: {self.simulador.statistics.typeInst}")
+        self.label5.pack()
+
+    def updateStatistics(self):
+        self.label1.config(text=f"Nº cycles: {self.simulador.statistics.cycles}")
+        self.label3.config(text=f"inst Issued: {self.simulador.statistics.instIssued}")
+        self.label4.config(text=f"Total Locks: {self.simulador.statistics.totalLock}")
+        self.label5.config(text=f"Type Instrucctions: {self.simulador.statistics.typeInst}")
 
 
     def next_cycle(self):
         self.simulador.one_clock_cycle()
         self.simulador.display2(bmux=True)
+        self.updateStatistics()
+
+    def n_next_cycle(self, n):
+        self.simulador.n_next_cycles(n)
+        self.simulador.display2(bmux=True)
+        self.updateStatistics()
+
+    def n3_cycles(self):
+        self.n_next_cycle(3)
+
+    def n5_cycles(self):
+        self.n_next_cycle(5)
+
+    def n10_cycles(self):
+        self.n_next_cycle(10)
+
 
     def re_start(self):
         self.text_widget.pack_forget()
-        self.re_start_button.pack_forget()
+        self.button_frame.pack_forget()
 
         self.frame_inst.pack()
         self.frame_n_ss.pack()
@@ -252,7 +303,7 @@ class app:
         self.frame_n_cycle.pack()
 
         self.start_button.pack()
-        self.next_cycle_button.pack_forget()
+
 
     def hide(self):
         # Hide all the values
@@ -286,6 +337,7 @@ class app:
 
 def main():
     root = tk.Tk()
+    root.title("Simulador")
     calculator = app(root)
     root.mainloop()
 

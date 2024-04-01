@@ -57,6 +57,7 @@ class FU:
         return n
 
     def newInstruction(self, inst,instIndex , registers, hs, b_hs):
+        bitMux = -1
         if inst.function.endswith("i"):
             registersCalculation = registers.td_calculation_type1_inm(inst.r2, inst.inm, inst.r1)
 
@@ -64,7 +65,7 @@ class FU:
             registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
 
         if len(registersCalculation) == 1:
-            return 0
+            return 0, 8
         else:
 
             ts_max = registersCalculation[0]
@@ -96,17 +97,17 @@ class FU:
                     if(freeHS == -1):
                         # caso de bloqueo total!!! There are no free HS
                         res = 0
-                        bitMux = 4
+                        bitMux = 5
                     else:
 
                         value1 = None
                         value2 = None
                         casePile = False
-                        bitMux = 5
+                        bitMux = 6
 
                         if ts_max != position: # alternativamente n == 0
                             casePile = True
-                            bitMux = 6
+                            bitMux = 7
                         if ts_min == -1:
                             value1 = inst.inm
                             RP1 = -1
@@ -155,7 +156,7 @@ class FU:
                 self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
                                  RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv)
 
-            return res
+            return res, bitMux
 
     def findFirstEmptyBRT(self, ts_max):
         n = self.BRT.findFirstAfter(ts_max)

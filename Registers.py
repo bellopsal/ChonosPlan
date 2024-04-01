@@ -137,9 +137,9 @@ class Registers:
 
     def instBlock(self, lBlock):
         for r in lBlock:
-            self.R[r].lock= True
-            self.R[r].lock = True
-            self.R[r].lock = True
+            if r!= None:
+                self.R[r].lock= True
+
 
     def td_calculation_type2(self, source):
 

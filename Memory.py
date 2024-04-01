@@ -12,16 +12,14 @@ class Memory:
             write.writerow(range(size))
             write.writerow(self.memory)
 
-    def one_clock_cycle(self):
-        self.ready = [e - 1 if e > 0 else e for e in self.ready]
+
+    def putBuffer(self,position, value):
 
     def putValues(self, values):
         self.memory = values
 
 
-    def put(self, pos, value, ready):
-        self.memory[pos] = value
-        self.ready[pos] = ready
+
 
     def get(self, pos):
         return self.memory[pos]
