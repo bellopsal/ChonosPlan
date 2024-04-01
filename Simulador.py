@@ -228,6 +228,7 @@ class Simulador_1_FU:
     def display_HS(self):
         table = Table(title="Hold Stations")
         table.add_column("occupied", justify="center")
+        table.add_column("type", justify="center")
         table.add_column("HS", justify="center")
         table.add_column("bitMux", justify="center")
         table.add_column("RP1", justify="center")
@@ -241,7 +242,7 @@ class Simulador_1_FU:
 
         for i in range(self.hs.n):
             hs = self.hs.l_hs[i]
-            table.add_row(str(self.hs.occupied[i]), f"HS{i}", str(hs.bitMux), str(hs.RP1), str(hs.RP2),
+            table.add_row(str(self.hs.occupied[i]),str(hs.casePile), f"HS{i}", str(hs.bitMux), str(hs.RP1), str(hs.RP2),
                           str(hs.position), str(hs.destination),
                           hs.FU1, hs.FU2, str(hs.value1), str(hs.value2))
 
@@ -349,7 +350,7 @@ class Simulador_1_FU:
 
         if bmux:
             mux_renderables = [Panel(Group(self.display_SS(f"MULT_{i}", fu=self.fus_mult[i]),
-                                           self.display_pile(fu=self.fus_add[i], title=f"Pile_{i}")))
+                                           self.display_pile(fu=self.fus_mult[i], title=f"Pile_{i}")))
                                for i in range(self.n_mult)]
 
             console.print(Columns(mux_renderables, equal=True, align="center", title="Functional Unit: MULT"))

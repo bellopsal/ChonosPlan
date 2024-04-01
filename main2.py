@@ -285,6 +285,7 @@ class app:
     def re_start(self):
         self.text_widget.pack_forget()
         self.button_frame.pack_forget()
+        self.re_start_button.pack_forget()
 
         self.frame_inst.pack()
         self.frame_n_ss.pack()
