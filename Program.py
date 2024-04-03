@@ -55,19 +55,6 @@ class Program:
                 self.n = self.n + 1
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 class Instruction:
 
     def __init__(self , operation,tag = None, r1=None, r2=None, r3=None, rd=None, rs1=None, inm=None, offset = None, BTB= True):

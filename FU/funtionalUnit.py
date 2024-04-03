@@ -15,7 +15,7 @@ class FU:
         self.pile_size = pile_size
         self.ss_size = ss_size
         self.SS = shiftStations.SS(ss_size)
-        self.BRT = BRT.BRT(n_cycles, latency)
+        self.BRT = BRT.BRT(n_cycles)
         self.latency = latency
         self.pile = shiftStations.Pile(pile_size)
         self.operationQueue = [None] * latency

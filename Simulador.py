@@ -1,11 +1,11 @@
 import CDB
 import Memory
 import Pointer
-import Program
-from FU import funtionalUnit, OUTfuntionalUnitStore, holdStations, funtionalUnitStore
+
+from FU import funtionalUnit, holdStations, funtionalUnitStore, funtionalUnitJump
 import Registers
 
-from rich.console import Console, OverflowMethod, Group
+from rich.console import Console,Group
 from rich.table import Table
 from rich.columns import Columns
 from rich.panel import Panel
@@ -34,6 +34,8 @@ class Simulador_1_FU:
         self.fus_add = []
         self.fus_mult = []
         self.fus_store = []
+        self.fu_jump = funtionalUnitJump.FU(name="jump_0", fu_type="jump", ss_size=self.ss_size,
+                                            pile_size = self.pile_size, n_cycles=self.n_cycles)
 
         self.b_hs = b_hs
         self.hs = holdStations.HS(n_hs, n_ss, pile_size)
@@ -89,6 +91,7 @@ class Simulador_1_FU:
         for i in range(self.n_add): self.fus_add[i].one_clock_cycle(self.CDB)
         for i in range(self.n_mult): self.fus_mult[i].one_clock_cycle(self.CDB)
         for i in range(self.n_store): self.fus_store[i].one_clock_cycle(self.CDB)
+        self.fu_jump.one_clock_cycle()
 
         if self.b_hs:
             toUpdateSS = self.hs.one_clock_cycle(self.CDB)
@@ -106,9 +109,13 @@ class Simulador_1_FU:
                     if res == 0:
                         self.statistics.increaseTotalLock()
                         self.PC.instBlock()
-                        self.registers.instBlock([inst.r1, inst.r2, inst.r3])
+                        self.registers.instBlock([inst.r1, inst.r2, inst.r3, inst.rs1, inst.rd])
                     else:
                         self.statistics.increaseInstIssued()
+
+                    if inst.fu_type == "jump" and inst.BTB == True:
+                        self.PC.last = self.program.dict_names[inst.offset] - 1
+                        break
 
     def moveOperationQueue(self, fus):
         res = [fu.moveOperationQueue() for fu in fus]
@@ -157,30 +164,34 @@ class Simulador_1_FU:
     def newInstruction(self, instIndex):
         inst = self.program.get(instIndex)
         fu_type = inst.fu_type
-        fu_free = []
-        if fu_type == "add":
-            fu_free = [fu.calculateN(inst, self.registers) for fu in self.fus_add]
-            selectionOrder = self.add_selectionOrder
-        if fu_type == "mult":
-            fu_free = [fu.calculateN(inst, self.registers) for fu in self.fus_mult]
-            selectionOrder = self.mult_selectionOrder
-        if fu_type == "store":
-            fu_free = [fu.calculateN(inst, self.registers) for fu in self.fus_store]
-            selectionOrder = self.store_selectionOrder
-
-        indexes = self.find_lowest_positive_index(fu_free)
-
-        if len(indexes) == 0:
-            # if there are no elements in the indexes its means that there are no free slots in the next 4 slots
-            # this is a complete lock in our instruction
-            res = 0
-            self.registers.lock(inst.r1)
-            bitMux = 4
+        fus_free = []
+        if fu_type == "jump":
+            res, bitMux = self.fu_jump.newInstruction(inst,  self.registers, self.hs, self.b_hs)
         else:
+            if fu_type == "add":
+                fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_add]
+                selectionOrder = self.add_selectionOrder
+            if fu_type == "mult":
+                fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_mult]
+                selectionOrder = self.mult_selectionOrder
+            if fu_type == "store":
+                fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_store]
+                selectionOrder = self.store_selectionOrder
 
-            index = self.selection(indexes, selectionOrder)
-            fu = self.getFU(inst.fu_type, index)
-            res, bitMux = fu.newInstruction(inst, instIndex, self.registers, self.hs, self.b_hs)
+
+            indexes = self.find_lowest_positive_index(fus_free)
+
+            if len(indexes) == 0:
+                # if there are no elements in the indexes its means that there are no free slots in the next 4 slots
+                # this is a complete lock in our instruction
+                res = 0
+                self.registers.lock(inst.r1)
+                bitMux = 4
+            else:
+
+                index = self.selection(indexes, selectionOrder)
+                fu = self.getFU(inst.fu_type, index)
+                res, bitMux = fu.newInstruction(inst, instIndex, self.registers, self.hs, self.b_hs)
 
         return res, bitMux
 
