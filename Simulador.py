@@ -340,7 +340,7 @@ class Simulador_1_FU:
 
         console.print(register)
 
-    def display2(self, badd=True, bmux=True, bstore=False, bmemory=False):
+    def display2(self, badd=True, bmux=True, bstore=False, bmemory=False, bhs = False, bCDB = False):
         console = Console(record=True, width=250, height=200)
 
         console.rule("[bold red]")
@@ -349,7 +349,7 @@ class Simulador_1_FU:
 
         self.display_ints()
 
-        if self.b_hs:
+        if self.b_hs and bhs:
             console.print(self.display_HS(), justify="center")
 
         if badd:
@@ -383,6 +383,11 @@ class Simulador_1_FU:
             for i in range(len(l)):
                 memory.add_row(str(i), str(l[i]))
             console.print(memory)
+
+        if bCDB:
+            text = Text()
+            text.append(self.CDB.__str__())
+            console.print(text)
 
         register = Table(title="REGISTERS")
         register.add_column("Register", justify="center")
