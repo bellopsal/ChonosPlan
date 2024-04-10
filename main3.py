@@ -13,7 +13,7 @@ instrucciones = [Inst(operation="add", tag = "bucle", r1= 1, r2=1, r3=2),
                  Inst(operation="mul", r1= 1, r2=0, r3=0) ,
                  Inst(operation="add", r1= 3, r2=1, r3=1) ]
 
-instrucciones = Program.Program("exampleOP.csv")
+instrucciones = Program.Program("exampleOP4.csv")
 
 #print(instrucciones.instructions[1])
 #print(instrucciones.instructions[3])
@@ -26,7 +26,7 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
                              b_scoreboard = 1,
                              pile_size = 3,
                              memory_size=32,
-                             n_add = 4,
+                             n_add = 3,
                              n_mult= 3,
                              n_store = 2,
                              latency_add = 2,
@@ -39,12 +39,37 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
 
 s.memory.putValues([*range(32)])
 
+s.display2(bmux=False, bstore=False, bmemory=False)
+print(s.CDB)
 s.one_clock_cycle()
-s.display2(bmux=True, bstore=True, bmemory=True)
+s.display2(bmux=False, bstore=False, bmemory=False)
+
 print("---------------")
+print(s.CDB)
 s.one_clock_cycle()
-s.display2(bmux=False, bstore=True, bmemory=True)
+
+s.display2(bmux=False, bstore=False, bmemory=False)
+
 print("---------------")
+print(s.CDB)
 s.one_clock_cycle()
-s.display2(bmux=False, bstore=True, bmemory=True)
+
+s.display2(bmux=False, bstore=False, bmemory=False)
+
 print("---------------")
+print(s.CDB)
+s.one_clock_cycle()
+s.display2(bmux=False, bstore=False, bmemory=False)
+
+print("---------------")
+print(s.CDB)
+s.one_clock_cycle()
+s.display2(bmux=False, bstore=False, bmemory=False)
+
+print("---------------")
+print(s.CDB)
+s.one_clock_cycle()
+s.display2(bmux=False, bstore=False, bmemory=False)
+
+print("---------------")
+

@@ -1,0 +1,5 @@
+tag,operation,r1,r2,r3,rd,rs1,inm,offset,BTB
+,addi,3,0,,,,1,,
+bucle,add,3,3,3,,,,,
+,j,,,,,,,bucle,
+
