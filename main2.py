@@ -35,6 +35,8 @@ class app:
         self.image = None
         self.master = master
         self.text_widget = tk.Text(self.master, wrap="none")
+        self.px = 15
+        self.py = 15
         v = tk.Scrollbar(self.master, command=self.scroll_text)
         v.pack(side="right", fill="y")
 
@@ -44,10 +46,11 @@ class app:
         self.frame_a = tk.Frame(master=self.full_frame, highlightbackground="black", highlightthickness=2)
         self.frame_b = tk.Frame(master=self.full_frame,highlightbackground="black", highlightthickness=2)
 
-        l = tk.Label(self.frame_a, text="Configuration")
-        l.pack()
-        l = tk.Label(self.frame_b, text="Display Settings")
-        l.pack()
+        l = tk.Label(self.frame_a, text="Configuration",
+		                                bg = "light pink",font = "Verdana 24 bold")
+        l.pack(padx=self.px, pady=self.py)
+        l = tk.Label(self.frame_b, text="Display Settings", bg = "light pink",font = "Verdana 24 bold")
+        l.pack(padx=self.px, pady=self.py)
 
         self.frame_inst = tk.Frame(master=self.frame_a)
         self.file_name_label = tk.Label(self.frame_inst, text="No file selected")
@@ -245,8 +248,8 @@ class app:
         self.display_HS.pack()
 
 
-        self.frame_a.pack(fill=tk.Y, side=tk.LEFT)
-        self.frame_b.pack(fill=tk.Y, side=tk.RIGHT)
+        self.frame_a.pack(fill=tk.Y, side=tk.LEFT, padx=self.px, pady=self.py)
+        self.frame_b.pack(fill=tk.Y, side=tk.RIGHT, padx=self.px, pady=self.py)
 
         self.full_frame.pack()
 
