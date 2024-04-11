@@ -313,7 +313,8 @@ class app:
 
         self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
                                 bmemory=self.display_memory_value.get(),badd=self.display_ADD_value.get(),
-                                bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get())
+                                bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get(),
+                                badd_brt = self.display_ADD_BRT_value.get())
 
     def open_statistics(self):
         self.new_window = tk.Toplevel(self.master)
@@ -345,14 +346,16 @@ class app:
         self.simulador.one_clock_cycle()
         self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
                                 bmemory=self.display_memory_value.get(),badd=self.display_ADD_value.get(),
-                                bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get())
+                                bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get(),
+                                badd_brt = self.display_ADD_BRT_value.get())
         self.updateStatistics()
 
     def n_next_cycle(self, n):
         self.simulador.n_next_cycles(n)
         self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
                                 bmemory=self.display_memory_value.get(),badd=self.display_ADD_value.get(),
-                                bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get())
+                                bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get(),
+                                badd_brt = self.display_ADD_BRT_value.get())
         self.updateStatistics()
 
     def n3_cycles(self):

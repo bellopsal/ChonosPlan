@@ -20,6 +20,7 @@ class Simulador_1_FU:
                  b_scoreboard=1):
         # set of instructions
         self.recent_cycle = 0
+        self.i
         self.program = program
         self.memory = Memory.Memory(memory_size)
         self.ss_size = n_ss
@@ -340,7 +341,7 @@ class Simulador_1_FU:
 
         console.print(register)
 
-    def display2(self, badd=True, bmux=True, bstore=False, bmemory=False, bhs = False, bCDB = False):
+    def display2(self, badd=True, bmux=True, bstore=False, bmemory=False, bhs = False, bCDB = False, badd_brt=False, bmux_brt = False, bstore_brt = False):
         console = Console(record=True, width=250, height=200)
 
         console.rule("[bold red]")
@@ -388,6 +389,13 @@ class Simulador_1_FU:
             text = Text()
             text.append(self.CDB.__str__())
             console.print(text)
+
+        if badd_brt:
+            text = Text()
+            for fu in self.fus_add:
+                text.append(fu.name + fu.BRT.__str__())
+            console.print(text)
+
 
         register = Table(title="REGISTERS")
         register.add_column("Register", justify="center")

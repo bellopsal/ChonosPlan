@@ -20,7 +20,6 @@ class FU:
         self.pile = shiftStations.Pile(pile_size)
         self.operationQueue = [None] * latency
         self.memoryQueue = [(None,None)] * latency
-        # self.operationQueue = [1, 2, 3]
 
         # Registers that are going to be used for the operation next
         self.ss_side = shiftStations.ShiftStation()
@@ -61,7 +60,8 @@ class FU:
     def newInstruction(self, inst,instIndex , registers, hs, b_hs):
         bitMux = -1
         if inst.function == "lb":
-            registersCalculation = registers.td_calculation_type2(inst.rs1, inst.r1)
+            registersCalculation = registers.td_calculation_type2(source = inst.rs1, destination=inst.r1)
+            ts_max = registersCalculation[0]
             b_lb = True
         else:
             registersCalculation = registers.td_calculation_type1(inst.r1, inst.rs1, inst.r1)
