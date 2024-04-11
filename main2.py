@@ -47,8 +47,7 @@ class app:
         self.frame_a = tk.Frame(master=self.full_frame, highlightbackground="black", highlightthickness=2)
         self.frame_b = tk.Frame(master=self.full_frame,highlightbackground="black", highlightthickness=2)
 
-        l = tk.Label(self.frame_a, text="Configuration",
-		                                bg = "light pink",font = "Verdana 24 bold")
+        l = tk.Label(self.frame_a, text="Configuration", bg = "light pink",font = "Verdana 24 bold")
         l.pack(padx=self.px, pady=self.py)
         l = tk.Label(self.frame_b, text="Display Settings", bg = "light pink",font = "Verdana 24 bold")
         l.pack(padx=self.px, pady=self.py)
@@ -57,20 +56,21 @@ class app:
         self.file_name_label = tk.Label(self.frame_inst, text="No file selected")
         self.file_name_label.pack(fill=tk.Y, side=tk.RIGHT)
         self.button_inst = tk.Button(self.frame_inst, text="Import Instructions csv", command=self.open_file)
-        self.button_inst.pack(fill=tk.Y, side=tk.LEFT)
+        self.button_inst.pack(fill=tk.Y, side=tk.LEFT, padx=self.px/4, pady=self.py/8)
         self.frame_inst.pack()
 
         self.frame_conf = tk.Frame(master=self.frame_a)
         self.conf_name_label = tk.Label(self.frame_conf, text="No Configuration selected")
         self.conf_name_label.pack(fill=tk.Y, side=tk.RIGHT)
         self.button_conf = tk.Button(self.frame_conf, text="Import Configuration csv", command=self.open_config)
-        self.button_conf.pack(fill=tk.Y, side=tk.LEFT)
+        self.button_conf.pack(fill=tk.Y, side=tk.LEFT, padx=self.px/4, pady=self.py/8)
         self.frame_conf.pack()
+
 
         self.frame_n_ss = tk.Frame(master=self.frame_a)
         self.n_ss_l = tk.Label(master = self.frame_n_ss, text="nº of SS:")
         self.n_ss_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.n_ss = tk.Entry(master = self.frame_n_ss)
+        self.n_ss = tk.Entry(master = self.frame_n_ss, width = 5)
         self.n_ss.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_ss.insert(0, "8")
         self.frame_n_ss.pack()
@@ -78,7 +78,7 @@ class app:
         self.frame_n_registers = tk.Frame(master=self.frame_a)
         self.n_registers_l = tk.Label(master = self.frame_n_registers, text="nº of registers:")
         self.n_registers_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.n_registers = tk.Entry(master = self.frame_n_registers)
+        self.n_registers = tk.Entry(master = self.frame_n_registers, width = 5)
         self.n_registers.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_registers.insert(0, "5")
         self.frame_n_registers.pack()
@@ -86,7 +86,7 @@ class app:
         self.frame_pile_size = tk.Frame(master=self.frame_a)
         self.pile_size_l = tk.Label(master = self.frame_pile_size, text="Pile size:")
         self.pile_size_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.pile_size = tk.Entry(master = self.frame_pile_size)
+        self.pile_size = tk.Entry(master = self.frame_pile_size, width = 5)
         self.pile_size.pack(fill=tk.Y, side=tk.RIGHT)
         self.pile_size.insert(0, "3")
         self.frame_pile_size.pack()
@@ -94,11 +94,95 @@ class app:
         self.frame_memory_size = tk.Frame(master=self.frame_a)
         self.memory_size_l = tk.Label(master = self.frame_memory_size, text="Memory size:")
         self.memory_size_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.memory_size = tk.Entry(master = self.frame_memory_size)
+        self.memory_size = tk.Entry(master = self.frame_memory_size, width = 5)
         self.memory_size.pack(fill=tk.Y, side=tk.RIGHT)
         self.memory_size.insert(0, "32")
         self.frame_memory_size.pack()
 
+        self.frame_m = tk.Frame(master=self.frame_a)
+        self.m_l = tk.Label(master = self.frame_m, text="Multiplicity:")
+        self.m_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.m = tk.Entry(master = self.frame_m, width = 5)
+        self.m.pack(fill=tk.Y, side=tk.RIGHT)
+        self.m.insert(0, "5")
+        self.frame_m.pack()
+
+        self.frame_b_hs = tk.Frame(master=self.frame_a)
+        self.b_hs_l = tk.Label(master = self.frame_b_hs, text="HS?:")
+        self.b_hs_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.b_hs = tk.BooleanVar(value=True)
+        self.true_radio = tk.Radiobutton(master = self.frame_b_hs, text="True", variable=self.b_hs, value=True)
+        self.true_radio.pack(fill=tk.Y, side=tk.RIGHT)
+        self.false_radio = tk.Radiobutton(master = self.frame_b_hs, text="False", variable=self.b_hs, value=False)
+        self.false_radio.pack(fill=tk.Y, side=tk.RIGHT)
+        self.frame_b_hs.pack()
+
+        self.frame_n_hs = tk.Frame(master=self.frame_a)
+        self.n_hs_l = tk.Label(master = self.frame_n_hs, text="Nº of HS:")
+        self.n_hs_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.n_hs = tk.Entry(master = self.frame_n_hs, width = 5)
+        self.n_hs.pack(fill=tk.Y, side=tk.RIGHT)
+        self.n_hs.insert(0, "10")
+        self.frame_n_hs.pack()
+
+        self.frame_n_cycle = tk.Frame(master=self.frame_a)
+        self.n_cycles_l = tk.Label(master = self.frame_n_cycle, text="Nº of future cycles:")
+        self.n_cycles_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.n_cycles = tk.Entry(master = self.frame_n_cycle, width = 5)
+        self.n_cycles.pack(fill=tk.Y, side=tk.RIGHT)
+        self.n_cycles.insert(0, "30")
+        self.frame_n_cycle.pack()
+
+        self.frame_add = tk.Frame(master=self.frame_a, highlightbackground="pink", highlightthickness=5)
+        frame_add_1 = tk.Frame(master=self.frame_add)
+        frame_add_2 = tk.Frame(master=self.frame_add)
+        frame_add_3 = tk.Frame(master=self.frame_add)
+        frame_add_4 = tk.Frame(master=self.frame_add)
+
+        tk.Label(master=frame_add_1, text=" FU ",  width = 5).pack(fill=tk.Y, side=tk.LEFT)
+        tk.Label(master=frame_add_1, text=" nº ", width = 5).pack(fill=tk.Y, side=tk.LEFT)
+        tk.Label(master=frame_add_1, text="lat", width = 5).pack(fill=tk.Y, side=tk.RIGHT)
+
+        tk.Label(master=frame_add_2, text=" ADD  ").pack(fill=tk.Y, side=tk.LEFT)
+        self.n_add = tk.Entry(master = frame_add_2, width = 5)
+        self.n_add.pack( side=tk.RIGHT)
+        self.n_add.insert(0, "4")
+
+        self.latency_add = tk.Entry(master = frame_add_2, width = 5)
+        self.latency_add.pack( side=tk.RIGHT)
+        self.latency_add.insert(0, "2")
+
+        tk.Label(master=frame_add_3, text="MULT ").pack(fill=tk.Y, side=tk.LEFT)
+        self.n_mult = tk.Entry(master = frame_add_3,  width = 5)
+        self.n_mult.pack( side=tk.RIGHT)
+        self.n_mult.insert(0, "2")
+
+        self.latency_mult = tk.Entry(master = frame_add_3, width = 5)
+        self.latency_mult.pack( side=tk.RIGHT)
+        self.latency_mult.insert(0, "3")
+
+        tk.Label(master=frame_add_4, text="STORE").pack(fill=tk.Y, side=tk.LEFT)
+        self.n_store = tk.Entry(master = frame_add_4, width = 5)
+        self.n_store.pack( side=tk.RIGHT)
+        self.n_store.insert(0, "2")
+
+        self.latency_store = tk.Entry(master = frame_add_4, width = 5)
+        self.latency_store.pack(side=tk.RIGHT)
+        self.latency_store.insert(0, "2")
+
+
+
+
+        #self.n_add_l.pack(fill=tk.Y, side=tk.LEFT)
+
+        frame_add_1.pack()
+        frame_add_2.pack()
+        frame_add_3.pack()
+        frame_add_4.pack()
+
+        self.frame_add.pack()
+
+        ''''
         self.frame_n_add = tk.Frame(master=self.frame_a)
         self.n_add_l = tk.Label(master = self.frame_n_add, text="Nº of add FU :")
         self.n_add_l.pack(fill=tk.Y, side=tk.LEFT)
@@ -114,6 +198,8 @@ class app:
         self.latency_add.pack(fill=tk.Y, side=tk.RIGHT)
         self.latency_add.insert(0, "2")
         self.frame_latency_add.pack()
+        
+        
 
         self.frame_n_mult = tk.Frame(master=self.frame_a)
         self.n_mult_l = tk.Label(master = self.frame_n_mult, text="Nº of mult FU:")
@@ -146,40 +232,8 @@ class app:
         self.latency_store.pack(fill=tk.Y, side=tk.RIGHT)
         self.latency_store.insert(0, "2")
         self.frame_latency_store.pack()
-
-        self.frame_m = tk.Frame(master=self.frame_a)
-        self.m_l = tk.Label(master = self.frame_m, text="Multiplicity:")
-        self.m_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.m = tk.Entry(master = self.frame_m)
-        self.m.pack(fill=tk.Y, side=tk.RIGHT)
-        self.m.insert(0, "5")
-        self.frame_m.pack()
-
-        self.frame_b_hs = tk.Frame(master=self.frame_a)
-        self.b_hs_l = tk.Label(master = self.frame_b_hs, text="HS?:")
-        self.b_hs_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.b_hs = tk.BooleanVar(value=True)
-        self.true_radio = tk.Radiobutton(master = self.frame_b_hs, text="True", variable=self.b_hs, value=True)
-        self.true_radio.pack(fill=tk.Y, side=tk.RIGHT)
-        self.false_radio = tk.Radiobutton(master = self.frame_b_hs, text="False", variable=self.b_hs, value=False)
-        self.false_radio.pack(fill=tk.Y, side=tk.RIGHT)
-        self.frame_b_hs.pack()
-
-        self.frame_n_hs = tk.Frame(master=self.frame_a)
-        self.n_hs_l = tk.Label(master = self.frame_n_hs, text="Nº of HS:")
-        self.n_hs_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.n_hs = tk.Entry(master = self.frame_n_hs)
-        self.n_hs.pack(fill=tk.Y, side=tk.RIGHT)
-        self.n_hs.insert(0, "10")
-        self.frame_n_add.pack()
-
-        self.frame_n_cycle = tk.Frame(master=self.frame_a)
-        self.n_cycles_l = tk.Label(master = self.frame_n_cycle, text="Nº of future cycles:")
-        self.n_cycles_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.n_cycles = tk.Entry(master = self.frame_n_cycle)
-        self.n_cycles.pack(fill=tk.Y, side=tk.RIGHT)
-        self.n_cycles.insert(0, "120")
-        self.frame_n_cycle.pack()
+        
+        '''
 
         self.display_ADD = tk.Frame(master=self.frame_b)
         self.d_add = tk.Label(master=self.display_ADD, text="Display ADD FU")
@@ -273,7 +327,7 @@ class app:
 
 
         self.start_button = tk.Button(master, text="START", command=self.start)
-        self.start_button.pack()
+        self.start_button.pack(padx=self.px/4, pady=self.py/4)
 
 
     def save_conf(self):
@@ -321,7 +375,7 @@ class app:
         self.open_statistics()
 
         self.re_start_button = tk.Button(self.master, text="re-start", command=self.re_start)
-        self.re_start_button.pack()
+        self.re_start_button.pack(padx=self.px/4, pady=self.py/4)
 
 
         self.button_frame = tk.Frame()
@@ -344,7 +398,7 @@ class app:
 
         self.hide()
         self.start_button.pack_forget()
-        self.next_cycle_button.pack()
+        self.next_cycle_button.pack(padx=self.px/4, pady=self.py/4)
 
         sys.stdout = ConsoleRedirector(self.text_widget)
         sys.stderr = ConsoleRedirector(self.text_widget)
