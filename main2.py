@@ -1,5 +1,6 @@
 import os
 import tkinter as tk
+import pandas as pd
 #from tkinter.tix import ScrolledWindow
 from tkinter import filedialog
 
@@ -58,6 +59,13 @@ class app:
         self.button_inst = tk.Button(self.frame_inst, text="Import Instructions csv", command=self.open_file)
         self.button_inst.pack(fill=tk.Y, side=tk.LEFT)
         self.frame_inst.pack()
+
+        self.frame_conf = tk.Frame(master=self.frame_a)
+        self.conf_name_label = tk.Label(self.frame_conf, text="No Configuration selected")
+        self.conf_name_label.pack(fill=tk.Y, side=tk.RIGHT)
+        self.button_conf = tk.Button(self.frame_conf, text="Import Configuration csv", command=self.open_config)
+        self.button_conf.pack(fill=tk.Y, side=tk.LEFT)
+        self.frame_conf.pack()
 
         self.frame_n_ss = tk.Frame(master=self.frame_a)
         self.n_ss_l = tk.Label(master = self.frame_n_ss, text="nº of SS:")
@@ -255,6 +263,8 @@ class app:
         checkbutton_HS.pack(fill=tk.Y, side=tk.RIGHT)
         self.display_HS.pack()
 
+        self.save_config_button = tk.Button(self.frame_a, text="SAVE config", command=self.save_conf)
+        self.save_config_button.pack()
 
         self.frame_a.pack(fill=tk.Y, side=tk.LEFT, padx=self.px, pady=self.py)
         self.frame_b.pack(fill=tk.Y, side=tk.RIGHT, padx=self.px, pady=self.py)
@@ -266,6 +276,24 @@ class app:
         self.start_button.pack()
 
 
+    def save_conf(self):
+        r = pd.DataFrame({
+        "n_ss": [self.n_ss.get()],
+        "n_registers": [self.n_registers.get()],
+        "pile_size":[ self.pile_size.get()],
+        "memory_size":[ self.memory_size.get()],
+        "n_add":[ self.n_add.get()],
+        "n_mult":[ self.n_mult.get()],
+        "n_store":[ self.n_store.get()],
+        "latency_add":[ self.latency_add.get()],
+        "latency_mult":[ self.latency_mult.get()],
+        "latency_store":[ self.latency_store.get()],
+        "n_cycles":[ self.n_cycles.get()],
+        "m":[ self.m.get()],
+        "b_hs":[ self.b_hs.get()]
+
+        })
+        r.to_csv("config_sim.csv")
 
 
     def scroll_text(self, *args):
@@ -285,9 +313,9 @@ class app:
                              latency_add = int(self.latency_add.get()),
                              latency_mult =int(self.latency_mult.get()),
                              latency_store= int(self.latency_store.get()),
-                            n_cycles=int(self.n_cycles.get()),
+                             n_cycles=int(self.n_cycles.get()),
                              m=int(self.m.get()),
-                             b_hs= self.b_hs.get(),
+                             b_hs= self.b_hs.get()
 
                              )
         self.open_statistics()
@@ -412,6 +440,61 @@ class app:
             print("Selected file:", file_path)
         else:
             print("No file selected")
+
+    def open_config(self):
+        file_path = filedialog.askopenfilename()
+        if file_path:
+            file_name = os.path.basename(file_path)
+            self.conf_name_label.config(text="Selected file: " + file_name)
+
+            # set config values
+            conf = pd.read_csv(file_name)
+            self.n_ss.delete(0, tk.END)
+            self.n_ss.insert(0, str(conf["n_ss"][0]))
+
+            self.n_registers.delete(0, tk.END)
+            self.n_registers.insert(0, str(conf["n_registers"][0]))
+
+            self.pile_size.delete(0, tk.END)
+            self.pile_size.insert(0, str(conf["pile_size"][0]))
+
+            self.memory_size.delete(0, tk.END)
+            self.memory_size.insert(0, str(conf["memory_size"][0]))
+
+            self.n_add.delete(0, tk.END)
+            self.n_add.insert(0, str(conf["n_add"][0]))
+
+            self.n_mult.delete(0, tk.END)
+            self.n_mult.insert(0, str(conf["n_mult"][0]))
+
+            self.n_store.delete(0, tk.END)
+            self.n_store.insert(0, str(conf["n_store"][0]))
+
+            self.latency_add.delete(0, tk.END)
+            self.latency_add.insert(0, str(conf["latency_add"][0]))
+
+            self.latency_mult.delete(0, tk.END)
+            self.latency_mult.insert(0, str(conf["latency_mult"][0]))
+
+            self.latency_store.delete(0, tk.END)
+            self.latency_store.insert(0, str(conf["latency_store"][0]))
+
+            self.n_cycles.delete(0, tk.END)
+            self.n_cycles.insert(0, str(conf["n_cycles"][0]))
+
+            self.m.delete(0, tk.END)
+            self.m.insert(0, str(conf["m"][0]))
+
+            self.b_hs = tk.BooleanVar(value=bool(conf["b_hs"][0]))
+
+
+
+
+
+            print("Selected file:", file_path)
+        else:
+            print("No file selected")
+
 
 
 
