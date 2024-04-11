@@ -112,10 +112,9 @@ class Simulador_1_FU:
                         self.registers.instBlock([inst.r1, inst.r2, inst.r3, inst.rs1, inst.rd])
                     else:
                         self.statistics.increaseInstIssued()
-
-                    if inst.fu_type == "jump" and inst.BTB == True:
-                        self.PC.last = self.program.dict_names[inst.offset] - 1
-                        break
+                        if inst.fu_type == "jump" and inst.BTB == True:
+                            self.PC.last = self.program.dict_names[inst.offset] - 1
+                            break
 
     def moveOperationQueue(self, fus):
         res = [fu.moveOperationQueue() for fu in fus]
@@ -361,7 +360,7 @@ class Simulador_1_FU:
 
         console.print(register)
 
-    def display2(self, badd=True, bmux=True, bstore=False, bmemory=False, bhs = False, bCDB = False, badd_brt=False, bmux_brt = False, bstore_brt = False):
+    def display2(self, badd=True, bmux=True, bstore=False, bmemory=False, bhs = False, bCDB = False, badd_brt=False, bmux_brt = False, bstore_brt = False, bjump_brt = False):
         console = Console(record=True, width=250, height=200)
 
         console.rule("[bold red]")
@@ -413,7 +412,8 @@ class Simulador_1_FU:
         if badd_brt:
             text = Text()
             for fu in self.fus_add:
-                text.append(fu.name + fu.BRT.__str__() + "\n")
+                text.append(fu.name, style="bold magenta underline")
+                text.append( fu.BRT.__str__() + "\n")
             console.print(text)
 
         if bmux_brt:
@@ -426,6 +426,11 @@ class Simulador_1_FU:
             text = Text()
             for fu in self.fus_store:
                 text.append(fu.name + fu.BRT.__str__() + "\n")
+            console.print(text)
+
+        if bjump_brt:
+            text = Text()
+            text.append(self.fu_jump.name + self.fu_jump.BRT.__str__() + "\n")
             console.print(text)
 
 

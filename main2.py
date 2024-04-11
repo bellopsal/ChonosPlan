@@ -222,6 +222,14 @@ class app:
         checkbutton_STORE_BRT.pack(fill=tk.Y, side=tk.RIGHT)
         self.display_STORE_BRT.pack()
 
+        self.display_JUMP_BRT = tk.Frame(master=self.frame_b)
+        self.d_JUMP_BRT = tk.Label(master=self.display_JUMP_BRT, text="Display JUMP BRT")
+        self.d_JUMP_BRT.pack(fill=tk.Y, side=tk.LEFT)
+        self.display_JUMP_BRT_value = tk.BooleanVar(master = self.display_JUMP_BRT)
+        checkbutton_JUMP_BRT = tk.Checkbutton(master = self.display_JUMP_BRT, variable=self.display_JUMP_BRT_value)
+        checkbutton_JUMP_BRT.pack(fill=tk.Y, side=tk.RIGHT)
+        self.display_JUMP_BRT.pack()
+
         self.display_memory = tk.Frame(master=self.frame_b)
         self.d_memory = tk.Label(master=self.display_memory, text="Display memory")
         self.d_memory.pack(fill=tk.Y, side=tk.LEFT)
@@ -313,12 +321,15 @@ class app:
         sys.stdout = ConsoleRedirector(self.text_widget)
         sys.stderr = ConsoleRedirector(self.text_widget)
 
-        self.text_widget.pack(side="left", fill="both", expand=True)
+        self.text_widget.pack(side="left", fill="both", expand=True, padx=self.px, pady=self.py)
 
         self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
                                 bmemory=self.display_memory_value.get(),badd=self.display_ADD_value.get(),
                                 bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get(),
-                                badd_brt = self.display_ADD_BRT_value.get())
+                                badd_brt = self.display_ADD_BRT_value.get(),
+                                bstore_brt = self.display_STORE_BRT_value.get(),
+                                bmux_brt = self.display_MUL_BRT_value.get(),
+                                bjump_brt=self.display_JUMP_BRT_value.get())
 
     def open_statistics(self):
         self.new_window = tk.Toplevel(self.master)
@@ -351,7 +362,10 @@ class app:
         self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
                                 bmemory=self.display_memory_value.get(),badd=self.display_ADD_value.get(),
                                 bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get(),
-                                badd_brt = self.display_ADD_BRT_value.get())
+                                badd_brt = self.display_ADD_BRT_value.get(),
+                                bstore_brt = self.display_STORE_BRT_value.get(),
+                                bmux_brt = self.display_MUL_BRT_value.get(),
+                                bjump_brt=self.display_JUMP_BRT_value.get())
         self.updateStatistics()
 
     def n_next_cycle(self, n):
@@ -359,7 +373,10 @@ class app:
         self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
                                 bmemory=self.display_memory_value.get(),badd=self.display_ADD_value.get(),
                                 bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get(),
-                                badd_brt = self.display_ADD_BRT_value.get())
+                                badd_brt = self.display_ADD_BRT_value.get(),
+                                bstore_brt = self.display_STORE_BRT_value.get(),
+                                bmux_brt = self.display_MUL_BRT_value.get(),
+                                bjump_brt=self.display_JUMP_BRT_value.get())
         self.updateStatistics()
 
     def n3_cycles(self):

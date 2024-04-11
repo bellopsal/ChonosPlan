@@ -53,8 +53,6 @@ class FU:
 
                 ts_max = registersCalculation[0]
 
-
-
         n = self.findFirstEmptyBRT(ts_max)
 
         res = 1

@@ -57,7 +57,7 @@ class FU:
         return n
 
     def newInstruction(self, inst,instIndex , registers, hs, b_hs):
-        bitMux = -1
+
         if inst.function.endswith("i"):
             registersCalculation = registers.td_calculation_type1_inm(inst.r2, inst.inm, inst.r1)
 
