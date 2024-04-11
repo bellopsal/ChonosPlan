@@ -17,7 +17,7 @@ class HoldStation:
     def __init__(self):
         #self.bitInUse = 0   # if the ss is in use ( with data in it)
         #self.bitAvail = 0  # first operand available 1 or not
-        self.bitMux = 0  # 0 if second taken from Register
+        self.bitMux = None  # 0 if second taken from Register
                         # 1 if second taken from pile
                         # 2 if taken from CDB
         self.inm = None
@@ -39,6 +39,22 @@ class HoldStation:
         self.casePile = False
 
 
+    def empty(self):
+        self.bitMux = None
+        self.inm = None
+        self.inv = False
+        self.destination = None
+        self.position = None
+        self.FU1 = None  # which FU will generate first operand
+        self.FU2 = None  # which FU will generate second operand
+        self.RP1 = - 1  # when first operand will be ready
+        self.RP2 = - 1  # when first operand will be ready
+        self.value1 = None  # first operand
+        self.value2= None  # first operand
+        self.type_operation = None
+        self.casePile = False
+
+
     def one_clock_cycle(self, CDB, updateSS, updatePile):
         res = False
         self.position = self.position - 1
@@ -55,7 +71,7 @@ class HoldStation:
         elif self.RP2 > 1:
             self.RP2 = self.RP2 - 1
 
-        if (self.casePile and self.position == updatePile) or (not self.casePile and self.position == updateSS):
+        if (self.casePile and self.position == updatePile) or ((not self.casePile) and self.position <= updateSS ):
             # time to update SS
             res = True
 
@@ -74,7 +90,7 @@ class HS:
         self.n = n_hs
         self.occupied = [0]*n_hs
 
-        self.updateSS = n_ss -1
+        self.updateSS = n_ss - 1
         self.updatePile = pile_size -1
 
 
@@ -85,7 +101,8 @@ class HS:
         return -1
 
 
-    def update(self,i, bitMux, inv,RP1, RP2,destination,position, value1, value2 , FU1 , FU2 , casePile, type_operation, inm = None):
+    def update(self,i, bitMux, inv,RP1, RP2,destination,position, value1, value2 ,
+               FU1 , FU2 , casePile, type_operation, inm = None):
         hs = self.l_hs[i]
         hs.bitUse = True
         hs.bitMux = bitMux
@@ -127,19 +144,21 @@ class HS:
             if self.occupied[i] == 1:
                 update =self.l_hs[i].one_clock_cycle(CDB, self.updateSS, self.updatePile)
                 if update:
-                    res.append(i)
                     self.occupied[i] = 0
+                    res.append(i)
+                    #self.empty(i)
+
         return res
-
-
-
-
 
 
 
 
     def get(self,i):
         return self.l_hs[i]
+
+    def empty(self, i):
+        self.update_i(i,bitMux=None, FU1=None, FU2=None, RP1=-1,RP2=-1,
+                      value1=None,value2=None, type_operation=None, inv=None ,destination=None, inm= None)
 
     def update_i(self, i, bitMux, FU1, FU2, RP1,RP2, value1,value2, type_operation, inv, destination, inm= None):
         self.l_hs[i].bitMux = bitMux

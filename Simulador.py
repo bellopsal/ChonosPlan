@@ -20,7 +20,6 @@ class Simulador_1_FU:
                  b_scoreboard=1):
         # set of instructions
         self.recent_cycle = 0
-        self.i
         self.program = program
         self.memory = Memory.Memory(memory_size)
         self.ss_size = n_ss
@@ -148,6 +147,8 @@ class Simulador_1_FU:
                 fu.SS.update_i(i=i, bitMux=hs.bitMux, RP=hs.RP1, FU1=hs.FU1, FU2=hs.FU2, value=hs.value1,
                                type_operation=hs.type_operation, inv=hs.inv, inm=hs.inm)
 
+            hs.empty()
+
     def find_lowest_positive_index(self, l):
         lowest_positive = None
         lowest_positive_index = []
@@ -230,18 +231,28 @@ class Simulador_1_FU:
             ss = fu.SS.l_ss[i]
 
             if store:
-                table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), str(ss.FU1), str(ss.FU2), str(ss.value), str(ss.instruction),
-                              str(ss.inm))
+                table.add_row(f"SS{i}", "" if ss.bitMux is None else str(ss.bitMux), str(ss.RP),
+                              "" if ss.RP == -1 else str(ss.RP),
+                              "" if ss.FU1 is None else str(ss.FU1),
+                              "" if ss.FU2 is None else str(ss.FU2),
+                              "" if ss.value is None else str(ss.value),
+                              "" if ss.instruction is None else str(ss.instruction),
+                              "" if ss.inm is None else str(ss.inm))
             else:
-                table.add_row(f"SS{i}", str(ss.bitMux), str(ss.RP), str(ss.FU1), str(ss.FU2), str(ss.value), str(ss.instruction))
+                table.add_row(f"SS{i}", "" if ss.bitMux is None else str(ss.bitMux),
+                              "" if ss.RP==-1 else str(ss.RP),
+                              "" if ss.FU1 is None else str(ss.FU1),
+                              "" if ss.FU2 is None else str(ss.FU2),
+                              "" if ss.value is None else str(ss.value),
+                              "" if ss.instruction is None else str(ss.instruction))
 
         return table
 
     def display_HS(self):
         table = Table(title="Hold Stations")
         table.add_column("occupied", justify="center")
-        table.add_column("type", justify="center")
         table.add_column("HS", justify="center")
+        table.add_column("case Pile?", justify="center")
         table.add_column("bitMux", justify="center")
         table.add_column("RP1", justify="center")
         table.add_column("RP2", justify="center")
@@ -254,9 +265,18 @@ class Simulador_1_FU:
 
         for i in range(self.hs.n):
             hs = self.hs.l_hs[i]
-            table.add_row(str(self.hs.occupied[i]),str(hs.casePile), f"HS{i}", str(hs.bitMux), str(hs.RP1), str(hs.RP2),
-                          str(hs.position), str(hs.destination),
-                          hs.FU1, hs.FU2, str(hs.value1), str(hs.value2))
+            table.add_row(str(self.hs.occupied[i]),
+                          f"HS{i}",
+                          "" if hs.casePile is None else str(hs.casePile),
+                          "" if hs.bitMux is None else str(hs.bitMux),
+                          "" if hs.RP1 == -1 else str(hs.RP1),
+                          "" if hs.RP2 == -1 else str(hs.RP2),
+                          "" if hs.position is None else str(hs.position),
+                          "" if hs.destination is None else str(hs.destination),
+                          "" if hs.FU1 is None else hs.FU1,
+                          "" if hs.FU2 is None else hs.FU2,
+                          "" if hs.value1 is None else str(hs.value1),
+                          "" if hs.value2 is None else str(hs.value2))
 
         return table
 
@@ -387,13 +407,25 @@ class Simulador_1_FU:
 
         if bCDB:
             text = Text()
-            text.append(self.CDB.__str__())
+            text.append(self.CDB.__str__()+ "\n" )
             console.print(text)
 
         if badd_brt:
             text = Text()
             for fu in self.fus_add:
-                text.append(fu.name + fu.BRT.__str__())
+                text.append(fu.name + fu.BRT.__str__() + "\n")
+            console.print(text)
+
+        if bmux_brt:
+            text = Text()
+            for fu in self.fus_mult:
+                text.append(fu.name + fu.BRT.__str__() + "\n")
+            console.print(text)
+
+        if bstore_brt:
+            text = Text()
+            for fu in self.fus_store:
+                text.append(fu.name + fu.BRT.__str__() + "\n")
             console.print(text)
 
 

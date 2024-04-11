@@ -117,8 +117,9 @@ class FU:
                         if ts_max == 0:
                             value2 = registers.R[reg_max].value
                             RP1 = -1
-                        hs.update(i = freeHS, RP1=ts_min, RP2 = ts_max, position = position, value1 = value1, destination = self.name,
-                                  value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, casePile = casePile, type_operation=inst.function)
+                        hs.update(i = freeHS, RP1=ts_min, RP2 = ts_max, position = position, value1 = value1,
+                                  destination = self.name,value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1,
+                                  FU2 = FU2, casePile = casePile, type_operation=inst.function)
 
                         registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
                         self.BRT.occupy_i(position)

@@ -19,10 +19,14 @@ class BRT:
     #     self.table[i:i+self.latency] = [1]*self.latency
 
     def findFirstAfter(self, ts_max):
-        for index in range(ts_max, ts_max+4):
-            if self.table[index] == 0:
-                return index-ts_max
-        return -1
+        if ts_max >= len(self.table):
+            return -1
+        else:
+            end = ts_max + 4 if ts_max + 4 < len(self.table) else len(self.table)-1
+            for index in range(ts_max, end):
+                if self.table[index] == 0:
+                    return index-ts_max
+            return -1
 
     def one_clock_cycle(self):
         self.table.pop(0)

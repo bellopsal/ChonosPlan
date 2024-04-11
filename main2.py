@@ -274,6 +274,7 @@ class app:
                              latency_add = int(self.latency_add.get()),
                              latency_mult =int(self.latency_mult.get()),
                              latency_store= int(self.latency_store.get()),
+                            n_cycles=int(self.n_cycles.get()),
                              m=int(self.m.get()),
                              b_hs= self.b_hs.get(),
 

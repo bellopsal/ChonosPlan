@@ -105,9 +105,10 @@ class Registers:
                 reg_min = source1
                 inv = False
 
-
-
-            FU1 = self.R[reg_min].fu
+            if ts_min == 0:
+                FU1 = "mem"
+            else:
+                FU1 = self.R[reg_min].fu
             FU2 = self.R[reg_max].fu
 
             return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
