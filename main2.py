@@ -35,7 +35,7 @@ class app:
     def __init__(self, master):
         self.image = None
         self.master = master
-        self.text_widget = tk.Text(self.master, wrap="none")
+        self.text_widget = tk.Text(self.master, width=190)
         self.px = 15
         self.py = 15
         v = tk.Scrollbar(self.master, command=self.scroll_text)
@@ -403,7 +403,7 @@ class app:
         sys.stdout = ConsoleRedirector(self.text_widget)
         sys.stderr = ConsoleRedirector(self.text_widget)
 
-        self.text_widget.pack(side="left", fill="both", expand=True, padx=self.px, pady=self.py)
+        self.text_widget.pack(side="left", padx=self.px, pady=self.py, fill="y")
 
         self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
                                 bmemory=self.display_memory_value.get(),badd=self.display_ADD_value.get(),

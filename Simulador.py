@@ -307,13 +307,13 @@ class Simulador_1_FU:
 
             text.append(str(inst_list), style="bold")
 
-        console = Console(width=250, height=200)
+        console = Console(record=True, width=200, height=200)
 
         console.print(text)
 
     def display(self, badd=True, bmux=True, bstore=False, bmemory=False):
         self.display_ints()
-        console = Console()
+        console = Console(record=True, width=200, height=200)
 
         if badd:
             table_adds = Table(title="Functional Unit: ADD")
@@ -361,16 +361,18 @@ class Simulador_1_FU:
         console.print(register)
 
     def display2(self, badd=True, bmux=True, bstore=False, bmemory=False, bhs = False, bCDB = False, badd_brt=False, bmux_brt = False, bstore_brt = False, bjump_brt = False):
-        console = Console(record=True, width=250, height=200)
+        console = Console(record=True, width=190, height=200)
 
-        console.rule("[bold red]")
-        console.rule(f"[bold red] {self.recent_cycle}")
-        console.rule("[bold red]\n")
+        #console.rule("[bold red]")
+        console.rule(f"[bold red] {self.recent_cycle}", align="left")
+        #console.rule("[bold red]\n")
+
 
         self.display_ints()
 
         if self.b_hs and bhs:
-            console.print(self.display_HS(), justify="center")
+            console.print(self.display_HS())
+
 
         if badd:
             alu_renderables = [Panel(Group(self.display_SS(f"ADD_{i}", fu=self.fus_add[i]),
@@ -392,6 +394,22 @@ class Simulador_1_FU:
                                  for i in range(self.n_store)]
 
             console.print(Columns(store_renderables, equal=True, align="center", title="Functional Unit: STORE"))
+            Group().
+        register = Table(title="REGISTERS")
+        register.add_column("Register", justify="center")
+        register.add_column("TD", justify="center")
+        register.add_column("FU", justify="center")
+        register.add_column("value", justify="center")
+        register.add_column("locked", justify="center")
+
+        for reg in self.registers.R:
+            register.add_row("R" + str(reg.number), "+" + str(reg.td), reg.fu, str(reg.value), str(reg.lock))
+
+        console.print(register)
+
+        console.save_html("test.html")
+        console.save_svg("test.svg")
+        console.save_text("test.txt")
 
         if bmemory:
             memory = Table(title="MEMORY")
@@ -403,6 +421,8 @@ class Simulador_1_FU:
             for i in range(len(l)):
                 memory.add_row(str(i), str(l[i]))
             console.print(memory)
+
+
 
         if bCDB:
             text = Text()
@@ -434,18 +454,4 @@ class Simulador_1_FU:
             console.print(text)
 
 
-        register = Table(title="REGISTERS")
-        register.add_column("Register", justify="center")
-        register.add_column("TD", justify="center")
-        register.add_column("FU", justify="center")
-        register.add_column("value", justify="center")
-        register.add_column("locked", justify="center")
 
-        for reg in self.registers.R:
-            register.add_row("R" + str(reg.number), "+" + str(reg.td), reg.fu, str(reg.value), str(reg.lock))
-
-        console.print(register)
-
-        console.save_html("test.html")
-        console.save_svg("test.svg")
-        console.save_text("test.txt")
