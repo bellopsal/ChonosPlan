@@ -1,0 +1,24 @@
+@startuml
+class PC {
+    __str__()
+    instBlock()
+    one_clock_cycle()
+    new_instruction()
+        m
+    PC
+    pointer
+    last
+    inst_blocked
+    programSize
+    PC
+    last
+    PC
+    last
+    pointer
+    PC
+    inst_blocked
+    last
+    pointer
+    __init__()
+}
+@enduml

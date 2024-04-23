@@ -125,9 +125,9 @@ class Simulador_1_FU:
 
     def moveOperationQueue(self, fus, mem = None):
         if mem == None:
-            res = [fu.moveOperationQueue() for fu in fus]
+            res = [fu.move_operation_queue() for fu in fus]
         else:
-            res = [fu.moveOperationQueue(mem) for fu in fus]
+            res = [fu.move_operation_queue(mem) for fu in fus]
         return res
 
     def fromHSToSS(self, lUpdate):
@@ -146,7 +146,7 @@ class Simulador_1_FU:
                 i = self.pile_size - 1
                 fu.SS.update_i(i=i, bitMux=hs.bitMux, FU1=hs.FU1, RP=hs.RP1, FU2=hs.FU2, value=hs.value1,
                                type_operation=hs.type_operation, inv=hs.inv, inm=hs.inm)
-                fu.updatePile(position=i, RP=hs.RP2, FU=hs.FU2, value=hs.value2)
+                fu.update_pile(position=i, RP=hs.RP2, FU=hs.FU2, value=hs.value2)
 
             else:
                 i = self.ss_size - 1
@@ -186,7 +186,7 @@ class Simulador_1_FU:
 
                 index = self.selection(indexes, selectionOrder)
                 fu = self.getFU(inst.fu_type, index)
-                res, bitMux = fu.newInstruction(inst, instIndex, self.registers, self.hs, self.b_hs)
+                res, bitMux = fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs)
 
         return res, bitMux
 

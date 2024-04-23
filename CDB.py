@@ -10,12 +10,12 @@ class CDB:
         txt= f"CBD: \n     add: {self.add} \n     store: {self.store} \n     mult: {self.mult }"
         return txt
 
-    def get(self,strValue, index):
-        if strValue == "add":
+    def get(self, FU_type, index):
+        if FU_type == "add":
             return self.add[index]
-        elif strValue == "store":
+        elif FU_type == "store":
             return self.store[index]
-        elif strValue == "mult":
+        elif FU_type == "mult":
             return self.mult[index]
 
     def update(self, add, store, mult):

@@ -85,7 +85,7 @@ class FU:
         return res, bitMux
 
     def findFirstEmptyBRT(self, ts_max):
-        n = self.BRT.findFirstAfter(ts_max)
+        n = self.BRT.find_first_after(ts_max)
         return n
 
 

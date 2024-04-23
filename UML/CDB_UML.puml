@@ -1,0 +1,24 @@
+@startuml
+class CDB {
+    __str__()
+    get()
+    update()
+        add
+    store
+    mult
+    __init__()
+}
+@enduml
+
+@startuml
+class BRT {
+    __str__()
+    get()
+    occupy_i()
+    find_first_after()
+    one_clock_cycle()
+    n_clocks_cycle()
+        table
+    __init__()
+}
+@enduml

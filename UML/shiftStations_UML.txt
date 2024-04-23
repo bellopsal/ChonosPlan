@@ -1,0 +1,55 @@
+@startuml
+class ShiftStation {
+    one_clock_cycle()
+    __str__()
+        bitMux
+    inv
+    inm
+    FU1
+    FU2
+    value
+    type_operation
+    instruction
+    value
+    RP
+    __init__()
+}
+class SS {
+    get()
+    __str__()
+    one_clock_cycle()
+    get()
+    update_i()
+        n
+    __init__()
+}
+class PileElement {
+    __str__()
+    __int__()
+    one_clock_cycle()
+    setValue()
+    setFu()
+    setRP()
+    getValue()
+    getFU()
+    getRP()
+        value
+    fu
+    value
+    fu
+    RP
+    value
+    RP
+    value
+    fu
+    RP
+    __init__()
+}
+class Pile {
+    __str__()
+    get()
+    one_clock_cycle()
+        n
+    __init__()
+}
+@enduml

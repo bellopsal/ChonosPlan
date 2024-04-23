@@ -1,0 +1,12 @@
+@startuml
+class Statistics {
+    newCycle()
+    updateTypeInst()
+    increaseTotalLock()
+    increaseInstIssued()
+        totalLock
+    instIssued
+    cycles
+    __init__()
+}
+@enduml

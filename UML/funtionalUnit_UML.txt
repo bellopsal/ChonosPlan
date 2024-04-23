@@ -1,0 +1,26 @@
+@startuml
+class FU {
+    operation()
+    calculateN()
+    new_instruction()
+    findFirstEmptyBRT()
+    update_pile()
+    update_pile_case0()
+    move_operation_queue()
+    strBRT()
+    strOperationQueue()
+    one_clock_cycle()
+        name
+    type
+    pile_size
+    ss_size
+    SS
+    BRT
+    latency
+    pile
+    ss_side
+    pile_side
+    pile_side
+    __init__()
+}
+@enduml

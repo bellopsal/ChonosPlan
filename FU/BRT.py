@@ -18,7 +18,7 @@ class BRT:
     # def ocupy_range(self,i):
     #     self.table[i:i+self.latency] = [1]*self.latency
 
-    def findFirstAfter(self, ts_max):
+    def find_first_after(self, ts_max):
         if ts_max >= len(self.table):
             return -1
         else:
