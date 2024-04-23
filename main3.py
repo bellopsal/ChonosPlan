@@ -22,7 +22,7 @@ instrucciones = Program.Program("fullBRT.csv")
 
 s = Simulador.Simulador_1_FU(program = instrucciones,
                              n_ss = 8,
-                             n_registers = 5,
+                             n_registers = 9,
                              b_scoreboard = 1,
                              pile_size = 3,
                              memory_size=32,
@@ -32,7 +32,7 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
                              latency_add = 2,
                              latency_mult =3,
                              latency_store= 2,
-                             m=3,
+                             multiplicity=3,
                              b_hs= False,
 
                              )

@@ -1,2 +1,2 @@
 ,n_ss,n_registers,pile_size,memory_size,n_add,n_mult,n_store,latency_add,latency_mult,latency_store,n_cycles,m,b_hs
-0,8,2,3,16,4,3,2,2,3,2,20,5,True
+0,8,8,3,16,4,3,2,2,3,2,20,5,True

@@ -20,12 +20,17 @@ class FU:
         self.pile = shiftStations.Pile(pile_size)
         self.operationQueue = [None] * latency
         self.memoryQueue = [(None,None)] * latency
+        self.lastBRT = 0
 
         # Registers that are going to be used for the operation next
         self.ss_side = shiftStations.ShiftStation()
         self.pile_side = shiftStations.PileElement()
 
     def operation(self, mem):
+        #update last BRT
+        if self.lastBRT > 0: self.lastBRT = self.lastBRT - 1
+
+        # operation
         operand1 = self.ss_side.value  # first to arrive
         inm = self.ss_side.inm
 
@@ -79,6 +84,12 @@ class FU:
             FU2 = registersCalculation[5]
             inv = registersCalculation[6]
 
+            # always set the time to the last one to avoid dependency hazzards
+            if self.lastBRT > ts_max:
+                ts_max = self.lastBRT
+            else:
+                self.lastBRT = ts_max
+
             td = ts_max + self.latency
             n = self.findFirstEmptyBRT(ts_max)
 
@@ -87,8 +98,6 @@ class FU:
             position = ts_max + n
 
             inm = inst.inm
-
-
 
             if n == -1:
                 # this case will never happen

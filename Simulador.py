@@ -15,21 +15,24 @@ from rich.text import Text
 
 class Simulador_1_FU:
 
-    def __init__(self, program, n_ss, n_registers, pile_size, memory_size,
-                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, m, n_hs=10, b_hs=False, n_cycles=120,
+    def __init__(self, program, ss_size, n_registers, pile_size, memory_size,
+                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, multiplicity, n_hs=10, b_hs=False, n_cycles=120,
                  b_scoreboard=1):
         # set of instructions
         self.recent_cycle = 0
         self.program = program
+
         self.memory = Memory.Memory(memory_size)
-        self.ss_size = n_ss
+        self.ss_size = ss_size
         self.pile_size = pile_size
+
         self.n_add = n_add
         self.n_mult = n_mult
         self.n_store = n_store
-        self.PC = Pointer.PC(m, self.program.n)
+
+        self.PC = Pointer.PC(multiplicity, self.program.n)
         self.n_cycles = n_cycles
-        self.m = m
+        self.multiplicity = multiplicity
 
         self.fus_add = []
         self.fus_mult = []
@@ -38,7 +41,7 @@ class Simulador_1_FU:
                                             pile_size = self.pile_size, n_cycles=self.n_cycles)
 
         self.b_hs = b_hs
-        self.hs = holdStations.HS(n_hs, n_ss, pile_size)
+        self.hs = holdStations.HS(n_hs, ss_size, pile_size)
 
         self.add_selectionOrder = list(range(n_add))
         self.mult_selectionOrder = list(range(n_mult))
@@ -48,16 +51,17 @@ class Simulador_1_FU:
 
         for i in range(n_add):
             self.fus_add.append(
-                funtionalUnit.FU(f"add_{i}", "add", n_ss, pile_size=pile_size, latency=latency_add, n_cycles=n_cycles))
+                funtionalUnit.FU(f"add_{i}", "add", ss_size,
+                                 pile_size=pile_size, latency=latency_add, n_cycles=n_cycles))
 
         for i in range(n_mult):
-            self.fus_mult.append(funtionalUnit.FU(f"mult_{i}", "mult", n_ss, pile_size=pile_size, latency=latency_mult,
-                                                  n_cycles=n_cycles))
+            self.fus_mult.append(funtionalUnit.FU(f"mult_{i}", "mult", ss_size,
+                                                  pile_size=pile_size, latency=latency_mult, n_cycles=n_cycles))
 
         for i in range(n_store):
             self.fus_store.append(
-                funtionalUnitStore.FU(f"store_{i}", "store", n_ss, pile_size=pile_size, latency=latency_store,
-                                      n_cycles=n_cycles))
+                funtionalUnitStore.FU(f"store_{i}", "store", ss_size,
+                                      pile_size=pile_size, latency=latency_store,n_cycles=n_cycles))
 
         self.registers = Registers.Registers(n_registers, b_scoreboard)
         self.CDB = CDB.CDB()
@@ -82,7 +86,7 @@ class Simulador_1_FU:
         for fu in self.fus_store: fu.operation(self.memory)
 
         # Update the operation Queue
-        self.CDB.update(add=self.moveOperationQueue(self.fus_add), store=self.moveOperationQueue2(self.fus_store, self.memory),
+        self.CDB.update(add=self.moveOperationQueue(self.fus_add), store=self.moveOperationQueue(self.fus_store, self.memory),
                         mult=self.moveOperationQueue(self.fus_mult))
 
         self.registers.one_clock_cycle(self.CDB)
@@ -110,18 +114,20 @@ class Simulador_1_FU:
                         self.statistics.increaseTotalLock()
                         self.PC.instBlock()
                         self.registers.instBlock([inst.r1, inst.r2, inst.r3, inst.rs1, inst.rd])
+                        self.dump_csv()
                     else:
                         self.statistics.increaseInstIssued()
+                        self.dump_csv()
                         if inst.fu_type == "jump" and inst.BTB == True:
                             self.PC.last = self.program.dict_names[inst.offset] - 1
                             break
 
-    def moveOperationQueue(self, fus):
-        res = [fu.moveOperationQueue() for fu in fus]
-        return res
 
-    def moveOperationQueue2(self, fus, mem):
-        res = [fu.moveOperationQueue(mem) for fu in fus]
+    def moveOperationQueue(self, fus, mem = None):
+        if mem == None:
+            res = [fu.moveOperationQueue() for fu in fus]
+        else:
+            res = [fu.moveOperationQueue(mem) for fu in fus]
         return res
 
     def fromHSToSS(self, lUpdate):
@@ -134,6 +140,7 @@ class Simulador_1_FU:
             if fu_type == "add": fu = self.fus_add[fu_pos]
             if fu_type == "mult": fu = self.fus_mult[fu_pos]
             if fu_type == "store": fu = self.fus_store[fu_pos]
+            if fu_type == "jump": fu = self.fu_jump
 
             if hs.casePile:
                 i = self.pile_size - 1
@@ -148,19 +155,6 @@ class Simulador_1_FU:
 
             hs.empty()
 
-    def find_lowest_positive_index(self, l):
-        lowest_positive = None
-        lowest_positive_index = []
-
-        for i, num in enumerate(l):
-            if num >= 0 and (lowest_positive is None or num < lowest_positive):
-                lowest_positive = num
-                lowest_positive_index = [i]
-            elif num >= 0 and num == lowest_positive:
-                lowest_positive = num
-                lowest_positive_index.append(i)
-
-        return lowest_positive_index
 
     def newInstruction(self, instIndex):
         inst = self.program.get(instIndex)
@@ -196,6 +190,22 @@ class Simulador_1_FU:
 
         return res, bitMux
 
+
+    def find_lowest_positive_index(self, l):
+        # Find the "best" fu to put the new instruction
+        lowest_positive = None
+        lowest_positive_index = []
+
+        for i, num in enumerate(l):
+            if num >= 0 and (lowest_positive is None or num < lowest_positive):
+                lowest_positive = num
+                lowest_positive_index = [i]
+            elif num >= 0 and num == lowest_positive:
+                lowest_positive = num
+                lowest_positive_index.append(i)
+
+        return lowest_positive_index
+
     def selection(self, indexes, selectionOrder):
         keep = [e for e in selectionOrder if e in indexes]
 
@@ -215,8 +225,11 @@ class Simulador_1_FU:
         if fu_type == "mult":
             return self.fus_mult[index]
 
+
+    ## Display functions
+
     def display_SS(self, title, fu, store=False):
-        table = Table(title=title)
+        table = Table(title=title,  expand = True)
         table.add_column("SS", justify="center")
         table.add_column("bMux", justify="center")
         table.add_column("RP", justify="center")
@@ -361,7 +374,7 @@ class Simulador_1_FU:
         console.print(register)
 
     def display2(self, badd=True, bmux=True, bstore=False, bmemory=False, bhs = False, bCDB = False, badd_brt=False, bmux_brt = False, bstore_brt = False, bjump_brt = False):
-        console = Console(record=True, width=190, height=200)
+        console = Console(record= True, width=190)
 
         #console.rule("[bold red]")
         console.rule(f"[bold red] {self.recent_cycle}", align="left")
@@ -379,7 +392,7 @@ class Simulador_1_FU:
                                            self.display_pile(fu=self.fus_add[i], title=f"Pile_{i}")))
                                for i in range(self.n_add)]
 
-            console.print(Columns(alu_renderables, equal=True, align="center", title="Functional Unit: ADD"))
+            console.print(Columns(alu_renderables, equal=True, align="center", title="Functional Unit: ADD", expand = True))
 
         if bmux:
             mux_renderables = [Panel(Group(self.display_SS(f"MULT_{i}", fu=self.fus_mult[i]),
@@ -394,7 +407,7 @@ class Simulador_1_FU:
                                  for i in range(self.n_store)]
 
             console.print(Columns(store_renderables, equal=True, align="center", title="Functional Unit: STORE"))
-            Group().
+
         register = Table(title="REGISTERS")
         register.add_column("Register", justify="center")
         register.add_column("TD", justify="center")

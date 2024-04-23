@@ -38,11 +38,11 @@ class app:
         self.text_widget = tk.Text(self.master, width=190)
         self.px = 15
         self.py = 15
-        v = tk.Scrollbar(self.master, command=self.scroll_text)
-        v.pack(side="right", fill="y")
+        self.v = tk.Scrollbar(self.master, command=self.scroll_text)
+        self.h = tk.Scrollbar(self.master, command=self.scroll_text)
+        self.h.pack(side="bottom", fill="x")
+        self.v.pack(side="right", fill="y")
 
-        h = tk.Scrollbar(self.master, command=self.scroll_text)
-        h.pack(side="bottom", fill="x")
         self.full_frame = tk.Frame()
         self.frame_a = tk.Frame(master=self.full_frame, highlightbackground="black", highlightthickness=2)
         self.frame_b = tk.Frame(master=self.full_frame,highlightbackground="black", highlightthickness=2)
@@ -145,7 +145,7 @@ class app:
 
         tk.Label(master=frame_add_2, text=" ADD  ").pack(fill=tk.Y, side=tk.LEFT)
         self.n_add = tk.Entry(master = frame_add_2, width = 5)
-        self.n_add.pack( side=tk.RIGHT)
+        self.n_add.pack( side=tk.LEFT)
         self.n_add.insert(0, "4")
 
         self.latency_add = tk.Entry(master = frame_add_2, width = 5)
@@ -154,8 +154,8 @@ class app:
 
         tk.Label(master=frame_add_3, text="MULT ").pack(fill=tk.Y, side=tk.LEFT)
         self.n_mult = tk.Entry(master = frame_add_3,  width = 5)
-        self.n_mult.pack( side=tk.RIGHT)
-        self.n_mult.insert(0, "2")
+        self.n_mult.pack( side=tk.LEFT)
+        self.n_mult.insert(0, "4")
 
         self.latency_mult = tk.Entry(master = frame_add_3, width = 5)
         self.latency_mult.pack( side=tk.RIGHT)
@@ -163,8 +163,8 @@ class app:
 
         tk.Label(master=frame_add_4, text="STORE").pack(fill=tk.Y, side=tk.LEFT)
         self.n_store = tk.Entry(master = frame_add_4, width = 5)
-        self.n_store.pack( side=tk.RIGHT)
-        self.n_store.insert(0, "2")
+        self.n_store.pack( side=tk.LEFT)
+        self.n_store.insert(0, "4")
 
         self.latency_store = tk.Entry(master = frame_add_4, width = 5)
         self.latency_store.pack(side=tk.RIGHT)
@@ -356,22 +356,22 @@ class app:
     def start(self):
 
         self.simulador =Simulador.Simulador_1_FU(program = self.program,
-                             n_ss = int(self.n_ss.get()),
-                             n_registers = int(self.n_registers.get()),
+                                                 ss_size = int(self.n_ss.get()),
+                                                 n_registers = int(self.n_registers.get()),
 
-                             pile_size = int(self.pile_size.get()),
-                             memory_size=int(self.memory_size.get()),
-                             n_add = int(self.n_add.get()),
-                             n_mult= int(self.n_mult.get()),
-                             n_store = int(self.n_store.get()),
-                             latency_add = int(self.latency_add.get()),
-                             latency_mult =int(self.latency_mult.get()),
-                             latency_store= int(self.latency_store.get()),
-                             n_cycles=int(self.n_cycles.get()),
-                             m=int(self.m.get()),
-                             b_hs= self.b_hs.get()
+                                                 pile_size = int(self.pile_size.get()),
+                                                 memory_size=int(self.memory_size.get()),
+                                                 n_add = int(self.n_add.get()),
+                                                 n_mult= int(self.n_mult.get()),
+                                                 n_store = int(self.n_store.get()),
+                                                 latency_add = int(self.latency_add.get()),
+                                                 latency_mult =int(self.latency_mult.get()),
+                                                 latency_store= int(self.latency_store.get()),
+                                                 n_cycles=int(self.n_cycles.get()),
+                                                 multiplicity=int(self.m.get()),
+                                                 b_hs= self.b_hs.get()
 
-                             )
+                                                 )
         self.open_statistics()
 
         self.re_start_button = tk.Button(self.master, text="re-start", command=self.re_start)
@@ -403,6 +403,8 @@ class app:
         sys.stdout = ConsoleRedirector(self.text_widget)
         sys.stderr = ConsoleRedirector(self.text_widget)
 
+
+
         self.text_widget.pack(side="left", padx=self.px, pady=self.py, fill="y")
 
         self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
@@ -420,7 +422,7 @@ class app:
         self.label1 = tk.Label(self.new_window, text=f"Nº cycles: {self.simulador.statistics.cycles}")
         self.label1.pack()
 
-        self.label2 = tk.Label(self.new_window, text=f"Multiplicity: {self.simulador.m}")
+        self.label2 = tk.Label(self.new_window, text=f"Multiplicity: {self.simulador.multiplicity}")
         self.label2.pack()
 
         self.label3 = tk.Label(self.new_window, text=f"inst Issued: {self.simulador.statistics.instIssued}")
