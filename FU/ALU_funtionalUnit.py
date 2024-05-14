@@ -48,10 +48,10 @@ class FU:
             self.operationQueue[0] = operand1 ^ operand2
 
         if str(self.ss_side.type_operation).startswith("sll"):
-            self.operationQueue[0] = operand2 << operand1
+            self.operationQueue[0] = int(operand2) << int(operand1)
 
         if str(self.ss_side.type_operation).startswith("srl"):
-            self.operationQueue[0] = operand2 >> operand1
+            self.operationQueue[0] = int(operand2) >> int(operand1)
 
         if str(self.ss_side.type_operation).startswith("slt"):
             if self.ss_side.inv:

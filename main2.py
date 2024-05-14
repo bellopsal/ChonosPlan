@@ -161,7 +161,7 @@ class app:
         tk.Label(master=frame_alu_2, text=" ALU  ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
         self.n_alu = tk.Entry(master = frame_alu_2, width = 5, justify="left")
         self.n_alu.pack( side=tk.LEFT)
-        self.n_alu.insert(0, "4")
+        self.n_alu.insert(0, "3")
 
         self.latency_alu = tk.Entry(master = frame_alu_2, width = 5, justify="left")
         self.latency_alu.pack( side=tk.RIGHT)
@@ -171,7 +171,7 @@ class app:
         tk.Label(master=frame_alu_3, text="MULT ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
         self.n_mult = tk.Entry(master = frame_alu_3,  width = 5, justify="left")
         self.n_mult.pack( side=tk.LEFT)
-        self.n_mult.insert(0, "4")
+        self.n_mult.insert(0, "3")
 
         self.latency_mult = tk.Entry(master = frame_alu_3, width = 5, justify="left")
         self.latency_mult.pack( side=tk.RIGHT)
@@ -181,7 +181,7 @@ class app:
         tk.Label(master=frame_alu_4, text=" DIV  ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
         self.n_div = tk.Entry(master = frame_alu_4,  width = 5, justify="left")
         self.n_div.pack( side=tk.LEFT)
-        self.n_div.insert(0, "4")
+        self.n_div.insert(0, "3")
 
         self.latency_div = tk.Entry(master = frame_alu_4, width = 5, justify="left")
         self.latency_div.pack( side=tk.RIGHT)
@@ -191,7 +191,7 @@ class app:
         tk.Label(master=frame_alu_5, text="STORE", justify="left").pack(fill=tk.Y, side=tk.LEFT)
         self.n_store = tk.Entry(master = frame_alu_5, width = 5, justify="left")
         self.n_store.pack( side=tk.LEFT)
-        self.n_store.insert(0, "4")
+        self.n_store.insert(0, "3")
 
         self.latency_store = tk.Entry(master = frame_alu_5, width = 5, justify="left")
         self.latency_store.pack(side=tk.RIGHT)
@@ -201,7 +201,7 @@ class app:
         tk.Label(master=frame_alu_6, text="LOAD", justify="left").pack(fill=tk.Y, side=tk.LEFT)
         self.n_load = tk.Entry(master = frame_alu_6, width = 5, justify="left")
         self.n_load.pack( side=tk.LEFT)
-        self.n_load.insert(0, "4")
+        self.n_load.insert(0, "3")
 
         self.latency_load = tk.Entry(master = frame_alu_6, width = 5, justify="left")
         self.latency_load.pack(side=tk.RIGHT)
@@ -456,13 +456,20 @@ class app:
 
         self.text_widget.pack(side="left", padx=self.px, pady=self.py, fill="y")
 
-        self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
-                                bmemory=self.display_memory_value.get(),balu=self.display_alu_value.get(),
-                                bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get(),
-                                balu_brt = self.display_alu_BRT_value.get(),
+        self.simulador.display2(balu=self.display_alu_value.get(),
+                                bmux=self.display_MUL_value.get(),
+                                bdiv=self.display_DIV_value.get(),
+                                bstore=self.display_STORE_value.get(),
+                                bload=self.display_LOAD_value.get(),
+                                bmemory=self.display_memory_value.get(),
+                                bhs = self.display_HS_value.get(),
+                                bCDB=self.display_CDB_value.get(),
+                                balu_brt=self.display_alu_BRT_value.get(),
+                                bdiv_brt=self.display_DIV_BRT_value.get(),
+                                bmux_brt=self.display_MUL_BRT_value.get(),
                                 bstore_brt = self.display_STORE_BRT_value.get(),
-                                bmux_brt = self.display_MUL_BRT_value.get(),
-                                bjump_brt=self.display_JUMP_BRT_value.get())
+                                bload_brt=self.display_LOAD_BRT_value.get(),
+                                bjump_brt=self.display_JUMP_BRT_value.get(),)
 
     def open_statistics(self):
         self.new_window = tk.Toplevel(self.master)

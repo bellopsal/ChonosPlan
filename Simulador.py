@@ -72,6 +72,7 @@ class Simulador_1_FU:
                 DIV_funtionalUnit.FU(f"div_{i}", "div", ss_size,
                                                   pile_size=pile_size, latency=latency_div, n_cycles=n_cycles))
 
+        print(n_load)
         for i in range(n_load):
             self.fus_load.append(
                 LOAD_funtionalUnitStore.FU(f"load_{i}", "load", ss_size,
@@ -305,7 +306,7 @@ class Simulador_1_FU:
         table = Table(title="Hold Stations")
         table.add_column("occupied", justify="center")
         table.add_column("HS", justify="center")
-        table.add_column("case Pile?", justify="center")
+        table.add_column("case QUEUE?", justify="center")
         table.add_column("bitMux", justify="center")
         table.add_column("RP1", justify="center")
         table.add_column("RP2", justify="center")
@@ -342,7 +343,7 @@ class Simulador_1_FU:
 
         for i in range(self.pile_size - 1, -1, -1):
             ss = fu.pile.pile[i]
-            table.add_row(f"P{i}", str(ss.RP), ss.fu, str(ss.value))
+            table.add_row(f"Q{i}", str(ss.RP), ss.fu, str(ss.value))
 
         return table
 
@@ -371,7 +372,7 @@ class Simulador_1_FU:
 
         if balu:
             table_alus = Table(title="Functional Unit: alu")
-            table_alus_pile = Table(title="Pile: alu")
+            table_alus_pile = Table(title="Queue: alu")
             for i in range(self.n_alu):
                 table_alus.add_column(self.display_SS(f"alu_{i}", fu=self.fus_alu[i]))
                 table_alus_pile.add_column(self.display_pile(fu=self.fus_alu[i]))
@@ -414,7 +415,7 @@ class Simulador_1_FU:
 
         console.print(register)
 
-    def display2(self, balu=True, bmux=True, bstore=False, bmemory=False, bhs = False, bCDB = False, balu_brt=False, bmux_brt = False, bstore_brt = False, bjump_brt = False):
+    def display2(self, balu=True, bmux=True,bdiv=False, bstore=False, bload=False, bmemory=False, bhs = False, bCDB = False, balu_brt=False, bmux_brt = False,bdiv_brt = False, bstore_brt = False, bload_brt = False,bjump_brt = False):
         console = Console(record= True, width=190)
 
         #console.rule("[bold red]")
@@ -430,24 +431,38 @@ class Simulador_1_FU:
 
         if balu:
             alu_renderables = [Panel(Group(self.display_SS(f"alu_{i}", fu=self.fus_alu[i]),
-                                           self.display_pile(fu=self.fus_alu[i], title=f"Pile_{i}")))
+                                           self.display_pile(fu=self.fus_alu[i], title=f"Queue_{i}")))
                                for i in range(self.n_alu)]
 
-            console.print(Columns(alu_renderables, equal=True, align="center", title="Functional Unit: alu", expand = True))
+            console.print(Columns(alu_renderables, equal=True, align="center", title="Functional Unit: alu"))
 
         if bmux:
             mux_renderables = [Panel(Group(self.display_SS(f"MULT_{i}", fu=self.fus_mult[i]),
-                                           self.display_pile(fu=self.fus_mult[i], title=f"Pile_{i}")))
+                                           self.display_pile(fu=self.fus_mult[i], title=f"Queue_{i}")))
                                for i in range(self.n_mult)]
 
             console.print(Columns(mux_renderables, equal=True, align="center", title="Functional Unit: MULT"))
 
+        if bdiv:
+            div_renderables = [Panel(Group(self.display_SS(f"DIV_{i}", fu=self.fus_div[i]),
+                                           self.display_pile(fu=self.fus_div[i], title=f"Queue_{i}")))
+                               for i in range(self.n_div)]
+
+            console.print(Columns(div_renderables, equal=True, align="center", title="Functional Unit: DIV"))
+
         if bstore:
             store_renderables = [Panel(Group(self.display_SS(f"STORE_{i}", fu=self.fus_store[i]),
-                                             self.display_pile(fu=self.fus_store[i], title=f"Pile_{i}")))
+                                             self.display_pile(fu=self.fus_store[i], title=f"Queue_{i}")))
                                  for i in range(self.n_store)]
 
             console.print(Columns(store_renderables, equal=True, align="center", title="Functional Unit: STORE"))
+
+        if bload:
+            store_renderables = [Panel(Group(self.display_SS(f"LOAD_{i}", fu=self.fus_load[i]),
+                                             self.display_pile(fu=self.fus_load[i], title=f"Queue_{i}")))
+                                 for i in range(self.n_load)]
+
+            console.print(Columns(store_renderables, equal=True, align="center", title="Functional Unit: LOAD"))
 
         register = Table(title="REGISTERS")
         register.add_column("Register", justify="center")
@@ -496,9 +511,22 @@ class Simulador_1_FU:
                 text.append(fu.name + fu.BRT.__str__() + "\n")
             console.print(text)
 
+        if bdiv_brt:
+            text = Text()
+            for fu in self.fus_div:
+                text.append(fu.name, style="bold magenta underline")
+                text.append( fu.BRT.__str__() + "\n")
+            console.print(text)
+
         if bstore_brt:
             text = Text()
             for fu in self.fus_store:
+                text.append(fu.name + fu.BRT.__str__() + "\n")
+            console.print(text)
+
+        if bload_brt:
+            text = Text()
+            for fu in self.fus_load:
                 text.append(fu.name + fu.BRT.__str__() + "\n")
             console.print(text)
 
