@@ -2,7 +2,7 @@ import CDB
 import Memory
 import Pointer
 
-from FU import funtionalUnit, holdStations, funtionalUnitStore, funtionalUnitJump
+from FU import holdStations, funtionalUnitStore, funtionalUnitJump, ALU_funtionalUnit, STORE_funtionalUnitStore, LOAD_funtionalUnitStore, DIV_funtionalUnit, MULT_funtionalUnit
 import Registers
 
 from rich.console import Console,Group
@@ -16,7 +16,9 @@ from rich.text import Text
 class Simulador_1_FU:
 
     def __init__(self, program, ss_size, n_registers, pile_size, memory_size,
-                 n_add, n_mult, n_store, latency_add, latency_mult, latency_store, multiplicity, n_hs=10, b_hs=False, n_cycles=120,
+                 n_alu, n_mult, n_div, n_load, n_store,
+                 latency_alu, latency_mult,latency_div,latency_load, latency_store,
+                 multiplicity, n_hs=10, b_hs=False, n_cycles=120,
                  b_scoreboard=1):
         # set of instructions
         self.recent_cycle = 0
@@ -26,16 +28,20 @@ class Simulador_1_FU:
         self.ss_size = ss_size
         self.pile_size = pile_size
 
-        self.n_add = n_add
+        self.n_alu = n_alu
         self.n_mult = n_mult
+        self.n_div = n_div
+        self.n_load = n_load
         self.n_store = n_store
 
         self.PC = Pointer.PC(multiplicity, self.program.n)
         self.n_cycles = n_cycles
         self.multiplicity = multiplicity
 
-        self.fus_add = []
+        self.fus_alu = []
         self.fus_mult = []
+        self.fus_div = []
+        self.fus_load = []
         self.fus_store = []
         self.fu_jump = funtionalUnitJump.FU(name="jump_0", fu_type="jump", ss_size=self.ss_size,
                                             pile_size = self.pile_size, n_cycles=self.n_cycles)
@@ -43,24 +49,37 @@ class Simulador_1_FU:
         self.b_hs = b_hs
         self.hs = holdStations.HS(n_hs, ss_size, pile_size)
 
-        self.add_selectionOrder = list(range(n_add))
+        self.alu_selectionOrder = list(range(n_alu))
         self.mult_selectionOrder = list(range(n_mult))
+        self.div_selectionOrder = list(range(n_div))
         self.store_selectionOrder = list(range(n_store))
+        self.load_selectionOrder = list(range(n_load))
 
         self.statistics = Statistics()
 
-        for i in range(n_add):
-            self.fus_add.append(
-                funtionalUnit.FU(f"add_{i}", "add", ss_size,
-                                 pile_size=pile_size, latency=latency_add, n_cycles=n_cycles))
+        #Creates all the FU
+        for i in range(n_alu):
+            self.fus_alu.append(
+                ALU_funtionalUnit.FU(f"alu_{i}", "alu", ss_size,
+                                 pile_size=pile_size, latency=latency_alu, n_cycles=n_cycles))
 
         for i in range(n_mult):
-            self.fus_mult.append(funtionalUnit.FU(f"mult_{i}", "mult", ss_size,
+            self.fus_mult.append(
+                MULT_funtionalUnit.FU(f"mult_{i}", "mult", ss_size,
                                                   pile_size=pile_size, latency=latency_mult, n_cycles=n_cycles))
+        for i in range(n_div):
+            self.fus_div.append(
+                DIV_funtionalUnit.FU(f"div_{i}", "div", ss_size,
+                                                  pile_size=pile_size, latency=latency_div, n_cycles=n_cycles))
+
+        for i in range(n_load):
+            self.fus_load.append(
+                LOAD_funtionalUnitStore.FU(f"load_{i}", "load", ss_size,
+                                                  pile_size=pile_size, latency=latency_load, n_cycles=n_cycles))
 
         for i in range(n_store):
             self.fus_store.append(
-                funtionalUnitStore.FU(f"store_{i}", "store", ss_size,
+                STORE_funtionalUnitStore.FU(f"store_{i}", "store", ss_size,
                                       pile_size=pile_size, latency=latency_store,n_cycles=n_cycles))
 
         self.registers = Registers.Registers(n_registers, b_scoreboard)
@@ -81,20 +100,28 @@ class Simulador_1_FU:
         self.statistics.newCycle()
 
         # Do the operation in the FU
-        for fu in self.fus_add: fu.operation()
+        for fu in self.fus_alu: fu.operation()
+        for fu in self.fus_div: fu.operation()
         for fu in self.fus_mult: fu.operation()
         for fu in self.fus_store: fu.operation(self.memory)
+        for fu in self.fus_load: fu.operation(self.memory)
 
         # Update the operation Queue
-        self.CDB.update(add=self.moveOperationQueue(self.fus_add), store=self.moveOperationQueue(self.fus_store, self.memory),
-                        mult=self.moveOperationQueue(self.fus_mult))
+        self.CDB.update(alu=self.moveOperationQueue(self.fus_alu),
+                        store=self.moveOperationQueue(self.fus_store, self.memory),
+                        load=self.moveOperationQueue(self.fus_load, self.memory),
+                        mult=self.moveOperationQueue(self.fus_mult),
+                        div=self.moveOperationQueue(self.fus_div))
 
         self.registers.one_clock_cycle(self.CDB)
 
         # One clock init cycle
-        for i in range(self.n_add): self.fus_add[i].one_clock_cycle(self.CDB)
+        for i in range(self.n_alu): self.fus_alu[i].one_clock_cycle(self.CDB)
         for i in range(self.n_mult): self.fus_mult[i].one_clock_cycle(self.CDB)
+        for i in range(self.n_div): self.fus_div[i].one_clock_cycle(self.CDB)
         for i in range(self.n_store): self.fus_store[i].one_clock_cycle(self.CDB)
+        for i in range(self.n_load): self.fus_load[i].one_clock_cycle(self.CDB)
+
         self.fu_jump.one_clock_cycle()
 
         if self.b_hs:
@@ -137,8 +164,10 @@ class Simulador_1_FU:
 
             fu_type, fu_pos = aux[0].strip(), int(aux[1].strip())
 
-            if fu_type == "add": fu = self.fus_add[fu_pos]
+            if fu_type == "alu": fu = self.fus_alu[fu_pos]
             if fu_type == "mult": fu = self.fus_mult[fu_pos]
+            if fu_type == "div": fu = self.fus_div[fu_pos]
+            if fu_type == "load": fu = self.fus_load[fu_pos]
             if fu_type == "store": fu = self.fus_store[fu_pos]
             if fu_type == "jump": fu = self.fu_jump
 
@@ -163,15 +192,21 @@ class Simulador_1_FU:
         if fu_type == "jump":
             res, bitMux = self.fu_jump.newInstruction(inst,  self.registers, self.hs, self.b_hs)
         else:
-            if fu_type == "add":
-                fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_add]
-                selectionOrder = self.add_selectionOrder
+            if fu_type == "alu":
+                fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_alu]
+                selectionOrder = self.alu_selectionOrder
             if fu_type == "mult":
                 fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_mult]
                 selectionOrder = self.mult_selectionOrder
+            if fu_type == "div":
+                fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_div]
+                selectionOrder = self.div_selectionOrder
             if fu_type == "store":
                 fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_store]
                 selectionOrder = self.store_selectionOrder
+            if fu_type == "load":
+                fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_load]
+                selectionOrder = self.load_selectionOrder
 
 
             indexes = self.find_lowest_positive_index(fus_free)
@@ -216,14 +251,20 @@ class Simulador_1_FU:
         return elementToMove
 
     def getFU(self, fu_type, index):
-        if fu_type == "add":
-            return self.fus_add[index]
+        if fu_type == "alu":
+            return self.fus_alu[index]
 
         if fu_type == "store":
             return self.fus_store[index]
 
+        if fu_type == "load":
+            return self.fus_load[index]
+
         if fu_type == "mult":
             return self.fus_mult[index]
+
+        if fu_type == "div":
+            return self.fus_div[index]
 
 
     ## Display functions
@@ -324,25 +365,25 @@ class Simulador_1_FU:
 
         console.print(text)
 
-    def display(self, badd=True, bmux=True, bstore=False, bmemory=False):
+    def display(self, balu=True, bmux=True, bstore=False, bmemory=False):
         self.display_ints()
         console = Console(record=True, width=200, height=200)
 
-        if badd:
-            table_adds = Table(title="Functional Unit: ADD")
-            table_adds_pile = Table(title="Pile: ADD")
-            for i in range(self.n_add):
-                table_adds.add_column(self.display_SS(f"ADD_{i}", fu=self.fus_add[i]))
-                table_adds_pile.add_column(self.display_pile(fu=self.fus_add[i]))
-            console.print(table_adds, overflow="fold")
-            console.print(table_adds_pile, overflow="fold")
+        if balu:
+            table_alus = Table(title="Functional Unit: alu")
+            table_alus_pile = Table(title="Pile: alu")
+            for i in range(self.n_alu):
+                table_alus.add_column(self.display_SS(f"alu_{i}", fu=self.fus_alu[i]))
+                table_alus_pile.add_column(self.display_pile(fu=self.fus_alu[i]))
+            console.print(table_alus)
+            console.print(table_alus_pile)
 
         if bmux:
             table_mult = Table(title="Functional Unit: MULT")
             for i in range(self.n_mult):
                 table_mult.add_column(self.display_SS(f"MULT_{i}", fu=self.fus_mult[i]))
-
             console.print(table_mult, overflow="fold")
+
 
         if bstore:
             table_store = Table(title="Functional Unit: STORE")
@@ -373,7 +414,7 @@ class Simulador_1_FU:
 
         console.print(register)
 
-    def display2(self, badd=True, bmux=True, bstore=False, bmemory=False, bhs = False, bCDB = False, badd_brt=False, bmux_brt = False, bstore_brt = False, bjump_brt = False):
+    def display2(self, balu=True, bmux=True, bstore=False, bmemory=False, bhs = False, bCDB = False, balu_brt=False, bmux_brt = False, bstore_brt = False, bjump_brt = False):
         console = Console(record= True, width=190)
 
         #console.rule("[bold red]")
@@ -387,12 +428,12 @@ class Simulador_1_FU:
             console.print(self.display_HS())
 
 
-        if badd:
-            alu_renderables = [Panel(Group(self.display_SS(f"ADD_{i}", fu=self.fus_add[i]),
-                                           self.display_pile(fu=self.fus_add[i], title=f"Pile_{i}")))
-                               for i in range(self.n_add)]
+        if balu:
+            alu_renderables = [Panel(Group(self.display_SS(f"alu_{i}", fu=self.fus_alu[i]),
+                                           self.display_pile(fu=self.fus_alu[i], title=f"Pile_{i}")))
+                               for i in range(self.n_alu)]
 
-            console.print(Columns(alu_renderables, equal=True, align="center", title="Functional Unit: ADD", expand = True))
+            console.print(Columns(alu_renderables, equal=True, align="center", title="Functional Unit: alu", expand = True))
 
         if bmux:
             mux_renderables = [Panel(Group(self.display_SS(f"MULT_{i}", fu=self.fus_mult[i]),
@@ -442,9 +483,9 @@ class Simulador_1_FU:
             text.append(self.CDB.__str__()+ "\n" )
             console.print(text)
 
-        if badd_brt:
+        if balu_brt:
             text = Text()
-            for fu in self.fus_add:
+            for fu in self.fus_alu:
                 text.append(fu.name, style="bold magenta underline")
                 text.append( fu.BRT.__str__() + "\n")
             console.print(text)

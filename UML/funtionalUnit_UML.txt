@@ -23,4 +23,5 @@ class FU {
     pile_side
     __init__()
 }
+class type 
 @enduml

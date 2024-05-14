@@ -10,9 +10,11 @@ import csv
 
 typeInstructions = {
     "jump": ["j","beq"],
-    "add": ["add", "sub", "addi", "subi"],
-    "mult": ["mul", "div","muli", "divi"],
-    "store": ["lb", "sb"]
+    "alu": ["add", "sub", "addi", "subi","xor","xori","and","andi","or","ori","sll","srl","slt","slli","srli","slti"],
+    "mult": ["mult", "multi"],
+    "div": ["div", "divi"],
+    "store": ["sb"],
+    "load": ["lb"]
 }
 
 
@@ -87,6 +89,7 @@ class Instruction:
         if self.rs1 != None: txt = txt + "R"+str(self.rs1)
         if self.offset != None: txt = txt + "" + str(self.offset)
         if self.fu_type=="jump": txt = txt+ f"(BTB: {self.BTB})"
+        txt = txt + self.fu_type
         return txt
 
 

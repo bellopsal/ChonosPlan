@@ -5,7 +5,7 @@
 #       BRT of the SS -> 0 if SS empty / 1 cc
 from FU import BRT, shiftStations
 
-n = 10  # numero pila
+
 
 
 class FU:
@@ -19,50 +19,42 @@ class FU:
         self.latency = latency
         self.pile = shiftStations.Pile(pile_size)
         self.operationQueue = [None] * latency
-        # self.operationQueue = [1, 2, 3]
+        self.memoryQueue = [(None,None)] * latency
+        self.lastBRT = 0
 
         # Registers that are going to be used for the operation next
         self.ss_side = shiftStations.ShiftStation()
         self.pile_side = shiftStations.PileElement()
 
-    def operation(self):
-        operand1 = self.ss_side.value
-        operand2 = self.pile_side.value
+    def operation(self, mem):
+        #update last BRT
+        if self.lastBRT > 0: self.lastBRT = self.lastBRT - 1
 
-        if str(self.ss_side.type_operation).startswith("add") :
-            self.operationQueue[0] = operand1 + operand2
+        # operation
+        operand1 = self.ss_side.value  # first to arrive
+        inm = self.ss_side.inm
 
-        if str(self.ss_side.type_operation).startswith("sub") :
-            if self.ss_side.inv:
-                self.operationQueue[0] = operand2 - operand1
-            else:
-                self.operationQueue[0] = operand1 - operand2
+        operand2 = self.pile_side.value  # second to arrive
 
-        if str(self.ss_side.type_operation).startswith("mul"):
-            self.operationQueue[0] = operand1 * operand2
-
-        if str(self.ss_side.type_operation).startswith("div"):
-            if self.ss_side.inv:
-                self.operationQueue[0] = operand2 / operand1
-            else:
-                self.operationQueue[0] = operand1 / operand2
+        if self.ss_side.type_operation == "lb":
+            pos = inm + operand2
+            self.operationQueue[0] = mem.get(pos)
 
     def calculateN(self, inst, registers):
-        if inst.function.endswith("i"):
-            l = registers.td_calculation_type1(inst.r2, inst.inm, inst.r1)
-        else:
-            l = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
-        n = self.BRT.find_first_after(l[0])
+
+        l = registers.td_calculation_type2(inst.rs1, inst.r1)
+
+
+        n = self.findFirstEmptyBRT(l[0])
 
         return n
 
     def new_instruction(self, inst, instIndex, registers, hs, b_hs):
+        bitMux = -1
 
-        if inst.function.endswith("i"):
-            registersCalculation = registers.td_calculation_type1_inm(inst.r2, inst.inm, inst.r1)
-
-        else:
-            registersCalculation = registers.td_calculation_type1(inst.r2, inst.r3, inst.r1)
+        registersCalculation = registers.td_calculation_type2(source = inst.rs1, destination=inst.r1)
+        ts_max = registersCalculation[0]
+        b_lb = True
 
         if len(registersCalculation) == 1:
             return 0, 8
@@ -76,17 +68,23 @@ class FU:
             FU2 = registersCalculation[5]
             inv = registersCalculation[6]
 
+            # always set the time to the last one to avoid dependency hazzards
+            if self.lastBRT > ts_max:
+                ts_max = self.lastBRT
+            else:
+                self.lastBRT = ts_max
+
             td = ts_max + self.latency
-            n = self.BRT.find_first_after(ts_max)
+            n = self.findFirstEmptyBRT(ts_max)
 
             res = 1
             td = td + n
             position = ts_max + n
 
-
+            inm = inst.inm
 
             if n == -1:
-                # this case will never happen here, this method will not enter in this case
+                # this case will never happen
                 res = 0
                 bitMux = 4
 
@@ -102,10 +100,11 @@ class FU:
 
                         value1 = None
                         value2 = None
+
                         casePile = False
                         bitMux = 6
 
-                        if ts_max != position: # alternativamente n != 0
+                        if ts_max != position: # alternativamente n == 0
                             casePile = True
                             bitMux = 7
                         if ts_min == -1:
@@ -117,11 +116,11 @@ class FU:
                         if ts_max == 0:
                             value2 = registers.R[reg_max].value
                             RP1 = -1
-                        hs.update(i = freeHS, RP1=ts_min, RP2 = ts_max, position = position, value1 = value1,
-                                  destination = self.name,value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1,
-                                  FU2 = FU2, casePile = casePile, type_operation=inst.function)
+                        hs.update(i = freeHS, RP1=ts_min, RP2 = ts_max, position = position, value1 = value1, destination = self.name,
+                                  value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, casePile = casePile, type_operation=inst.function, inm = inm)
 
-                        registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                        if b_lb:
+                            registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
                         self.BRT.occupy_i(position)
 
                 else:
@@ -142,9 +141,6 @@ class FU:
                     else:
                         bitMux = 3
                         self.update_pile(position=position, RP=ts_max, FU=FU2)
-                if ts_min == -1:
-                    value = inst.inm
-                    RP = -1
                 if ts_min == 0:
                     value = registers.R[reg_min].value
                     RP = -1
@@ -152,13 +148,16 @@ class FU:
                     value = None
                     RP = ts_min
 
-                registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                if b_lb: registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
                 self.BRT.occupy_i(position)
                 self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
-                                 RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv)
+                                 RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv, inm = inm)
 
             return res, bitMux
 
+    def findFirstEmptyBRT(self, ts_max):
+        n = self.BRT.find_first_after(ts_max)
+        return n
 
     def update_pile(self, position, RP=-1, FU=None, value=None):
         self.pile.pile[position].RP = RP
@@ -166,11 +165,20 @@ class FU:
         self.pile.pile[position].value = value
 
 
-    def move_operation_queue(self):
+    def move_operation_queue(self, mem):
 
         self.operationQueue.pop(-1)
         self.operationQueue.insert(0, None)
         cbd = self.operationQueue[-1]
+
+        self.memoryQueue.pop(-1)
+        self.memoryQueue.insert(0, (None,None))
+        memPut = self.memoryQueue[-1]
+
+        if memPut[0] != None:
+            mem.put(memPut[0], memPut[1])
+
+
         return cbd
 
     def strBRT(self):

@@ -29,23 +29,35 @@ class FU:
         operand1 = self.ss_side.value
         operand2 = self.pile_side.value
 
-        if str(self.ss_side.type_operation).startswith("add") :
+        if str(self.ss_side.type_operation).startswith("add"):
             self.operationQueue[0] = operand1 + operand2
 
-        if str(self.ss_side.type_operation).startswith("sub") :
+        if str(self.ss_side.type_operation).startswith("sub"):
             if self.ss_side.inv:
                 self.operationQueue[0] = operand2 - operand1
             else:
                 self.operationQueue[0] = operand1 - operand2
 
-        if str(self.ss_side.type_operation).startswith("mul"):
-            self.operationQueue[0] = operand1 * operand2
+        if str(self.ss_side.type_operation).startswith("and"):
+            self.operationQueue[0] = operand1 & operand2
 
-        if str(self.ss_side.type_operation).startswith("div"):
+        if str(self.ss_side.type_operation).startswith("or"):
+            self.operationQueue[0] = operand1 | operand2
+
+        if str(self.ss_side.type_operation).startswith("xor"):
+            self.operationQueue[0] = operand1 ^ operand2
+
+        if str(self.ss_side.type_operation).startswith("sll"):
+            self.operationQueue[0] = operand2 << operand1
+
+        if str(self.ss_side.type_operation).startswith("srl"):
+            self.operationQueue[0] = operand2 >> operand1
+
+        if str(self.ss_side.type_operation).startswith("slt"):
             if self.ss_side.inv:
-                self.operationQueue[0] = operand2 / operand1
+                self.operationQueue[0] = operand2 < operand1
             else:
-                self.operationQueue[0] = operand1 / operand2
+                self.operationQueue[0] = operand1 < operand2
 
     def calculateN(self, inst, registers):
         if inst.function.endswith("i"):
@@ -83,18 +95,16 @@ class FU:
             td = td + n
             position = ts_max + n
 
-
-
             if n == -1:
                 # this case will never happen here, this method will not enter in this case
                 res = 0
                 bitMux = 4
 
-            elif (position > self.pile_size - 1 and n>0) or position > self.ss_size - 1:
+            elif (position > self.pile_size - 1 and n > 0) or position > self.ss_size - 1:
                 # two cases: there is a need for store the data in a pile or the time exceed the ss
                 if b_hs:
                     freeHS = hs.freeHS()
-                    if(freeHS == -1):
+                    if (freeHS == -1):
                         # caso de bloqueo total!!! There are no free HS
                         res = 0
                         bitMux = 5
@@ -105,7 +115,7 @@ class FU:
                         casePile = False
                         bitMux = 6
 
-                        if ts_max != position: # alternativamente n != 0
+                        if ts_max != position:  # alternativamente n != 0
                             casePile = True
                             bitMux = 7
                         if ts_min == -1:
@@ -117,9 +127,9 @@ class FU:
                         if ts_max == 0:
                             value2 = registers.R[reg_max].value
                             RP1 = -1
-                        hs.update(i = freeHS, RP1=ts_min, RP2 = ts_max, position = position, value1 = value1,
-                                  destination = self.name,value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1,
-                                  FU2 = FU2, casePile = casePile, type_operation=inst.function)
+                        hs.update(i=freeHS, RP1=ts_min, RP2=ts_max, position=position, value1=value1,
+                                  destination=self.name, value2=value2, inv=inv, bitMux=bitMux, FU1=FU1,
+                                  FU2=FU2, casePile=casePile, type_operation=inst.function)
 
                         registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
                         self.BRT.occupy_i(position)
@@ -134,11 +144,14 @@ class FU:
                 if ts_max == 0:
                     value_pile = registers.R[reg_max].value
                     self.update_pile(position=position, value=value_pile)
-                    if n == 0: bitMux = 0
-                    else: bitMux = 1
+                    if n == 0:
+                        bitMux = 0
+                    else:
+                        bitMux = 1
 
                 if ts_max > 0:
-                    if n == 0 : bitMux = 2
+                    if n == 0:
+                        bitMux = 2
                     else:
                         bitMux = 3
                         self.update_pile(position=position, RP=ts_max, FU=FU2)
@@ -155,16 +168,14 @@ class FU:
                 registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
                 self.BRT.occupy_i(position)
                 self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
-                                 RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv)
+                                 RP=RP, value=value, type_operation=inst.function, instruction=instIndex, inv=inv)
 
             return res, bitMux
-
 
     def update_pile(self, position, RP=-1, FU=None, value=None):
         self.pile.pile[position].RP = RP
         self.pile.pile[position].fu = FU
         self.pile.pile[position].value = value
-
 
     def move_operation_queue(self):
 
@@ -188,4 +199,3 @@ class FU:
 
         # Update the values inside each SS, BRT and pile and moving them one down
         self.BRT.one_clock_cycle()
-

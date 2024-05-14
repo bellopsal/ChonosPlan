@@ -1,5 +1,7 @@
 
 @startuml
+skinparam linetype polyline
+skinparam linetype ortho
 class CDB {
     get()
     void update()
@@ -224,19 +226,24 @@ class Statistics {
     cycles
 
 }
-Simulador "1" -> "1..*" FU
-Simulador "1" -> "1" Memory
-Simulador "1" -> "1" Statistics
-Simulador "1" -> "1" PC
-Simulador "1" -> "1" Program
-FU "1" -> "1" BRT
-HS "1" -> "1..*" HoldStation
-Program "1" -> "1..*" Instruction
-Registers "1" -> "1..*" Register
-SS "1" -> "1..*" ShiftStation
-FU -> SS
-FU -> Pile
-Pile "1" -> "1..*" PileElement
+Simulador --  FU
+Simulador -- Memory
+Simulador -- Statistics
+Simulador -- PC
+Simulador -- Program
+FU -- BRT
+HS --  HoldStation
+Registers -- Register
+Program --  Instruction
+
+SS -- ShiftStation
+FU -- SS
+FU -- Pile
+Pile -- PileElement
+Simulador -- CDB
+Simulador -- HS
+Simulador -- Registers
+
 
 
 

@@ -3,9 +3,9 @@ class Scoreboard:
 
     def __init__(self, i):
         self.number = i
-        self.T = [2]
-        self.td = []
-        self.fu = []
+        self.T = [0,1]
+        self.td = [0]
+        self.fu = [None]
         self.value = []
 
     def __str__(self):

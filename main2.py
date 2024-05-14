@@ -35,222 +35,204 @@ class app:
     def __init__(self, master):
         self.image = None
         self.master = master
-        self.text_widget = tk.Text(self.master, width=190)
+        self.v = tk.Scrollbar(self.master, command=self.yscroll_text)
+        self.h = tk.Scrollbar(self.master, command=self.xscroll_text)
+        self.text_widget = tk.Text(self.master, width=190, wrap = "none", xscrollcommand=self.h.set, yscrollcommand=self.v.set)
+        self.h.config(command=self.text_widget.xview)
+        self.v.config(command=self.text_widget.yview)
+
         self.px = 15
         self.py = 15
-        self.v = tk.Scrollbar(self.master, command=self.scroll_text)
-        self.h = tk.Scrollbar(self.master, command=self.scroll_text)
+
         self.h.pack(side="bottom", fill="x")
         self.v.pack(side="right", fill="y")
 
+
         self.full_frame = tk.Frame()
+        l = tk.Label(self.full_frame, text="CHRONOs", font="Script 50 bold").pack()
         self.frame_a = tk.Frame(master=self.full_frame, highlightbackground="black", highlightthickness=2)
         self.frame_b = tk.Frame(master=self.full_frame,highlightbackground="black", highlightthickness=2)
+        self.frame_c= tk.Frame(master=self.full_frame, highlightbackground="black", highlightthickness=2)
 
-        l = tk.Label(self.frame_a, text="Configuration", bg = "light pink",font = "Verdana 24 bold")
-        l.pack(padx=self.px, pady=self.py)
-        l = tk.Label(self.frame_b, text="Display Settings", bg = "light pink",font = "Verdana 24 bold")
-        l.pack(padx=self.px, pady=self.py)
+        l = tk.Label(self.frame_a, text="Configuration", font = "Verdana 24 bold")
+        l.pack(padx=self.px/2, pady=self.py/2)
+        l = tk.Label(self.frame_b, text="Display Settings",font = "Verdana 24 bold")
+        l.pack(padx=self.px/2, pady=self.py/2)
 
-        self.frame_inst = tk.Frame(master=self.frame_a)
-        self.file_name_label = tk.Label(self.frame_inst, text="No file selected")
+        l = tk.Label(self.frame_c, text="Load Files",font = "Verdana 24 bold")
+        l.pack(padx=self.px/2, pady=self.py/2)
+
+
+        self.frame_inst = tk.Frame(master=self.frame_c)
+        self.file_name_label = tk.Label(self.frame_inst, text="No Instructions selected")
         self.file_name_label.pack(fill=tk.Y, side=tk.RIGHT)
-        self.button_inst = tk.Button(self.frame_inst, text="Import Instructions csv", command=self.open_file)
-        self.button_inst.pack(fill=tk.Y, side=tk.LEFT, padx=self.px/4, pady=self.py/8)
-        self.frame_inst.pack()
+        self.button_inst = tk.Button(self.frame_inst, text="Import csv", command=self.open_file)
+        self.button_inst.pack(fill=tk.Y, side=tk.LEFT, padx=self.px/4)
+        self.frame_inst.pack(anchor="w",padx=self.px/2)
 
-        self.frame_conf = tk.Frame(master=self.frame_a)
+        self.frame_conf = tk.Frame(master=self.frame_c)
         self.conf_name_label = tk.Label(self.frame_conf, text="No Configuration selected")
         self.conf_name_label.pack(fill=tk.Y, side=tk.RIGHT)
-        self.button_conf = tk.Button(self.frame_conf, text="Import Configuration csv", command=self.open_config)
-        self.button_conf.pack(fill=tk.Y, side=tk.LEFT, padx=self.px/4, pady=self.py/8)
-        self.frame_conf.pack()
+        self.button_conf = tk.Button(self.frame_conf, text="Import csv", command=self.open_config)
+        self.button_conf.pack(fill=tk.Y, side=tk.LEFT, padx=self.px/4)
+        self.frame_conf.pack(anchor="w",padx=self.px/2,pady = self.py/2)
+        self.frame_c.pack()
 
 
         self.frame_n_ss = tk.Frame(master=self.frame_a)
-        self.n_ss_l = tk.Label(master = self.frame_n_ss, text="nº of SS:")
+        self.n_ss_l = tk.Label(master = self.frame_n_ss, text="nº of SS:", justify="left")
         self.n_ss_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.n_ss = tk.Entry(master = self.frame_n_ss, width = 5)
+        self.n_ss = tk.Entry(master = self.frame_n_ss, width = 5, justify="left")
         self.n_ss.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_ss.insert(0, "8")
-        self.frame_n_ss.pack()
+        self.frame_n_ss.pack(anchor="e", padx=40)
 
         self.frame_n_registers = tk.Frame(master=self.frame_a)
-        self.n_registers_l = tk.Label(master = self.frame_n_registers, text="nº of registers:")
+        self.n_registers_l = tk.Label(master = self.frame_n_registers, text="nº of registers:", justify="left")
         self.n_registers_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.n_registers = tk.Entry(master = self.frame_n_registers, width = 5)
+        self.n_registers = tk.Entry(master = self.frame_n_registers, width = 5, justify="left")
         self.n_registers.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_registers.insert(0, "5")
-        self.frame_n_registers.pack()
+        self.frame_n_registers.pack(anchor="e", padx=40)
 
         self.frame_pile_size = tk.Frame(master=self.frame_a)
-        self.pile_size_l = tk.Label(master = self.frame_pile_size, text="Pile size:")
+        self.pile_size_l = tk.Label(master = self.frame_pile_size, text="Pile size:", justify="left")
         self.pile_size_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.pile_size = tk.Entry(master = self.frame_pile_size, width = 5)
+        self.pile_size = tk.Entry(master = self.frame_pile_size, width = 5, justify="left")
         self.pile_size.pack(fill=tk.Y, side=tk.RIGHT)
         self.pile_size.insert(0, "3")
-        self.frame_pile_size.pack()
+        self.frame_pile_size.pack(anchor="e", padx=40)
 
         self.frame_memory_size = tk.Frame(master=self.frame_a)
-        self.memory_size_l = tk.Label(master = self.frame_memory_size, text="Memory size:")
+        self.memory_size_l = tk.Label(master = self.frame_memory_size, text="Memory size:", justify="left")
         self.memory_size_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.memory_size = tk.Entry(master = self.frame_memory_size, width = 5)
+        self.memory_size = tk.Entry(master = self.frame_memory_size, width = 5, justify="left")
         self.memory_size.pack(fill=tk.Y, side=tk.RIGHT)
         self.memory_size.insert(0, "32")
-        self.frame_memory_size.pack()
+        self.frame_memory_size.pack(anchor="e", padx=40)
 
         self.frame_m = tk.Frame(master=self.frame_a)
-        self.m_l = tk.Label(master = self.frame_m, text="Multiplicity:")
+        self.m_l = tk.Label(master = self.frame_m, text="Multiplicity:", justify="left")
         self.m_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.m = tk.Entry(master = self.frame_m, width = 5)
+        self.m = tk.Entry(master = self.frame_m, width = 5, justify="left")
         self.m.pack(fill=tk.Y, side=tk.RIGHT)
         self.m.insert(0, "5")
-        self.frame_m.pack()
+        self.frame_m.pack(anchor="e", padx=40)
 
         self.frame_b_hs = tk.Frame(master=self.frame_a)
-        self.b_hs_l = tk.Label(master = self.frame_b_hs, text="HS?:")
+        self.b_hs_l = tk.Label(master = self.frame_b_hs, text="HS?:", justify="left")
         self.b_hs_l.pack(fill=tk.Y, side=tk.LEFT)
         self.b_hs = tk.BooleanVar(value=True)
         self.true_radio = tk.Radiobutton(master = self.frame_b_hs, text="True", variable=self.b_hs, value=True)
         self.true_radio.pack(fill=tk.Y, side=tk.RIGHT)
         self.false_radio = tk.Radiobutton(master = self.frame_b_hs, text="False", variable=self.b_hs, value=False)
         self.false_radio.pack(fill=tk.Y, side=tk.RIGHT)
-        self.frame_b_hs.pack()
+        self.frame_b_hs.pack(anchor="e", padx=40)
 
         self.frame_n_hs = tk.Frame(master=self.frame_a)
-        self.n_hs_l = tk.Label(master = self.frame_n_hs, text="Nº of HS:")
+        self.n_hs_l = tk.Label(master = self.frame_n_hs, text="Nº of HS:", justify="left")
         self.n_hs_l.pack(fill=tk.Y, side=tk.LEFT)
         self.n_hs = tk.Entry(master = self.frame_n_hs, width = 5)
         self.n_hs.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_hs.insert(0, "10")
-        self.frame_n_hs.pack()
+        self.frame_n_hs.pack(anchor="e", padx=40)
 
         self.frame_n_cycle = tk.Frame(master=self.frame_a)
-        self.n_cycles_l = tk.Label(master = self.frame_n_cycle, text="Nº of future cycles:")
+        self.n_cycles_l = tk.Label(master = self.frame_n_cycle, text="Nº of future cycles:", justify="left")
         self.n_cycles_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.n_cycles = tk.Entry(master = self.frame_n_cycle, width = 5)
+        self.n_cycles = tk.Entry(master = self.frame_n_cycle, width = 5, justify="left")
         self.n_cycles.pack(fill=tk.Y, side=tk.RIGHT)
         self.n_cycles.insert(0, "30")
-        self.frame_n_cycle.pack()
+        self.frame_n_cycle.pack(anchor="e", padx=40)
 
-        self.frame_add = tk.Frame(master=self.frame_a, highlightbackground="pink", highlightthickness=5)
-        frame_add_1 = tk.Frame(master=self.frame_add)
-        frame_add_2 = tk.Frame(master=self.frame_add)
-        frame_add_3 = tk.Frame(master=self.frame_add)
-        frame_add_4 = tk.Frame(master=self.frame_add)
+        self.frame_alu = tk.Frame(master=self.frame_a, highlightbackground="black", highlightthickness=1)
+        frame_alu_1 = tk.Frame(master=self.frame_alu)
+        frame_alu_2 = tk.Frame(master=self.frame_alu)
+        frame_alu_3 = tk.Frame(master=self.frame_alu)
+        frame_alu_4 = tk.Frame(master=self.frame_alu)
+        frame_alu_5 = tk.Frame(master=self.frame_alu)
+        frame_alu_6 = tk.Frame(master=self.frame_alu)
 
-        tk.Label(master=frame_add_1, text=" FU ",  width = 5).pack(fill=tk.Y, side=tk.LEFT)
-        tk.Label(master=frame_add_1, text=" nº ", width = 5).pack(fill=tk.Y, side=tk.LEFT)
-        tk.Label(master=frame_add_1, text="lat", width = 5).pack(fill=tk.Y, side=tk.RIGHT)
+        tk.Label(master=frame_alu_1, text=" FU ",  width = 5).pack(fill=tk.Y, side=tk.LEFT)
+        tk.Label(master=frame_alu_1, text=" nº ", width = 5).pack(fill=tk.Y, side=tk.LEFT)
+        tk.Label(master=frame_alu_1, text="lat", width = 5).pack(fill=tk.Y, side=tk.RIGHT)
 
-        tk.Label(master=frame_add_2, text=" ADD  ").pack(fill=tk.Y, side=tk.LEFT)
-        self.n_add = tk.Entry(master = frame_add_2, width = 5)
-        self.n_add.pack( side=tk.LEFT)
-        self.n_add.insert(0, "4")
+        # Select ALU config
+        tk.Label(master=frame_alu_2, text=" ALU  ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
+        self.n_alu = tk.Entry(master = frame_alu_2, width = 5, justify="left")
+        self.n_alu.pack( side=tk.LEFT)
+        self.n_alu.insert(0, "4")
 
-        self.latency_add = tk.Entry(master = frame_add_2, width = 5)
-        self.latency_add.pack( side=tk.RIGHT)
-        self.latency_add.insert(0, "2")
+        self.latency_alu = tk.Entry(master = frame_alu_2, width = 5, justify="left")
+        self.latency_alu.pack( side=tk.RIGHT)
+        self.latency_alu.insert(0, "2")
 
-        tk.Label(master=frame_add_3, text="MULT ").pack(fill=tk.Y, side=tk.LEFT)
-        self.n_mult = tk.Entry(master = frame_add_3,  width = 5)
+        # Select MULT config
+        tk.Label(master=frame_alu_3, text="MULT ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
+        self.n_mult = tk.Entry(master = frame_alu_3,  width = 5, justify="left")
         self.n_mult.pack( side=tk.LEFT)
         self.n_mult.insert(0, "4")
 
-        self.latency_mult = tk.Entry(master = frame_add_3, width = 5)
+        self.latency_mult = tk.Entry(master = frame_alu_3, width = 5, justify="left")
         self.latency_mult.pack( side=tk.RIGHT)
         self.latency_mult.insert(0, "3")
 
-        tk.Label(master=frame_add_4, text="STORE").pack(fill=tk.Y, side=tk.LEFT)
-        self.n_store = tk.Entry(master = frame_add_4, width = 5)
+        # Select DIV config
+        tk.Label(master=frame_alu_4, text=" DIV  ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
+        self.n_div = tk.Entry(master = frame_alu_4,  width = 5, justify="left")
+        self.n_div.pack( side=tk.LEFT)
+        self.n_div.insert(0, "4")
+
+        self.latency_div = tk.Entry(master = frame_alu_4, width = 5, justify="left")
+        self.latency_div.pack( side=tk.RIGHT)
+        self.latency_div.insert(0, "3")
+
+        # Select STORE config
+        tk.Label(master=frame_alu_5, text="STORE", justify="left").pack(fill=tk.Y, side=tk.LEFT)
+        self.n_store = tk.Entry(master = frame_alu_5, width = 5, justify="left")
         self.n_store.pack( side=tk.LEFT)
         self.n_store.insert(0, "4")
 
-        self.latency_store = tk.Entry(master = frame_add_4, width = 5)
+        self.latency_store = tk.Entry(master = frame_alu_5, width = 5, justify="left")
         self.latency_store.pack(side=tk.RIGHT)
         self.latency_store.insert(0, "2")
 
+        # Select LOAD config
+        tk.Label(master=frame_alu_6, text="LOAD", justify="left").pack(fill=tk.Y, side=tk.LEFT)
+        self.n_load = tk.Entry(master = frame_alu_6, width = 5, justify="left")
+        self.n_load.pack( side=tk.LEFT)
+        self.n_load.insert(0, "4")
 
+        self.latency_load = tk.Entry(master = frame_alu_6, width = 5, justify="left")
+        self.latency_load.pack(side=tk.RIGHT)
+        self.latency_load.insert(0, "2")
 
+        #self.n_alu_l.pack(fill=tk.Y, side=tk.LEFT)
 
-        #self.n_add_l.pack(fill=tk.Y, side=tk.LEFT)
+        frame_alu_1.pack()
+        frame_alu_2.pack()
+        frame_alu_3.pack()
+        frame_alu_4.pack()
+        frame_alu_5.pack()
+        frame_alu_6.pack()
 
-        frame_add_1.pack()
-        frame_add_2.pack()
-        frame_add_3.pack()
-        frame_add_4.pack()
+        self.frame_alu.pack(padx=self.px/2, pady=self.py/2)
 
-        self.frame_add.pack()
+        self.display_alu = tk.Frame(master=self.frame_b)
+        self.d_alu = tk.Label(master=self.display_alu, text="Display alu FU")
+        self.d_alu.pack(fill=tk.Y, side=tk.LEFT)
+        self.display_alu_value = tk.BooleanVar(master = self.display_alu)
+        checkbutton_alu = tk.Checkbutton(master = self.display_alu, variable=self.display_alu_value)
+        checkbutton_alu.pack(fill=tk.Y, side=tk.RIGHT)
+        self.display_alu.pack()
 
-        ''''
-        self.frame_n_add = tk.Frame(master=self.frame_a)
-        self.n_add_l = tk.Label(master = self.frame_n_add, text="Nº of add FU :")
-        self.n_add_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.n_add = tk.Entry(master = self.frame_n_add)
-        self.n_add.pack(fill=tk.Y, side=tk.RIGHT)
-        self.n_add.insert(0, "4")
-        self.frame_n_add.pack()
-
-        self.frame_latency_add = tk.Frame(master=self.frame_a)
-        self.latency_add_l = tk.Label(master = self.frame_latency_add, text="Latency of add FU :")
-        self.latency_add_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.latency_add = tk.Entry(master = self.frame_latency_add)
-        self.latency_add.pack(fill=tk.Y, side=tk.RIGHT)
-        self.latency_add.insert(0, "2")
-        self.frame_latency_add.pack()
-        
-        
-
-        self.frame_n_mult = tk.Frame(master=self.frame_a)
-        self.n_mult_l = tk.Label(master = self.frame_n_mult, text="Nº of mult FU:")
-        self.n_mult_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.n_mult = tk.Entry(master = self.frame_n_mult)
-        self.n_mult.pack(fill=tk.Y, side=tk.RIGHT)
-        self.n_mult.insert(0, "3")
-        self.frame_n_mult.pack()
-
-        self.frame_latency_mult = tk.Frame(master=self.frame_a)
-        self.latency_mult_l = tk.Label(master = self.frame_latency_mult, text="Latency of mult FU :")
-        self.latency_mult_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.latency_mult = tk.Entry(master = self.frame_latency_mult)
-        self.latency_mult.pack(fill=tk.Y, side=tk.RIGHT)
-        self.latency_mult.insert(0, "3")
-        self.frame_latency_mult.pack()
-
-        self.frame_n_store = tk.Frame(master=self.frame_a)
-        self.n_store_l = tk.Label(master = self.frame_n_store, text="Nº of store FU:")
-        self.n_store_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.n_store = tk.Entry(master = self.frame_n_store)
-        self.n_store.pack(fill=tk.Y, side=tk.RIGHT)
-        self.n_store.insert(0, "2")
-        self.frame_n_store.pack()
-
-        self.frame_latency_store = tk.Frame(master=self.frame_a)
-        self.latency_store_l = tk.Label(master = self.frame_latency_store, text="Latency of store FU :")
-        self.latency_store_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.latency_store = tk.Entry(master = self.frame_latency_store)
-        self.latency_store.pack(fill=tk.Y, side=tk.RIGHT)
-        self.latency_store.insert(0, "2")
-        self.frame_latency_store.pack()
-        
-        '''
-
-        self.display_ADD = tk.Frame(master=self.frame_b)
-        self.d_add = tk.Label(master=self.display_ADD, text="Display ADD FU")
-        self.d_add.pack(fill=tk.Y, side=tk.LEFT)
-        self.display_ADD_value = tk.BooleanVar(master = self.display_ADD)
-        checkbutton_add = tk.Checkbutton(master = self.display_ADD, variable=self.display_ADD_value)
-        checkbutton_add.pack(fill=tk.Y, side=tk.RIGHT)
-        self.display_ADD.pack()
-
-        self.display_ADD_BRT = tk.Frame(master=self.frame_b)
-        self.d_add_BRT = tk.Label(master=self.display_ADD_BRT, text="Display ADD BRT")
-        self.d_add_BRT.pack(fill=tk.Y, side=tk.LEFT)
-        self.display_ADD_BRT_value = tk.BooleanVar(master = self.display_ADD_BRT)
-        checkbutton_add_BRT = tk.Checkbutton(master = self.display_ADD_BRT, variable=self.display_ADD_BRT_value)
-        checkbutton_add_BRT.pack(fill=tk.Y, side=tk.RIGHT)
-        self.display_ADD_BRT.pack()
-
+        self.display_alu_BRT = tk.Frame(master=self.frame_b)
+        self.d_alu_BRT = tk.Label(master=self.display_alu_BRT, text="Display alu BRT")
+        self.d_alu_BRT.pack(fill=tk.Y, side=tk.LEFT)
+        self.display_alu_BRT_value = tk.BooleanVar(master = self.display_alu_BRT)
+        checkbutton_alu_BRT = tk.Checkbutton(master = self.display_alu_BRT, variable=self.display_alu_BRT_value)
+        checkbutton_alu_BRT.pack(fill=tk.Y, side=tk.RIGHT)
+        self.display_alu_BRT.pack()
 
         self.display_MUL = tk.Frame(master=self.frame_b)
         self.d_mull = tk.Label(master=self.display_MUL, text="Display MULT FU")
@@ -318,7 +300,7 @@ class app:
         self.display_HS.pack()
 
         self.save_config_button = tk.Button(self.frame_a, text="SAVE config", command=self.save_conf)
-        self.save_config_button.pack()
+        self.save_config_button.pack(padx=self.px/2, pady=self.py/2)
 
         self.frame_a.pack(fill=tk.Y, side=tk.LEFT, padx=self.px, pady=self.py)
         self.frame_b.pack(fill=tk.Y, side=tk.RIGHT, padx=self.px, pady=self.py)
@@ -336,10 +318,12 @@ class app:
         "n_registers": [self.n_registers.get()],
         "pile_size":[ self.pile_size.get()],
         "memory_size":[ self.memory_size.get()],
-        "n_add":[ self.n_add.get()],
+        "n_alu":[ self.n_alu.get()],
         "n_mult":[ self.n_mult.get()],
+        "n_div": [self.n_div.get()],
+        "n_load": [self.n_load.get()],
         "n_store":[ self.n_store.get()],
-        "latency_add":[ self.latency_add.get()],
+        "latency_alu":[ self.latency_alu.get()],
         "latency_mult":[ self.latency_mult.get()],
         "latency_store":[ self.latency_store.get()],
         "n_cycles":[ self.n_cycles.get()],
@@ -350,8 +334,11 @@ class app:
         r.to_csv("config_sim.csv")
 
 
-    def scroll_text(self, *args):
+    def yscroll_text(self, *args):
         self.text_widget.yview(*args)
+
+    def xscroll_text(self, *args):
+        self.text_widget.xview(*args)
 
     def start(self):
 
@@ -361,10 +348,14 @@ class app:
 
                                                  pile_size = int(self.pile_size.get()),
                                                  memory_size=int(self.memory_size.get()),
-                                                 n_add = int(self.n_add.get()),
+                                                 n_alu= int(self.n_alu.get()),
                                                  n_mult= int(self.n_mult.get()),
+                                                 n_div = int(self.n_div.get()),
+                                                 n_load = int(self.n_load.get()),
                                                  n_store = int(self.n_store.get()),
-                                                 latency_add = int(self.latency_add.get()),
+                                                 latency_alu = int(self.latency_alu.get()),
+                                                 latency_load=int(self.latency_load.get()),
+                                                 latency_div=int(self.latency_div.get()),
                                                  latency_mult =int(self.latency_mult.get()),
                                                  latency_store= int(self.latency_store.get()),
                                                  n_cycles=int(self.n_cycles.get()),
@@ -408,9 +399,9 @@ class app:
         self.text_widget.pack(side="left", padx=self.px, pady=self.py, fill="y")
 
         self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
-                                bmemory=self.display_memory_value.get(),badd=self.display_ADD_value.get(),
+                                bmemory=self.display_memory_value.get(),balu=self.display_alu_value.get(),
                                 bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get(),
-                                badd_brt = self.display_ADD_BRT_value.get(),
+                                balu_brt = self.display_alu_BRT_value.get(),
                                 bstore_brt = self.display_STORE_BRT_value.get(),
                                 bmux_brt = self.display_MUL_BRT_value.get(),
                                 bjump_brt=self.display_JUMP_BRT_value.get())
@@ -444,9 +435,9 @@ class app:
     def next_cycle(self):
         self.simulador.one_clock_cycle()
         self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
-                                bmemory=self.display_memory_value.get(),badd=self.display_ADD_value.get(),
+                                bmemory=self.display_memory_value.get(),balu=self.display_alu_value.get(),
                                 bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get(),
-                                badd_brt = self.display_ADD_BRT_value.get(),
+                                balu_brt = self.display_alu_BRT_value.get(),
                                 bstore_brt = self.display_STORE_BRT_value.get(),
                                 bmux_brt = self.display_MUL_BRT_value.get(),
                                 bjump_brt=self.display_JUMP_BRT_value.get())
@@ -455,9 +446,9 @@ class app:
     def n_next_cycle(self, n):
         self.simulador.n_next_cycles(n)
         self.simulador.display2(bmux=self.display_MUL_value.get(), bstore=self.display_STORE_value.get(),
-                                bmemory=self.display_memory_value.get(),badd=self.display_ADD_value.get(),
+                                bmemory=self.display_memory_value.get(),balu=self.display_alu_value.get(),
                                 bhs = self.display_HS_value.get(), bCDB=self.display_CDB_value.get(),
-                                badd_brt = self.display_ADD_BRT_value.get(),
+                                balu_brt = self.display_alu_BRT_value.get(),
                                 bstore_brt = self.display_STORE_BRT_value.get(),
                                 bmux_brt = self.display_MUL_BRT_value.get(),
                                 bjump_brt=self.display_JUMP_BRT_value.get())
@@ -517,8 +508,14 @@ class app:
             self.memory_size.delete(0, tk.END)
             self.memory_size.insert(0, str(conf["memory_size"][0]))
 
-            self.n_add.delete(0, tk.END)
-            self.n_add.insert(0, str(conf["n_add"][0]))
+            self.n_alu.delete(0, tk.END)
+            self.n_alu.insert(0, str(conf["n_alu"][0]))
+
+            self.n_div.delete(0, tk.END)
+            self.n_div.insert(0, str(conf["n_div"][0]))
+
+            self.n_load.delete(0, tk.END)
+            self.n_load.insert(0, str(conf["n_load"][0]))
 
             self.n_mult.delete(0, tk.END)
             self.n_mult.insert(0, str(conf["n_mult"][0]))
@@ -526,8 +523,14 @@ class app:
             self.n_store.delete(0, tk.END)
             self.n_store.insert(0, str(conf["n_store"][0]))
 
-            self.latency_add.delete(0, tk.END)
-            self.latency_add.insert(0, str(conf["latency_add"][0]))
+            self.latency_alu.delete(0, tk.END)
+            self.latency_alu.insert(0, str(conf["latency_alu"][0]))
+
+            self.latency_div.delete(0, tk.END)
+            self.latency_div.insert(0, str(conf["latency_div"][0]))
+
+            self.latency_load.delete(0, tk.END)
+            self.latency_load.insert(0, str(conf["latency_load"][0]))
 
             self.latency_mult.delete(0, tk.END)
             self.latency_mult.insert(0, str(conf["latency_mult"][0]))

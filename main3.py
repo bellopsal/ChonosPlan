@@ -13,7 +13,7 @@ instrucciones = [Inst(operation="add", tag = "bucle", r1= 1, r2=1, r3=2),
                  Inst(operation="mul", r1= 1, r2=0, r3=0) ,
                  Inst(operation="add", r1= 3, r2=1, r3=1) ]
 
-instrucciones = Program.Program("fullBRT.csv")
+instrucciones = Program.Program("exampleOP.csv")
 
 #print(instrucciones.instructions[1])
 #print(instrucciones.instructions[3])
@@ -21,18 +21,22 @@ instrucciones = Program.Program("fullBRT.csv")
 #print(instrucciones.instructions[5])
 
 s = Simulador.Simulador_1_FU(program = instrucciones,
-                             n_ss = 8,
-                             n_registers = 9,
+                             ss_size = 8,
+                             n_registers = 4,
                              b_scoreboard = 1,
                              pile_size = 3,
                              memory_size=32,
-                             n_add = 3,
+                             multiplicity=1,
+                             n_alu= 3,
                              n_mult= 3,
+                            n_div= 3,
                              n_store = 2,
-                             latency_add = 2,
+                             n_load = 2,
+                             latency_alu = 2,
+                             latency_div=3,
+                             latency_load=2,
                              latency_mult =3,
                              latency_store= 2,
-                             multiplicity=3,
                              b_hs= False,
 
                              )
@@ -70,6 +74,6 @@ print("---------------")
 print(s.CDB)
 s.one_clock_cycle()
 s.display2(bmux=False, bstore=False, bmemory=False)
-
+print(s.registers.scoreboard)
 print("---------------")
 

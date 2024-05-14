@@ -29,17 +29,6 @@ class FU:
         operand1 = self.ss_side.value
         operand2 = self.pile_side.value
 
-        if str(self.ss_side.type_operation).startswith("add") :
-            self.operationQueue[0] = operand1 + operand2
-
-        if str(self.ss_side.type_operation).startswith("sub") :
-            if self.ss_side.inv:
-                self.operationQueue[0] = operand2 - operand1
-            else:
-                self.operationQueue[0] = operand1 - operand2
-
-        if str(self.ss_side.type_operation).startswith("mul"):
-            self.operationQueue[0] = operand1 * operand2
 
         if str(self.ss_side.type_operation).startswith("div"):
             if self.ss_side.inv:

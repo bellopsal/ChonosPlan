@@ -25,9 +25,9 @@ class Registers:
     def __init__(self, size, b_scoreboard):
         self.R = [Register(i) for i in range(size)]
         self.size = size
-        self.b_scoreboard = b_scoreboard
+        self.b_scoreboard = True
 
-        if b_scoreboard:
+        if self.b_scoreboard:
             self.scoreboard = Scoreboard.Scoreboards(size)
 
     def __str__(self):
@@ -61,6 +61,8 @@ class Registers:
         self.R[destino].fu = fu_name
         self.R[destino].value = None
         self.R[destino].lock = False
+
+        self.update_scoreboard()
 
     def lock(self, register):
         self.R[register].lock = True
@@ -106,10 +108,13 @@ class Registers:
                 inv = False
 
             if ts_min == 0:
-                FU1 = "mem"
+                FU1 = "reg"
             else:
                 FU1 = self.R[reg_min].fu
-            FU2 = self.R[reg_max].fu
+            if ts_max == 0:
+                FU2 = "reg"
+            else:
+                FU2 = self.R[reg_max].fu
 
             return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
 
@@ -119,10 +124,6 @@ class Registers:
             return [True]
         else:
             t1 = self.R[source1].td
-
-            # primero tengo que actualizar los registros que serán destino
-            # asi tengo en cuenta el tiempo anterior y en el caso de escalaridad
-            # no perder el orden de las instrucciones!!!
 
             ts_max = t1
             ts_min = -1
