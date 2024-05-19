@@ -43,20 +43,18 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
 
 s.memory.putValues([*range(32)])
 
-s.display2(balu = False,bmux=False, bstore=True, bmemory=False, bload=True)
+s.display2(balu = True,bmux=False, bstore=False, bmemory=False, bload=False)
 print(s.CDB)
 s.one_clock_cycle()
-s.display2(balu = False,bmux=False, bstore=True, bmemory=False, bload=True)
-
+s.display2(balu = True,bmux=False, bstore=False, bmemory=False, bload=False)
 print("---------------")
 print(s.CDB)
 s.one_clock_cycle()
 
-s.display2(balu = False,bmux=False, bstore=True, bmemory=False, bload=True)
-
+s.display2(balu = True,bmux=False, bstore=False, bmemory=False, bload=False)
 print("---------------")
 
 print(s.CDB)
 s.one_clock_cycle()
-
+s.display2(balu = True,bmux=False, bstore=False, bmemory=False, bload=False)
 

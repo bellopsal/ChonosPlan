@@ -82,7 +82,8 @@ class Registers:
     def get_type(self, i):
         return self.R[i].type
 
-    def td_calculation_type1(self, source1, source2, destiny):
+    def td_calculation_type1(self,source1, source2, destiny):
+        if source2 == None: source2 = source1
 
         if self.R[source1].lock or self.R[source2].lock or self.R[destiny].lock:
             return [True]

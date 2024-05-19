@@ -41,6 +41,9 @@ class FU:
         if str(self.ss_side.type_operation).startswith("and"):
             self.operationQueue[0] = operand1 & operand2
 
+        if str(self.ss_side.type_operation).startswith("not"):
+            self.operationQueue[0] = ~operand2
+
         if str(self.ss_side.type_operation).startswith("or"):
             self.operationQueue[0] = operand1 | operand2
 

@@ -2,7 +2,8 @@ import CDB
 import Memory
 import Pointer
 
-from FU import holdStations, funtionalUnitStore, funtionalUnitJump, ALU_funtionalUnit, STORE_funtionalUnitStore, LOAD_funtionalUnitStore, DIV_funtionalUnit, MULT_funtionalUnit
+from FU import holdStations, ALU_funtionalUnit, STORE_funtionalUnitStore, LOAD_funtionalUnitStore, DIV_funtionalUnit, MULT_funtionalUnit
+from FU.aux import funtionalUnitJump
 import Registers
 
 from rich.console import Console,Group

@@ -1,5 +1,3 @@
 tag,operation,r1,r2,r3,rd,rs1,inm,offset,BTB
-,lb,3,,,,2,1,,
-,lb,0,,,,0,0,,
-,sb,0,,,,0,0,,
-,lb,3,,,,2,1,,
+,not,1,2,,,,,
+

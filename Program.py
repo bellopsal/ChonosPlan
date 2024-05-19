@@ -10,7 +10,7 @@ import csv
 
 typeInstructions = {
     "jump": ["j","beq"],
-    "alu": ["add", "sub", "addi", "subi","xor","xori","and","andi","or","ori","sll","srl","slt","slli","srli","slti"],
+    "alu": ["add", "sub", "addi", "subi","xor","xori","and","andi","or","ori","sll","srl","slt","slli","srli","slti","not"],
     "mult": ["mult", "multi"],
     "div": ["div", "divi"],
     "store": ["sb"],
