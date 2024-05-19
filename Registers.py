@@ -116,6 +116,7 @@ class Registers:
             else:
                 FU2 = self.R[reg_max].fu
 
+
             return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
 
     def td_calculation_type1_inm(self, source1, inm, destiny):

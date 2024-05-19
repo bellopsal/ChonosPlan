@@ -3,7 +3,7 @@ import csv
 
 class Memory:
     def __init__(self, size):
-        self.memory = [0] * size
+        self.memory = [1] * size
 
         self.size = size
 

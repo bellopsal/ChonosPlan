@@ -38,6 +38,8 @@ class Simulador_1_FU:
         self.n_cycles = n_cycles
         self.multiplicity = multiplicity
 
+        self.memory_last = -1
+
         self.fus_alu = []
         self.fus_mult = []
         self.fus_div = []
@@ -72,7 +74,6 @@ class Simulador_1_FU:
                 DIV_funtionalUnit.FU(f"div_{i}", "div", ss_size,
                                                   pile_size=pile_size, latency=latency_div, n_cycles=n_cycles))
 
-        print(n_load)
         for i in range(n_load):
             self.fus_load.append(
                 LOAD_funtionalUnitStore.FU(f"load_{i}", "load", ss_size,
@@ -122,6 +123,7 @@ class Simulador_1_FU:
         for i in range(self.n_div): self.fus_div[i].one_clock_cycle(self.CDB)
         for i in range(self.n_store): self.fus_store[i].one_clock_cycle(self.CDB)
         for i in range(self.n_load): self.fus_load[i].one_clock_cycle(self.CDB)
+        if self.memory_last > 0: self.memory_last = self.memory_last - 1
 
         self.fu_jump.one_clock_cycle()
 
@@ -135,8 +137,11 @@ class Simulador_1_FU:
                 if instIndex < self.program.n:
                     inst = self.program.get(instIndex)
                     # if there are still instructions in the program
-                    res, bitMux = self.newInstruction(instIndex)
+                    res, bitMux, pos = self.newInstruction(instIndex)
                     self.statistics.updateTypeInst(bitMux)
+
+
+
 
                     if res == 0:
                         self.statistics.increaseTotalLock()
@@ -146,6 +151,7 @@ class Simulador_1_FU:
                     else:
                         self.statistics.increaseInstIssued()
                         self.dump_csv()
+                        if pos > self.memory_last: self.memory_last = pos
                         if inst.fu_type == "jump" and inst.BTB == True:
                             self.PC.last = self.program.dict_names[inst.offset] - 1
                             break
@@ -203,10 +209,10 @@ class Simulador_1_FU:
                 fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_div]
                 selectionOrder = self.div_selectionOrder
             if fu_type == "store":
-                fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_store]
+                fus_free = [fu.calculateN(inst, self.registers, self.memory_last) for fu in self.fus_store]
                 selectionOrder = self.store_selectionOrder
             if fu_type == "load":
-                fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_load]
+                fus_free = [fu.calculateN(inst, self.registers, self.memory_last) for fu in self.fus_load]
                 selectionOrder = self.load_selectionOrder
 
 
@@ -215,16 +221,23 @@ class Simulador_1_FU:
             if len(indexes) == 0:
                 # if there are no elements in the indexes its means that there are no free slots in the next 4 slots
                 # this is a complete lock in our instruction
+                pos = -1
                 res = 0
                 self.registers.lock(inst.r1)
+                pos = -1
                 bitMux = 4
-            else:
 
+            else:
+                pos = -1
                 index = self.selection(indexes, selectionOrder)
                 fu = self.getFU(inst.fu_type, index)
-                res, bitMux = fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs)
+                if inst.fu_type == "load" or inst.fu_type == "store":
+                    res, bitMux, pos = fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.memory_last)
+                else:
+                    res, bitMux= fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs)
 
-        return res, bitMux
+            pos = pos + 1
+        return res, bitMux, pos
 
 
     def find_lowest_positive_index(self, l):

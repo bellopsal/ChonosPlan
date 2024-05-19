@@ -13,7 +13,7 @@ instrucciones = [Inst(operation="add", tag = "bucle", r1= 1, r2=1, r3=2),
                  Inst(operation="mul", r1= 1, r2=0, r3=0) ,
                  Inst(operation="add", r1= 3, r2=1, r3=1) ]
 
-instrucciones = Program.Program("exampleOP.csv")
+instrucciones = Program.Program("ex2a_1_tfg.csv")
 
 #print(instrucciones.instructions[1])
 #print(instrucciones.instructions[3])
@@ -22,11 +22,11 @@ instrucciones = Program.Program("exampleOP.csv")
 
 s = Simulador.Simulador_1_FU(program = instrucciones,
                              ss_size = 8,
-                             n_registers = 4,
+                             n_registers = 10,
                              b_scoreboard = 1,
                              pile_size = 3,
                              memory_size=32,
-                             multiplicity=1,
+                             multiplicity=3,
                              n_alu= 3,
                              n_mult= 3,
                             n_div= 3,
@@ -43,37 +43,20 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
 
 s.memory.putValues([*range(32)])
 
-s.display2(bmux=False, bstore=False, bmemory=False)
+s.display2(balu = False,bmux=False, bstore=True, bmemory=False, bload=True)
 print(s.CDB)
 s.one_clock_cycle()
-s.display2(bmux=False, bstore=False, bmemory=False)
+s.display2(balu = False,bmux=False, bstore=True, bmemory=False, bload=True)
 
 print("---------------")
 print(s.CDB)
 s.one_clock_cycle()
 
-s.display2(bmux=False, bstore=False, bmemory=False)
+s.display2(balu = False,bmux=False, bstore=True, bmemory=False, bload=True)
 
 print("---------------")
+
 print(s.CDB)
 s.one_clock_cycle()
 
-s.display2(bmux=False, bstore=False, bmemory=False)
-
-print("---------------")
-print(s.CDB)
-s.one_clock_cycle()
-s.display2(bmux=False, bstore=False, bmemory=False)
-
-print("---------------")
-print(s.CDB)
-s.one_clock_cycle()
-s.display2(bmux=False, bstore=False, bmemory=False)
-
-print("---------------")
-print(s.CDB)
-s.one_clock_cycle()
-s.display2(bmux=False, bstore=False, bmemory=False)
-print(s.registers.scoreboard)
-print("---------------")
 

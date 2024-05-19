@@ -1,6 +1,11 @@
-Register,T0 ,T1 ,T2 ,T3 ,T4 ,T5 ,T6 
-R0,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) ,+2 (alu_1) ,+10 (alu_2) 
-R1,+0 (None) ,+2 (alu_0) ,+2 (alu_0) ,+2 (alu_0) ,+2 (alu_0) ,+2 (alu_0) 
-R2,+0 (None) ,+0 (None) ,+5 (mult_0) ,+5 (mult_0) ,+5 (mult_0) ,+5 (mult_0) 
-R3,+0 (None) ,+0 (None) ,+0 (None) ,+8 (div_0) ,+8 (div_0) ,+8 (div_0) 
-R4,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) 
+Register,T0 ,T1 ,T2 ,T3 ,T4 
+R0,+0 (None) ,+0 (None) ,+3 (load_1) ,+1 (load_1) 
+R1,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) 
+R2,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) 
+R3,+0 (None) ,+2 (load_0) ,+2 (load_0) ,+4 (load_1) 
+R4,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) 
+R5,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) 
+R6,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) 
+R7,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) 
+R8,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) 
+R9,+0 (None) ,+0 (None) ,+0 (None) ,+0 (None) 

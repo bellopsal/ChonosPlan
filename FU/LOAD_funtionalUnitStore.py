@@ -40,16 +40,19 @@ class FU:
             pos = inm + operand2
             self.operationQueue[0] = mem.get(pos)
 
-    def calculateN(self, inst, registers):
+    def calculateN(self, inst, registers, memory_last):
 
         l = registers.td_calculation_type2(inst.rs1, inst.r1)
+        ts_max = l[0]
 
-
-        n = self.findFirstEmptyBRT(l[0])
+        if memory_last > ts_max:
+            n = self.findFirstEmptyBRT(memory_last)
+        else:
+            n = self.findFirstEmptyBRT(ts_max)
 
         return n
 
-    def new_instruction(self, inst, instIndex, registers, hs, b_hs):
+    def new_instruction(self, inst, instIndex, registers, hs, b_hs, memory_last):
         bitMux = -1
 
         registersCalculation = registers.td_calculation_type2(source = inst.rs1, destination=inst.r1)
@@ -69,17 +72,24 @@ class FU:
             inv = registersCalculation[6]
 
             # always set the time to the last one to avoid dependency hazzards
-            if self.lastBRT > ts_max:
-                ts_max = self.lastBRT
-            else:
-                self.lastBRT = ts_max
+            b_des = False
+            if memory_last > ts_max:
+                td = memory_last + self.latency
+                n = self.findFirstEmptyBRT(memory_last)
+                position = memory_last + n
+                td = td + n
+                b_des = True
 
-            td = ts_max + self.latency
-            n = self.findFirstEmptyBRT(ts_max)
+            else:
+                td = ts_max + self.latency
+                n = self.findFirstEmptyBRT(ts_max)
+                position = ts_max + n
+                td = td + n
+
 
             res = 1
-            td = td + n
-            position = ts_max + n
+
+
 
             inm = inst.inm
 
@@ -88,7 +98,7 @@ class FU:
                 res = 0
                 bitMux = 4
 
-            elif (position > self.pile_size - 1 and n>0) or position > self.ss_size - 1:
+            elif (position > self.pile_size - 1 and (n>0 or b_des) )or position > self.ss_size - 1:
                 # two cases: there is a need for store the data in a pile or the time exceed the ss
                 if b_hs:
                     freeHS = hs.freeHS()
@@ -153,7 +163,7 @@ class FU:
                 self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
                                  RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv, inm = inm)
 
-            return res, bitMux
+            return res, bitMux, position
 
     def findFirstEmptyBRT(self, ts_max):
         n = self.BRT.find_first_after(ts_max)
