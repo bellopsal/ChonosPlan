@@ -29,12 +29,14 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
                              multiplicity=3,
                              n_alu= 3,
                              n_mult= 3,
+                             n_trans = 3,
                             n_div= 3,
                              n_store = 2,
                              n_load = 2,
                              latency_alu = 2,
                              latency_div=3,
                              latency_load=2,
+                                latency_trans = 5,
                              latency_mult =3,
                              latency_store= 2,
                              b_hs= False,
@@ -43,10 +45,10 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
 
 s.memory.putValues([*range(32)])
 
-s.display2(balu = True,bmux=False, bstore=False, bmemory=False, bload=False)
+s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False)
 print(s.CDB)
 s.one_clock_cycle()
-s.display2(balu = True,bmux=False, bstore=False, bmemory=False, bload=False)
+s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False)
 print("---------------")
 print(s.CDB)
 s.one_clock_cycle()
@@ -54,7 +56,15 @@ s.one_clock_cycle()
 s.display2(balu = True,bmux=False, bstore=False, bmemory=False, bload=False)
 print("---------------")
 
-print(s.CDB)
+
 s.one_clock_cycle()
-s.display2(balu = True,bmux=False, bstore=False, bmemory=False, bload=False)
+s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
+s.one_clock_cycle()
+s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
+s.one_clock_cycle()
+
+s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
+s.one_clock_cycle()
+
+s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
 

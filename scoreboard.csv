@@ -1,6 +1,6 @@
 Register,T0 ,T1 ,T2 
 R0,+0 (None) ,+0 (None) 
-R1,+0 (None) ,+2 (alu_0) 
+R1,+0 (None) ,+5 (trans_0) 
 R2,+0 (None) ,+0 (None) 
 R3,+0 (None) ,+0 (None) 
 R4,+0 (None) ,+0 (None) 

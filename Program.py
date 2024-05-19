@@ -14,7 +14,8 @@ typeInstructions = {
     "mult": ["mult", "multi"],
     "div": ["div", "divi"],
     "store": ["sb"],
-    "load": ["lb"]
+    "load": ["lb"],
+    "trans":["sqrt","log","sin","cos"]
 }
 
 

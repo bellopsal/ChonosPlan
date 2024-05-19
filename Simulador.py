@@ -2,7 +2,7 @@ import CDB
 import Memory
 import Pointer
 
-from FU import holdStations, ALU_funtionalUnit, STORE_funtionalUnitStore, LOAD_funtionalUnitStore, DIV_funtionalUnit, MULT_funtionalUnit
+from FU import holdStations, ALU_funtionalUnit, STORE_funtionalUnitStore, LOAD_funtionalUnitStore, DIV_funtionalUnit, MULT_funtionalUnit, TRANS_funtionalUnit
 from FU.aux import funtionalUnitJump
 import Registers
 
@@ -17,8 +17,8 @@ from rich.text import Text
 class Simulador_1_FU:
 
     def __init__(self, program, ss_size, n_registers, pile_size, memory_size,
-                 n_alu, n_mult, n_div, n_load, n_store,
-                 latency_alu, latency_mult,latency_div,latency_load, latency_store,
+                 n_alu, n_mult, n_div, n_load, n_store,n_trans,
+                 latency_alu, latency_mult,latency_div,latency_load, latency_store, latency_trans,
                  multiplicity, n_hs=10, b_hs=False, n_cycles=120,
                  b_scoreboard=1):
         # set of instructions
@@ -34,6 +34,7 @@ class Simulador_1_FU:
         self.n_div = n_div
         self.n_load = n_load
         self.n_store = n_store
+        self.n_trans = n_trans
 
         self.PC = Pointer.PC(multiplicity, self.program.n)
         self.n_cycles = n_cycles
@@ -46,6 +47,7 @@ class Simulador_1_FU:
         self.fus_div = []
         self.fus_load = []
         self.fus_store = []
+        self.fus_trans = []
         self.fu_jump = funtionalUnitJump.FU(name="jump_0", fu_type="jump", ss_size=self.ss_size,
                                             pile_size = self.pile_size, n_cycles=self.n_cycles)
 
@@ -57,6 +59,7 @@ class Simulador_1_FU:
         self.div_selectionOrder = list(range(n_div))
         self.store_selectionOrder = list(range(n_store))
         self.load_selectionOrder = list(range(n_load))
+        self.trans_selectionOrder = list(range(n_trans))
 
         self.statistics = Statistics()
 
@@ -84,6 +87,10 @@ class Simulador_1_FU:
             self.fus_store.append(
                 STORE_funtionalUnitStore.FU(f"store_{i}", "store", ss_size,
                                       pile_size=pile_size, latency=latency_store,n_cycles=n_cycles))
+        for i in range(n_trans):
+            self.fus_trans.append(
+                TRANS_funtionalUnit.FU(f"trans_{i}", "trans", ss_size,
+                                      pile_size=pile_size, latency=latency_trans,n_cycles=n_cycles))
 
         self.registers = Registers.Registers(n_registers, b_scoreboard)
         self.CDB = CDB.CDB()
@@ -106,6 +113,7 @@ class Simulador_1_FU:
         for fu in self.fus_alu: fu.operation()
         for fu in self.fus_div: fu.operation()
         for fu in self.fus_mult: fu.operation()
+        for fu in self.fus_trans: fu.operation()
         for fu in self.fus_store: fu.operation(self.memory)
         for fu in self.fus_load: fu.operation(self.memory)
 
@@ -114,7 +122,8 @@ class Simulador_1_FU:
                         store=self.moveOperationQueue(self.fus_store, self.memory),
                         load=self.moveOperationQueue(self.fus_load, self.memory),
                         mult=self.moveOperationQueue(self.fus_mult),
-                        div=self.moveOperationQueue(self.fus_div))
+                        div=self.moveOperationQueue(self.fus_div),
+                        trans = self.moveOperationQueue(self.fus_trans))
 
         self.registers.one_clock_cycle(self.CDB)
 
@@ -124,6 +133,7 @@ class Simulador_1_FU:
         for i in range(self.n_div): self.fus_div[i].one_clock_cycle(self.CDB)
         for i in range(self.n_store): self.fus_store[i].one_clock_cycle(self.CDB)
         for i in range(self.n_load): self.fus_load[i].one_clock_cycle(self.CDB)
+        for i in range(self.n_trans): self.fus_trans[i].one_clock_cycle(self.CDB)
         if self.memory_last > 0: self.memory_last = self.memory_last - 1
 
         self.fu_jump.one_clock_cycle()
@@ -140,8 +150,6 @@ class Simulador_1_FU:
                     # if there are still instructions in the program
                     res, bitMux, pos = self.newInstruction(instIndex)
                     self.statistics.updateTypeInst(bitMux)
-
-
 
 
                     if res == 0:
@@ -177,6 +185,7 @@ class Simulador_1_FU:
             if fu_type == "div": fu = self.fus_div[fu_pos]
             if fu_type == "load": fu = self.fus_load[fu_pos]
             if fu_type == "store": fu = self.fus_store[fu_pos]
+            if fu_type == "trans": fu = self.fus_trans[fu_pos]
             if fu_type == "jump": fu = self.fu_jump
 
             if hs.casePile:
@@ -215,6 +224,9 @@ class Simulador_1_FU:
             if fu_type == "load":
                 fus_free = [fu.calculateN(inst, self.registers, self.memory_last) for fu in self.fus_load]
                 selectionOrder = self.load_selectionOrder
+            if fu_type == "trans":
+                fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_trans]
+                selectionOrder = self.trans_selectionOrder
 
 
             indexes = self.find_lowest_positive_index(fus_free)
@@ -280,6 +292,9 @@ class Simulador_1_FU:
 
         if fu_type == "div":
             return self.fus_div[index]
+
+        if fu_type == "trans":
+            return self.fus_trans[index]
 
 
     ## Display functions
@@ -380,56 +395,10 @@ class Simulador_1_FU:
 
         console.print(text)
 
-    def display(self, balu=True, bmux=True, bstore=False, bmemory=False):
-        self.display_ints()
-        console = Console(record=True, width=200, height=200)
 
-        if balu:
-            table_alus = Table(title="Functional Unit: alu")
-            table_alus_pile = Table(title="Queue: alu")
-            for i in range(self.n_alu):
-                table_alus.add_column(self.display_SS(f"alu_{i}", fu=self.fus_alu[i]))
-                table_alus_pile.add_column(self.display_pile(fu=self.fus_alu[i]))
-            console.print(table_alus)
-            console.print(table_alus_pile)
-
-        if bmux:
-            table_mult = Table(title="Functional Unit: MULT")
-            for i in range(self.n_mult):
-                table_mult.add_column(self.display_SS(f"MULT_{i}", fu=self.fus_mult[i]))
-            console.print(table_mult, overflow="fold")
-
-
-        if bstore:
-            table_store = Table(title="Functional Unit: STORE")
-            for i in range(self.n_store):
-                table_store.add_column(self.display_SS(f"STORE_{i}", fu=self.fus_store[i]))
-            console.print(table_store, overflow="fold")
-
-        if bmemory:
-            memory = Table(title="MEMORY")
-            memory.add_column("Line", justify="center")
-            memory.add_column("values", justify="center")
-            memory.add_column("ready", justify="center")
-            l = [self.memory.memory[n:n + 8] for n in range(0, self.memory.size, 8)]
-            r = [self.memory.ready[n:n + 8] for n in range(0, self.memory.size, 8)]
-            for i in range(len(l)):
-                memory.add_row(str(i), str(l[i]), str(r[i]))
-            console.print(memory)
-
-        register = Table(title="REGISTERS")
-        register.add_column("Register", justify="center")
-        register.add_column("TD", justify="center")
-        register.add_column("FU", justify="center")
-        register.add_column("value", justify="center")
-        register.add_column("locked", justify="center")
-
-        for reg in self.registers.R:
-            register.add_row("R" + str(reg.number), "+" + str(reg.td), reg.fu, str(reg.value), str(reg.lock))
-
-        console.print(register)
-
-    def display2(self, balu=True, bmux=True,bdiv=False, bstore=False, bload=False, bmemory=False, bhs = False, bCDB = False, balu_brt=False, bmux_brt = False,bdiv_brt = False, bstore_brt = False, bload_brt = False,bjump_brt = False):
+    def display2(self, balu=True, bmux=True,bdiv=False, bstore=False, bload=False, bmemory=False,
+                 bhs = False, bCDB = False, balu_brt=False, bmux_brt = False, bdiv_brt = False, btrans = False, btrans_brt = False,
+                 bstore_brt = False, bload_brt = False,bjump_brt = False, ):
         console = Console(record= True, width=190)
 
         #console.rule("[bold red]")
@@ -463,6 +432,13 @@ class Simulador_1_FU:
                                for i in range(self.n_div)]
 
             console.print(Columns(div_renderables, equal=True, align="center", title="Functional Unit: DIV"))
+
+        if btrans:
+            trans_renderables = [Panel(Group(self.display_SS(f"TRANS_{i}", fu=self.fus_trans[i]),
+                                           self.display_pile(fu=self.fus_trans[i], title=f"Queue_{i}")))
+                               for i in range(self.n_trans)]
+
+            console.print(Columns(trans_renderables, equal=True, align="center", title="Functional Unit: TRANS"))
 
         if bstore:
             store_renderables = [Panel(Group(self.display_SS(f"STORE_{i}", fu=self.fus_store[i]),
@@ -528,6 +504,13 @@ class Simulador_1_FU:
         if bdiv_brt:
             text = Text()
             for fu in self.fus_div:
+                text.append(fu.name, style="bold magenta underline")
+                text.append( fu.BRT.__str__() + "\n")
+            console.print(text)
+
+        if btrans_brt:
+            text = Text()
+            for fu in self.fus_trans:
                 text.append(fu.name, style="bold magenta underline")
                 text.append( fu.BRT.__str__() + "\n")
             console.print(text)

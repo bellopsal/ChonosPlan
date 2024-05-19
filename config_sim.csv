@@ -1,2 +1,2 @@
-n_load,n_store,
-,3,1,3
+,n_ss,n_registers,pile_size,memory_size,n_alu,n_mult,n_div,n_trans,n_load,n_store,latency_alu,latency_mult,latency_div,latency_trans,latency_store,latency_load,n_cycles,m,b_hs
+0,10,5,3,30,3,3,3,3,3,3,1,2,3,6,4,5,33,5,False

@@ -7,9 +7,10 @@ class CDB:
         self.store = []
         self.load = []
         self.mult = []
+        self.trans = []
 
     def __str__(self):
-        txt= f"CBD: \n     alu: {self.alu} \n     store: {self.store}\n     load: {self.load } \n     mult: {self.mult }\n     div: {self.div }"
+        txt= f"CBD: \n     alu: {self.alu} \n     store: {self.store}\n     load: {self.load } \n     mult: {self.mult }\n     div: {self.div }\n     trans: {self.trans }"
         return txt
 
     def get(self, FU_type, index):
@@ -23,10 +24,13 @@ class CDB:
             return self.div[index]
         elif FU_type == "load":
             return self.load[index]
+        elif FU_type == "trans":
+            return self.trans[index]
 
-    def update(self, alu, store, mult, div, load):
+    def update(self, alu, store, mult, div, load, trans):
         self.alu = alu
         self.store = store
         self.mult = mult
         self.load = load
         self.div = div
+        self.trans = trans

@@ -152,13 +152,14 @@ class app:
         frame_alu_4 = tk.Frame(master=self.frame_alu)
         frame_alu_5 = tk.Frame(master=self.frame_alu)
         frame_alu_6 = tk.Frame(master=self.frame_alu)
+        frame_alu_7= tk.Frame(master=self.frame_alu)
 
         tk.Label(master=frame_alu_1, text=" FU ",  width = 5).pack(fill=tk.Y, side=tk.LEFT)
         tk.Label(master=frame_alu_1, text=" nº ", width = 5).pack(fill=tk.Y, side=tk.LEFT)
         tk.Label(master=frame_alu_1, text="lat", width = 5).pack(fill=tk.Y, side=tk.RIGHT)
 
         # Select ALU config
-        tk.Label(master=frame_alu_2, text=" ALU  ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
+        tk.Label(master=frame_alu_2, text="  ALU ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
         self.n_alu = tk.Entry(master = frame_alu_2, width = 5, justify="left")
         self.n_alu.pack( side=tk.LEFT)
         self.n_alu.insert(0, "3")
@@ -168,7 +169,7 @@ class app:
         self.latency_alu.insert(0, "2")
 
         # Select MULT config
-        tk.Label(master=frame_alu_3, text="MULT ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
+        tk.Label(master=frame_alu_3, text=" MULT", justify="left").pack(fill=tk.Y, side=tk.LEFT)
         self.n_mult = tk.Entry(master = frame_alu_3,  width = 5, justify="left")
         self.n_mult.pack( side=tk.LEFT)
         self.n_mult.insert(0, "3")
@@ -178,7 +179,7 @@ class app:
         self.latency_mult.insert(0, "3")
 
         # Select DIV config
-        tk.Label(master=frame_alu_4, text=" DIV  ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
+        tk.Label(master=frame_alu_4, text="  DIV   ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
         self.n_div = tk.Entry(master = frame_alu_4,  width = 5, justify="left")
         self.n_div.pack( side=tk.LEFT)
         self.n_div.insert(0, "3")
@@ -186,6 +187,16 @@ class app:
         self.latency_div = tk.Entry(master = frame_alu_4, width = 5, justify="left")
         self.latency_div.pack( side=tk.RIGHT)
         self.latency_div.insert(0, "3")
+
+        # Select TRANS config
+        tk.Label(master=frame_alu_7, text="TRANS", justify="left").pack(fill=tk.Y, side=tk.LEFT)
+        self.n_trans = tk.Entry(master = frame_alu_7,  width = 5, justify="left")
+        self.n_trans.pack( side=tk.LEFT)
+        self.n_trans.insert(0, "3")
+
+        self.latency_trans = tk.Entry(master = frame_alu_7, width = 5, justify="left")
+        self.latency_trans.pack( side=tk.RIGHT)
+        self.latency_trans.insert(0, "5")
 
         # Select STORE config
         tk.Label(master=frame_alu_5, text="STORE", justify="left").pack(fill=tk.Y, side=tk.LEFT)
@@ -198,7 +209,7 @@ class app:
         self.latency_store.insert(0, "2")
 
         # Select LOAD config
-        tk.Label(master=frame_alu_6, text="LOAD", justify="left").pack(fill=tk.Y, side=tk.LEFT)
+        tk.Label(master=frame_alu_6, text=" LOAD ", justify="left").pack(fill=tk.Y, side=tk.LEFT)
         self.n_load = tk.Entry(master = frame_alu_6, width = 5, justify="left")
         self.n_load.pack( side=tk.LEFT)
         self.n_load.insert(0, "3")
@@ -215,6 +226,7 @@ class app:
         frame_alu_4.pack()
         frame_alu_5.pack()
         frame_alu_6.pack()
+        frame_alu_7.pack()
 
         self.frame_alu.pack(padx=self.px/2, pady=self.py/2)
 
@@ -277,6 +289,27 @@ class app:
         checkbutton_DIV_BRT.pack(side=tk.RIGHT)
         self.display_DIV_BRT.pack(side=tk.RIGHT)
         self.dd_div.pack()
+
+        # Trans
+        self.dd_trans = tk.Frame(master=self.frame_b)
+        self.display_TRANS = tk.Frame(master=self.dd_trans)
+        alu = tk.Label(master=self.frame_b, text="Display TRANS:", font="Arial 14 bold").pack(anchor="w",
+                                                                                            padx=self.px * 2)
+        self.d_trans = tk.Label(master=self.display_TRANS, text="FU")
+        self.d_trans.pack(side=tk.LEFT)
+        self.display_TRANS_value = tk.BooleanVar(master = self.display_TRANS)
+        checkbutton_trans = tk.Checkbutton(master = self.display_TRANS, variable=self.display_TRANS_value)
+        checkbutton_trans.pack(side=tk.RIGHT)
+        self.display_TRANS.pack(side=tk.LEFT)
+
+        self.display_TRANS_BRT = tk.Frame(master=self.dd_trans)
+        self.d_TRANS_BRT = tk.Label(master=self.display_TRANS_BRT, text="BRT")
+        self.d_TRANS_BRT.pack(side=tk.LEFT)
+        self.display_TRANS_BRT_value = tk.BooleanVar(master = self.display_TRANS_BRT)
+        checkbutton_TRANS_BRT = tk.Checkbutton(master = self.display_TRANS_BRT, variable=self.display_TRANS_BRT_value)
+        checkbutton_TRANS_BRT.pack(side=tk.RIGHT)
+        self.display_TRANS_BRT.pack(side=tk.RIGHT)
+        self.dd_trans.pack()
 
         self.dd_store = tk.Frame(master=self.frame_b)
         self.display_STORE = tk.Frame(master=self.dd_store)
@@ -379,11 +412,15 @@ class app:
         "n_alu":[ self.n_alu.get()],
         "n_mult":[ self.n_mult.get()],
         "n_div": [self.n_div.get()],
+        "n_trans": [self.n_trans.get()],
         "n_load": [self.n_load.get()],
         "n_store":[ self.n_store.get()],
         "latency_alu":[ self.latency_alu.get()],
         "latency_mult":[ self.latency_mult.get()],
+        "latency_div": [self.latency_div.get()],
+        "latency_trans": [self.latency_trans.get()],
         "latency_store":[ self.latency_store.get()],
+        "latency_load": [self.latency_load.get()],
         "n_cycles":[ self.n_cycles.get()],
         "m":[ self.m.get()],
         "b_hs":[ self.b_hs.get()]
@@ -409,11 +446,13 @@ class app:
                                                  n_alu= int(self.n_alu.get()),
                                                  n_mult= int(self.n_mult.get()),
                                                  n_div = int(self.n_div.get()),
+                                                 n_trans=int(self.n_trans.get()),
                                                  n_load = int(self.n_load.get()),
                                                  n_store = int(self.n_store.get()),
                                                  latency_alu = int(self.latency_alu.get()),
                                                  latency_load=int(self.latency_load.get()),
                                                  latency_div=int(self.latency_div.get()),
+                                                 latency_trans=int(self.latency_trans.get()),
                                                  latency_mult =int(self.latency_mult.get()),
                                                  latency_store= int(self.latency_store.get()),
                                                  n_cycles=int(self.n_cycles.get()),
@@ -461,10 +500,12 @@ class app:
                                 bdiv=self.display_DIV_value.get(),
                                 bstore=self.display_STORE_value.get(),
                                 bload=self.display_LOAD_value.get(),
+                                btrans=self.display_TRANS_value.get(),
                                 bmemory=self.display_memory_value.get(),
                                 bhs = self.display_HS_value.get(),
                                 bCDB=self.display_CDB_value.get(),
                                 balu_brt=self.display_alu_BRT_value.get(),
+                                btrans_brt=self.display_TRANS_BRT_value.get(),
                                 bdiv_brt=self.display_DIV_BRT_value.get(),
                                 bmux_brt=self.display_MUL_BRT_value.get(),
                                 bstore_brt = self.display_STORE_BRT_value.get(),
@@ -504,13 +545,15 @@ class app:
                                 bdiv=self.display_DIV_value.get(),
                                 bstore=self.display_STORE_value.get(),
                                 bload=self.display_LOAD_value.get(),
+                                btrans=self.display_TRANS_value.get(),
                                 bmemory=self.display_memory_value.get(),
-                                bhs=self.display_HS_value.get(),
+                                bhs = self.display_HS_value.get(),
                                 bCDB=self.display_CDB_value.get(),
                                 balu_brt=self.display_alu_BRT_value.get(),
+                                btrans_brt=self.display_TRANS_BRT_value.get(),
                                 bdiv_brt=self.display_DIV_BRT_value.get(),
                                 bmux_brt=self.display_MUL_BRT_value.get(),
-                                bstore_brt=self.display_STORE_BRT_value.get(),
+                                bstore_brt = self.display_STORE_BRT_value.get(),
                                 bload_brt=self.display_LOAD_BRT_value.get(),
                                 bjump_brt=self.display_JUMP_BRT_value.get())
         self.updateStatistics()
@@ -522,13 +565,15 @@ class app:
                                 bdiv=self.display_DIV_value.get(),
                                 bstore=self.display_STORE_value.get(),
                                 bload=self.display_LOAD_value.get(),
+                                btrans=self.display_TRANS_value.get(),
                                 bmemory=self.display_memory_value.get(),
-                                bhs=self.display_HS_value.get(),
+                                bhs = self.display_HS_value.get(),
                                 bCDB=self.display_CDB_value.get(),
                                 balu_brt=self.display_alu_BRT_value.get(),
+                                btrans_brt=self.display_TRANS_BRT_value.get(),
                                 bdiv_brt=self.display_DIV_BRT_value.get(),
                                 bmux_brt=self.display_MUL_BRT_value.get(),
-                                bstore_brt=self.display_STORE_BRT_value.get(),
+                                bstore_brt = self.display_STORE_BRT_value.get(),
                                 bload_brt=self.display_LOAD_BRT_value.get(),
                                 bjump_brt=self.display_JUMP_BRT_value.get())
         self.updateStatistics()
@@ -599,6 +644,9 @@ class app:
             self.n_mult.delete(0, tk.END)
             self.n_mult.insert(0, str(conf["n_mult"][0]))
 
+            self.n_trans.delete(0, tk.END)
+            self.n_trans.insert(0, str(conf["n_trans"][0]))
+
             self.n_store.delete(0, tk.END)
             self.n_store.insert(0, str(conf["n_store"][0]))
 
@@ -613,6 +661,9 @@ class app:
 
             self.latency_mult.delete(0, tk.END)
             self.latency_mult.insert(0, str(conf["latency_mult"][0]))
+
+            self.latency_trans.delete(0, tk.END)
+            self.latency_trans.insert(0, str(conf["latency_trans"][0]))
 
             self.latency_store.delete(0, tk.END)
             self.latency_store.insert(0, str(conf["latency_store"][0]))

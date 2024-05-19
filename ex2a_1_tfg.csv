@@ -1,3 +1,3 @@
 tag,operation,r1,r2,r3,rd,rs1,inm,offset,BTB
-,not,1,2,,,,,
+,sqrt,1,2,,,,,
 
