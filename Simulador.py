@@ -144,7 +144,7 @@ class Simulador_1_FU:
 
         if len(self.PC.PC) > 0:
             for _ in range(len(self.PC.PC)):
-                instIndex = self.PC.newInstruction()
+                instIndex = self.PC.new_instruction()
                 if instIndex < self.program.program_size:
                     inst = self.program.get(instIndex)
                     # if there are still instructions in the program
@@ -154,7 +154,7 @@ class Simulador_1_FU:
 
                     if res == 0:
                         self.statistics.increaseTotalLock()
-                        self.PC.instBlock()
+                        self.PC.inst_lock()
                         self.registers.instBlock([inst.r1, inst.r2, inst.r3, inst.rs1, inst.rd])
                         self.dump_csv()
                     else:

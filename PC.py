@@ -4,7 +4,7 @@ class PC:
         self.PC = None
         self.pointer = 0
         self.last = 0
-        self.inst_blocked = list()
+        self.inst_locked = list()
         self.program_size = program_size
 
     def one_clock_cycle(self):
@@ -20,8 +20,8 @@ class PC:
         # For the rest of the cycles
         elif len(self.PC) > 0: # check if cycle before had instructions
             self.pointer = 0
-            self.PC = self.inst_blocked.copy()
-            self.inst_blocked = list()
+            self.PC = self.inst_locked.copy()
+            self.inst_locked = list()
 
             while len(self.PC) < self.multiplicity and self.last < self.program_size -1:
                 self.last = self.last + 1
@@ -29,14 +29,14 @@ class PC:
 
 
     def __str__(self):
-        res = f"List Instructions: {self.PC}\n Blocked Instructions: {self.inst_blocked}\n"
+        res = f"List Instructions: {self.PC}\n Blocked Instructions: {self.inst_locked}\n"
         return res
 
-    def instBlock(self):
-        self.inst_blocked.append(self.PC[self.pointer - 1])
+    def inst_lock(self):
+        self.inst_locked.append(self.PC[self.pointer - 1])
 
 
-    def newInstruction(self):
+    def new_instruction(self):
         instIndex = self.PC[self.pointer]
         self.pointer = self.pointer + 1
         return instIndex

@@ -63,7 +63,7 @@ class HoldStation {
 }
 
 class PC {
-    instBlock()
+    inst_lock()
     one_clock_cycle()
     new_instruction()
         Integer multiplicity

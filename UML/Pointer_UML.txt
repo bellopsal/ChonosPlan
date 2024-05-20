@@ -1,7 +1,7 @@
 @startuml
 class PC {
     __str__()
-    instBlock()
+    inst_lock()
     one_clock_cycle()
     new_instruction()
         m

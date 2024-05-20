@@ -17,7 +17,7 @@ class BRT {
 class FU {
     operation()
     calculateN()
-    newInstruction()
+    new_instruction()
     findFirstEmptyBRT()
     updatePile()
     updatePile_case0()
@@ -96,9 +96,9 @@ class Memory {
 }
 class PC {
     __str__()
-    instBlock()
+    inst_lock()
     one_clock_cycle()
-    newInstruction()
+    new_instruction()
         m
     PC
     pointer
@@ -163,7 +163,7 @@ class Registers {
     td_calculation_type1()
     td_calculation_type1_inm()
     td_calculation_type2()
-    instBlock()
+    inst_lock()
     update_scoreboard()
         size
     b_scoreboard
@@ -229,7 +229,7 @@ class Simulador_1_FU {
     one_clock_cycle()
     moveOperationQueue()
     fromHSToSS()
-    newInstruction()
+    new_instruction()
     find_lowest_positive_index()
     selection()
     getFU()

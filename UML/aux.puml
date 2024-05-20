@@ -83,7 +83,7 @@ class Memory {
 }
 
 class PC {
-    instBlock()
+    inst_lock()
     one_clock_cycle()
     new_instruction()
         Integer multiplicity
@@ -139,7 +139,7 @@ class Registers {
     td_calculation_type1()
     td_calculation_type1_inm()
     td_calculation_type2()
-    instBlock()
+    inst_lock()
     update_scoreboard()
         Integer size
 
