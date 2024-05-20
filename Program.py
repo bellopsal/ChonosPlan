@@ -21,18 +21,18 @@ typeInstructions = {
 
 
 class Program:
-    def __init__(self, list_instructions, dict_names):
+    def __init__(self, list_instructions, dict_tag):
         self.instructions = list_instructions
-        self.n = len(list_instructions)
-        self.dict_names = dict_names
+        self.program_size = len(list_instructions)
+        self.dict_tags = dict_tag
 
     def get(self, i):
         return self.instructions[i]
 
     def __init__(self, file):
-        self.n = 0
+        self.program_size = 0
         self.instructions = []
-        self.dict_names = {}
+        self.dict_tags = {}
         with open(file, newline='') as csvfile:
             # Create a CSV DictReader
             reader = csv.DictReader(csvfile)
@@ -50,11 +50,11 @@ class Program:
                                    BTB=bool(int(row["BTB"])) if row["BTB"] is not None and row["BTB"].strip() else True)
 
                 if tag != None:
-                    self.dict_names[tag]=self.n
+                    self.dict_tags[tag]=self.program_size
 
                 self.instructions.append(inst)
 
-                self.n = self.n + 1
+                self.program_size = self.program_size + 1
 
 
 class Instruction:
@@ -84,7 +84,7 @@ class Instruction:
         if self.r2 != None: txt = txt + "R"+str(self.r2) + ", "
         if self.r3 != None: txt = txt + "R"+str(self.r3) + ""
         if self.inm != None: txt = txt + str(self.inm)
-        if self.rs1 != None: txt = txt + "R"+str(self.rs)
+        if self.rs1 != None: txt = txt + "R"+str(self.rs1)
         if self.offset != None: txt = txt + "" + str(self.offset)
         if self.fu_type=="jump": txt = txt+ f"(BTB: {self.BTB})"
         txt = txt + self.fu_type

@@ -13,8 +13,8 @@ instrucciones = [Inst(operation="add", tag = "bucle", r1= 1, r2=1, r3=2),
                  Inst(operation="mul", r1= 1, r2=0, r3=0) ,
                  Inst(operation="add", r1= 3, r2=1, r3=1) ]
 
-instrucciones = Program.Program("ex2a_1_tfg.csv")
-
+#instrucciones = Program.Program("ex2a_1_tfg.csv")
+instrucciones = Program.Program("ex2.csv")
 #print(instrucciones.instructions[1])
 #print(instrucciones.instructions[3])
 #print(instrucciones.instructions[4])
@@ -45,10 +45,10 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
 
 s.memory.putValues([*range(32)])
 
-s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False)
+s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=True)
 print(s.CDB)
 s.one_clock_cycle()
-s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False)
+s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=True)
 print("---------------")
 print(s.CDB)
 s.one_clock_cycle()

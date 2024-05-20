@@ -57,7 +57,7 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
 
                              )
 
-print(s.program.dict_names)
+print(s.program.dict_tags)
 print(s.program.instructions[1])
 
 #s.memory.putValues([*range(32)])

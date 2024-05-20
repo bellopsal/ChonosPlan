@@ -1,6 +1,6 @@
 import CDB
 import Memory
-import Pointer
+import PC
 
 from FU import holdStations, ALU_funtionalUnit, STORE_funtionalUnitStore, LOAD_funtionalUnitStore, DIV_funtionalUnit, MULT_funtionalUnit, TRANS_funtionalUnit
 from FU.aux import funtionalUnitJump
@@ -36,7 +36,7 @@ class Simulador_1_FU:
         self.n_store = n_store
         self.n_trans = n_trans
 
-        self.PC = Pointer.PC(multiplicity, self.program.n)
+        self.PC = PC.PC(multiplicity, self.program.program_size)
         self.n_cycles = n_cycles
         self.multiplicity = multiplicity
 
@@ -145,7 +145,7 @@ class Simulador_1_FU:
         if len(self.PC.PC) > 0:
             for _ in range(len(self.PC.PC)):
                 instIndex = self.PC.newInstruction()
-                if instIndex < self.program.n:
+                if instIndex < self.program.program_size:
                     inst = self.program.get(instIndex)
                     # if there are still instructions in the program
                     res, bitMux, pos = self.newInstruction(instIndex)
@@ -162,7 +162,7 @@ class Simulador_1_FU:
                         self.dump_csv()
                         if pos > self.memory_last: self.memory_last = pos
                         if inst.fu_type == "jump" and inst.BTB == True:
-                            self.PC.last = self.program.dict_names[inst.offset] - 1
+                            self.PC.last = self.program.dict_tags[inst.offset] - 1
                             break
 
 
@@ -206,6 +206,7 @@ class Simulador_1_FU:
         inst = self.program.get(instIndex)
         fu_type = inst.fu_type
         fus_free = []
+        pos = -1
         if fu_type == "jump":
             res, bitMux = self.fu_jump.newInstruction(inst,  self.registers, self.hs, self.b_hs)
         else:
@@ -231,17 +232,17 @@ class Simulador_1_FU:
 
             indexes = self.find_lowest_positive_index(fus_free)
 
+
             if len(indexes) == 0:
                 # if there are no elements in the indexes its means that there are no free slots in the next 4 slots
                 # this is a complete lock in our instruction
-                pos = -1
                 res = 0
                 self.registers.lock(inst.r1)
-                pos = -1
+
                 bitMux = 4
 
             else:
-                pos = -1
+
                 index = self.selection(indexes, selectionOrder)
                 fu = self.getFU(inst.fu_type, index)
                 if inst.fu_type == "load" or inst.fu_type == "store":

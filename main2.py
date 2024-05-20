@@ -114,9 +114,9 @@ class app:
         self.frame_m = tk.Frame(master=self.frame_a)
         self.m_l = tk.Label(master = self.frame_m, text="Multiplicity:", justify="left")
         self.m_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.m = tk.Entry(master = self.frame_m, width = 5, justify="left")
-        self.m.pack(fill=tk.Y, side=tk.RIGHT)
-        self.m.insert(0, "5")
+        self.multiplicity = tk.Entry(master = self.frame_m, width = 5, justify="left")
+        self.multiplicity.pack(fill=tk.Y, side=tk.RIGHT)
+        self.multiplicity.insert(0, "5")
         self.frame_m.pack(anchor="e", padx=40)
 
         self.frame_b_hs = tk.Frame(master=self.frame_a)
@@ -422,7 +422,7 @@ class app:
         "latency_store":[ self.latency_store.get()],
         "latency_load": [self.latency_load.get()],
         "n_cycles":[ self.n_cycles.get()],
-        "m":[ self.m.get()],
+        "multiplicity":[ self.multiplicity.get()],
         "b_hs":[ self.b_hs.get()]
 
         })
@@ -456,7 +456,7 @@ class app:
                                                  latency_mult =int(self.latency_mult.get()),
                                                  latency_store= int(self.latency_store.get()),
                                                  n_cycles=int(self.n_cycles.get()),
-                                                 multiplicity=int(self.m.get()),
+                                                 multiplicity=int(self.multiplicity.get()),
                                                  b_hs= self.b_hs.get()
 
                                                  )
@@ -671,8 +671,8 @@ class app:
             self.n_cycles.delete(0, tk.END)
             self.n_cycles.insert(0, str(conf["n_cycles"][0]))
 
-            self.m.delete(0, tk.END)
-            self.m.insert(0, str(conf["m"][0]))
+            self.multiplicity.delete(0, tk.END)
+            self.multiplicity.insert(0, str(conf["multiplicity"][0]))
 
             self.b_hs = tk.BooleanVar(value=bool(conf["b_hs"][0]))
 
