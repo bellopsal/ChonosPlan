@@ -1,7 +1,7 @@
-tag,operation,r1,r2,r3,rd,rs1,inm,offset,BTB
-bucle,lb,3,,,,0,1,,
-,add,3,2,1,,,,,
-,add,2,2,1,,,,,
-,add,1,2,1,,,,,
-,sb,4,,,,0,1,,
-,j,,,,,,,bucle,
+tag,operation,r1,r2,r3,rs1,inm,offset,BTB
+bucle,lb,3,,,0,1,,
+,add,3,2,1,,,,
+,add,2,2,1,,,,
+,add,1,2,1,,,,
+,sb,4,,,0,1,,
+,j,,,,,,bucle,
