@@ -457,13 +457,13 @@ class Simulador_1_FU:
 
         register = Table(title="REGISTERS")
         register.add_column("Register", justify="center")
-        register.add_column("TD", justify="center")
+        register.add_column("RP", justify="center")
         register.add_column("FU", justify="center")
         register.add_column("value", justify="center")
         register.add_column("locked", justify="center")
 
         for reg in self.registers.R:
-            register.add_row("R" + str(reg.number), "+" + str(reg.td), reg.fu, str(reg.value), str(reg.lock))
+            register.add_row("R" + str(reg.number), "+" + str(reg.rp), reg.fu, str(reg.value), str(reg.lock))
 
         console.print(register)
 

@@ -7,14 +7,14 @@ from FU import Scoreboard
 class Register:
     def __init__(self, i):
         self.number = i  # numero de registro
-        self.td = 0  # tiempo en llegar value desde fu
+        self.rp = 0  # tiempo en llegar value desde fu
         self.fu = None  # fu de donde proveendrá el value
         self.value = i*2
-        self.type = None
+        #self.type = None
         self.lock = False
 
     def __str__(self):
-        return f"R{self.number}: +{self.td} ({self.fu}) value: {self.value} lock: {self.lock}"
+        return f"R{self.number}: +{self.rp} ({self.fu}) value: {self.value} lock: {self.lock}"
 
 
 
@@ -41,23 +41,23 @@ class Registers:
     def one_clock_cycle(self, CBD):
         for reg in self.R:
             reg.lock = False
-            if reg.td == 1:
+            if reg.rp == 1:
                 separated_list = reg.fu.split("_")
                 type = separated_list[0].strip()
                 index = int(separated_list[1].strip())
                 reg.value = CBD.get(type, index)
                 reg.fu = None
-                reg.td = 0
+                reg.rp = 0
 
-            if reg.td > 0:
-                reg.td = reg.td - 1
+            if reg.rp > 0:
+                reg.rp = reg.rp - 1
 
-    def new_inst(self, destino, td, fu_name):
+    def new_inst(self, destino, rp, fu_name):
         # primero tengo que actualizar los registros que serán destino
         # asi tengo en cuenta el tiempo anterior y en el caso de escalaridad
         # no perder el orden de las instrucciones!!!
 
-        self.R[destino].td = td
+        self.R[destino].rp = rp
         self.R[destino].fu = fu_name
         self.R[destino].value = None
         self.R[destino].lock = False
@@ -77,10 +77,8 @@ class Registers:
         return self.R[i].value
 
     def get_td(self, i):
-        return self.R[i].td
+        return self.R[i].rp
 
-    def get_type(self, i):
-        return self.R[i].type
 
     def td_calculation_type1(self,source1, source2, destiny):
         if source2 == None: source2 = source1
@@ -88,8 +86,8 @@ class Registers:
         if self.R[source1].lock or self.R[source2].lock or self.R[destiny].lock:
             return [True]
         else:
-            t1 = self.R[source1].td
-            t2 = self.R[source2].td
+            t1 = self.R[source1].rp
+            t2 = self.R[source2].rp
 
             # primero tengo que actualizar los registros que serán destino
             # asi tengo en cuenta el tiempo anterior y en el caso de escalaridad
@@ -125,7 +123,7 @@ class Registers:
         if self.R[source1].lock or self.R[destiny].lock:
             return [True]
         else:
-            t1 = self.R[source1].td
+            t1 = self.R[source1].rp
 
             ts_max = t1
             ts_min = -1
@@ -145,7 +143,7 @@ class Registers:
         if self.R[source].lock or self.R[destination].lock:
             return [True]
         else:
-            ts_max = self.R[source].td
+            ts_max = self.R[source].rp
             FU = self.R[source].fu
 
         return [ts_max,0 ,source,0, 0, FU, 0]

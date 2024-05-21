@@ -81,16 +81,16 @@ class FU:
             # always set the time to the last one to avoid dependency hazzards
             b_des = False
             if memory_last > ts_max:
-                td = memory_last + self.latency
+                rp = memory_last + self.latency
                 n = self.findFirstEmptyBRT(memory_last)
                 position = memory_last + n
-                td = td + n
+                rp = rp + n
                 b_des = True
             else:
-                td = ts_max + self.latency
+                rp = ts_max + self.latency
                 n = self.findFirstEmptyBRT(ts_max)
                 position = ts_max + n
-                td = td + n
+                rp = rp + n
 
 
 
@@ -136,7 +136,7 @@ class FU:
                                   value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, casePile = casePile, type_operation=inst.function, inm = inm)
 
                         if b_lb:
-                            registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                            registers.new_inst(destino=inst.r1, rp=rp, fu_name=self.name)
                         self.BRT.occupy_i(position)
 
                 else:
@@ -164,7 +164,7 @@ class FU:
                     value = None
                     RP = ts_min
 
-                if b_lb: registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                if b_lb: registers.new_inst(destino=inst.r1, rp=rp, fu_name=self.name)
                 self.BRT.occupy_i(position)
                 self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
                                  RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv, inm = inm)

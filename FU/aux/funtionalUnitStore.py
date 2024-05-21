@@ -90,11 +90,11 @@ class FU:
             else:
                 self.lastBRT = ts_max
 
-            td = ts_max + self.latency
+            rp = ts_max + self.latency
             n = self.findFirstEmptyBRT(ts_max)
 
             res = 1
-            td = td + n
+            rp = rp + n
             position = ts_max + n
 
             inm = inst.inm
@@ -136,7 +136,7 @@ class FU:
                                   value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, casePile = casePile, type_operation=inst.function, inm = inm)
 
                         if b_lb:
-                            registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                            registers.new_inst(destino=inst.r1, rp=rp, fu_name=self.name)
                         self.BRT.occupy_i(position)
 
                 else:
@@ -164,7 +164,7 @@ class FU:
                     value = None
                     RP = ts_min
 
-                if b_lb: registers.new_inst(destino=inst.r1, td=td, fu_name=self.name)
+                if b_lb: registers.new_inst(destino=inst.r1, rp=rp, fu_name=self.name)
                 self.BRT.occupy_i(position)
                 self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
                                  RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv, inm = inm)

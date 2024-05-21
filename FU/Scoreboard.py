@@ -4,16 +4,16 @@ class Scoreboard:
     def __init__(self, i):
         self.number = i
         self.T = [0,1]
-        self.td = [0]
+        self.rp = [0]
         self.fu = [None]
         self.value = []
 
     def __str__(self):
-        l_aux = ["+" + str(self.td[i]) + " (" + str(self.fu[i]) + ") " for i in range(len(self.fu))]
+        l_aux = ["+" + str(self.rp[i]) + " (" + str(self.fu[i]) + ") " for i in range(len(self.fu))]
         return f"R{self.number}: {' | '.join(l_aux)}"
 
     def dump_csv(self):
-        return ["+" + str(self.td[i]) + " (" + str(self.fu[i]) + ") " for i in range(len(self.fu))]
+        return ["+" + str(self.rp[i]) + " (" + str(self.fu[i]) + ") " for i in range(len(self.fu))]
 
 class Scoreboards:
 
@@ -48,7 +48,7 @@ class Scoreboards:
 
     def update_i(self, i, registro):
         self.scoreboard[i].T.append(self.scoreboard[i].T[-1]+1)
-        self.scoreboard[i].td.append(registro.td)
+        self.scoreboard[i].rp.append(registro.rp)
         self.scoreboard[i].fu.append(registro.fu)
         self.scoreboard[i].value.append(registro.value)
 

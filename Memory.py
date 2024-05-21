@@ -3,9 +3,9 @@ import csv
 
 class Memory:
     def __init__(self, size):
+        self.size = size
         self.memory = [1] * size
 
-        self.size = size
 
         with open("memory.csv", "w") as f:
             write = csv.writer(f)
