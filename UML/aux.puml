@@ -136,9 +136,9 @@ class Registers {
     get_value()
     get_td()
     get_type()
-    td_calculation_type1()
-    td_calculation_type1_inm()
-    td_calculation_type2()
+    rp_calculation_type1()
+    rp_calculation_type1_inm()
+    rp_calculation_type2()
     inst_lock()
     update_scoreboard()
         Integer size

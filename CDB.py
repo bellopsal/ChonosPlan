@@ -10,7 +10,7 @@ class CDB:
         self.trans = []
 
     def __str__(self):
-        txt= f"CBD: \n     alu: {self.alu} \n     store: {self.store}\n     load: {self.load } \n     mult: {self.mult }\n     div: {self.div }\n     trans: {self.trans }"
+        txt= f"CDB: \n     alu: {self.alu} \n     store: {self.store}\n     load: {self.load } \n     mult: {self.mult }\n     div: {self.div }\n     trans: {self.trans }"
         return txt
 
     def get(self, FU_type, index):

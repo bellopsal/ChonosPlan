@@ -22,21 +22,21 @@ instrucciones = Program.Program("ex2.csv")
 
 s = Simulador.Simulador_1_FU(program = instrucciones,
                              ss_size = 8,
-                             n_registers = 10,
+                             registers_size= 10,
                              b_scoreboard = 1,
-                             pile_size = 3,
+                             QSD_size = 3,
                              memory_size=32,
                              multiplicity=3,
-                             n_alu= 3,
-                             n_mult= 3,
+                             n_alu= 1,
+                             n_mult= 1,
                              n_trans = 3,
-                            n_div= 3,
+                             n_div= 3,
                              n_store = 2,
                              n_load = 2,
                              latency_alu = 2,
                              latency_div=3,
                              latency_load=2,
-                                latency_trans = 5,
+                             latency_trans = 5,
                              latency_mult =3,
                              latency_store= 2,
                              b_hs= False,
@@ -67,4 +67,23 @@ s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bC
 s.one_clock_cycle()
 
 s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+
 

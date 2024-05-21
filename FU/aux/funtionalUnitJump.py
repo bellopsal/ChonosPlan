@@ -9,31 +9,31 @@ from FU import BRT, shiftStations
 
 
 class FU:
-    def __init__(self, name, fu_type, ss_size, pile_size, n_cycles):
+    def __init__(self, name, fu_type, ss_size, QSD_size, n_cycles):
         self.name = name
         self.type = fu_type
-        self.pile_size = pile_size
+        self.QSD_size = QSD_size
         self.ss_size = ss_size
         #self.SS = shiftStations.SS(ss_size)
         self.BRT = BRT.BRT(n_cycles)
         #self.latency = latency
-        #self.pile = shiftStations.Pile(pile_size)
+        #self.QSD = shiftStations.QSD(QSD_size)
         #self.operationQueue = [None] * latency
         #self.memoryQueue = [(None,None)] * latency
         # self.operationQueue = [1, 2, 3]
 
         # Registers that are going to be used for the operation next
         #self.ss_side = shiftStations.ShiftStation()
-        #self.pile_side = shiftStations.PileElement()
+        #self.QSD_side = shiftStations.QSDElement()
 
 
     def calculateN(self, inst, registers):
         if inst.function == "j":
-            #l = registers.td_calculation_type2(inst.rs1, inst.r1)
+            #l = registers.rp_calculation_type2(inst.rs1, inst.r1)
             ts_max = 0
 
         else:
-            l = registers.td_calculation_type1(inst.r1, inst.r2, inst.r1)
+            l = registers.rp_calculation_type1(inst.r1, inst.r2, inst.r1)
             ts_max = l[0]
 
         n = self.findFirstEmptyBRT(ts_max)
@@ -46,7 +46,7 @@ class FU:
             ts_max = 0
 
         else:
-            registersCalculation = registers.td_calculation_type1(inst.r1, inst.rs1, inst.r1)
+            registersCalculation = registers.rp_calculation_type1(inst.r1, inst.rs1, inst.r1)
             if len(registersCalculation) == 1:
                 return 0, 8
             else:
@@ -65,8 +65,8 @@ class FU:
             res = 0
             bitMux = 4
 
-        elif (position > self.pile_size - 1 and n>0) or position > self.ss_size - 1:
-            # two cases: there is a need for store the data in a pile or the time exceed the ss
+        elif (position > self.QSD_size - 1 and n>0) or position > self.ss_size - 1:
+            # two cases: there is a need for store the data in a QSD or the time exceed the ss
             if b_hs:
                 freeHS = hs.freeHS()
                 if(freeHS == -1):
@@ -90,6 +90,6 @@ class FU:
 
 
     def one_clock_cycle(self):
-        # Update the values inside each SS, BRT and pile and moving them one down
+        # Update the values inside each SS, BRT and QSD and moving them one down
         self.BRT.one_clock_cycle()
 

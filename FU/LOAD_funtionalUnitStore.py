@@ -9,22 +9,22 @@ from FU import BRT, shiftStations
 
 
 class FU:
-    def __init__(self, name, fu_type, ss_size, latency, pile_size, n_cycles):
+    def __init__(self, name, fu_type, ss_size, latency, QSD_size, n_cycles):
         self.name = name
         self.type = fu_type
-        self.pile_size = pile_size
+        self.QSD_size = QSD_size
         self.ss_size = ss_size
         self.SS = shiftStations.SS(ss_size)
         self.BRT = BRT.BRT(n_cycles)
         self.latency = latency
-        self.pile = shiftStations.Pile(pile_size)
+        self.QSD = shiftStations.QSD(QSD_size)
         self.operationQueue = [None] * latency
         self.memoryQueue = [(None,None)] * latency
         self.lastBRT = 0
 
         # Registers that are going to be used for the operation next
         self.ss_side = shiftStations.ShiftStation()
-        self.pile_side = shiftStations.PileElement()
+        self.QSD_side = shiftStations.QSDElement()
 
     def operation(self, mem):
         #update last BRT
@@ -34,7 +34,7 @@ class FU:
         operand1 = self.ss_side.value  # first to arrive
         inm = self.ss_side.inm
 
-        operand2 = self.pile_side.value  # second to arrive
+        operand2 = self.QSD_side.value  # second to arrive
 
         if self.ss_side.type_operation == "lb":
             pos = inm + operand2
@@ -42,7 +42,7 @@ class FU:
 
     def calculateN(self, inst, registers, memory_last):
 
-        l = registers.td_calculation_type2(inst.rs1, inst.r1)
+        l = registers.rp_calculation_type2(inst.rs1, inst.r1)
         ts_max = l[0]
 
         if memory_last > ts_max:
@@ -55,7 +55,7 @@ class FU:
     def new_instruction(self, inst, instIndex, registers, hs, b_hs, memory_last):
         bitMux = -1
 
-        registersCalculation = registers.td_calculation_type2(source = inst.rs1, destination=inst.r1)
+        registersCalculation = registers.rp_calculation_type2(source = inst.rs1, destination=inst.r1)
         ts_max = registersCalculation[0]
         b_lb = True
 
@@ -98,8 +98,8 @@ class FU:
                 res = 0
                 bitMux = 4
 
-            elif (position > self.pile_size - 1 and (n>0 or b_des) )or position > self.ss_size - 1:
-                # two cases: there is a need for store the data in a pile or the time exceed the ss
+            elif (position > self.QSD_size - 1 and (n>0 or b_des) )or position > self.ss_size - 1:
+                # two cases: there is a need for store the data in a QSD or the time exceed the ss
                 if b_hs:
                     freeHS = hs.freeHS()
                     if(freeHS == -1):
@@ -111,26 +111,26 @@ class FU:
                         value1 = None
                         value2 = None
 
-                        casePile = False
+                        case_QSD = False
                         bitMux = 6
 
                         if ts_max != position: # alternativamente n == 0
-                            casePile = True
+                            case_QSD = True
                             bitMux = 7
                         if ts_min == -1:
                             value1 = inst.inm
                             RP1 = -1
                         if ts_min == 0:
-                            value1 = registers.R[reg_min].value
+                            value1 = registers.Registers[reg_min].value
                             RP1 = -1
                         if ts_max == 0:
-                            value2 = registers.R[reg_max].value
+                            value2 = registers.Registers[reg_max].value
                             RP1 = -1
                         hs.update(i = freeHS, RP1=ts_min, RP2 = ts_max, position = position, value1 = value1, destination = self.name,
-                                  value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, casePile = casePile, type_operation=inst.function, inm = inm)
+                                  value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, case_QSD = case_QSD, type_operation=inst.function, inm = inm)
 
                         if b_lb:
-                            registers.new_inst(destino=inst.r1, rp=rp, fu_name=self.name)
+                            registers.new_inst(destination=inst.r1, rp=rp, fu_name=self.name)
                         self.BRT.occupy_i(position)
 
                 else:
@@ -141,8 +141,8 @@ class FU:
 
             else:
                 if ts_max == 0:
-                    value_pile = registers.R[reg_max].value
-                    self.update_pile(position=position, value=value_pile)
+                    value_QSD = registers.Registers[reg_max].value
+                    self.update_QSD(position=position, value=value_QSD)
                     if n == 0: bitMux = 0
                     else: bitMux = 1
 
@@ -150,15 +150,15 @@ class FU:
                     if n == 0 : bitMux = 2
                     else:
                         bitMux = 3
-                        self.update_pile(position=position, RP=ts_max, FU=FU2)
+                        self.update_QSD(position=position, RP=ts_max, FU=FU2)
                 if ts_min == 0:
-                    value = registers.R[reg_min].value
+                    value = registers.Registers[reg_min].value
                     RP = -1
                 if ts_min > 0:
                     value = None
                     RP = ts_min
 
-                if b_lb: registers.new_inst(destino=inst.r1, rp=rp, fu_name=self.name)
+                if b_lb: registers.new_inst(destination=inst.r1, rp=rp, fu_name=self.name)
                 self.BRT.occupy_i(position)
                 self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
                                  RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv, inm = inm)
@@ -169,17 +169,17 @@ class FU:
         n = self.BRT.find_first_after(ts_max)
         return n
 
-    def update_pile(self, position, RP=-1, FU=None, value=None):
-        self.pile.pile[position].RP = RP
-        self.pile.pile[position].fu = FU
-        self.pile.pile[position].value = value
+    def update_QSD(self, position, RP=-1, FU=None, value=None):
+        self.QSD.QSD[position].RP = RP
+        self.QSD.QSD[position].fu = FU
+        self.QSD.QSD[position].value = value
 
 
     def move_operation_queue(self, mem):
 
         self.operationQueue.pop(-1)
         self.operationQueue.insert(0, None)
-        cbd = self.operationQueue[-1]
+        CDB = self.operationQueue[-1]
 
         self.memoryQueue.pop(-1)
         self.memoryQueue.insert(0, (None,None))
@@ -189,7 +189,7 @@ class FU:
             mem.put(memPut[0], memPut[1])
 
 
-        return cbd
+        return CDB
 
     def strBRT(self):
         return f"BRT {self.name}: " + str(self.BRT)
@@ -198,12 +198,12 @@ class FU:
         res = ""
         for i in range(self.latency):
             res = res + f"E{i}: " + str(self.operationQueue[i]) + " -> "
-        return f"{self.name}  queue: " + res + "CBD"
+        return f"{self.name}  queue: " + res + "CDB"
 
-    def one_clock_cycle(self, CBD):
-        self.ss_side, bitMux, FU2 = self.SS.one_clock_cycle(CBD)
-        self.pile_side = self.pile.one_clock_cycle(CBD, bitMux, FU2)
+    def one_clock_cycle(self, CDB):
+        self.ss_side, bitMux, FU2 = self.SS.one_clock_cycle(CDB)
+        self.QSD_side = self.QSD.one_clock_cycle(CDB, bitMux, FU2)
 
-        # Update the values inside each SS, BRT and pile and moving them one down
+        # Update the values inside each SS, BRT and QSD and moving them one down
         self.BRT.one_clock_cycle()
 

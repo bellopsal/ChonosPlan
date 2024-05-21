@@ -18,7 +18,7 @@ class HoldStation:
         #self.bitInUse = 0   # if the ss is in use ( with data in it)
         #self.bitAvail = 0  # first operand available 1 or not
         self.bitMux = None  # 0 if second taken from Register
-                        # 1 if second taken from pile
+                        # 1 if second taken from QSD
                         # 2 if taken from CDB
         self.inm = None
         self.inv = False
@@ -36,7 +36,7 @@ class HoldStation:
         self.value2= None  # first operand
 
         self.type_operation = None
-        self.casePile = False
+        self.case_QSD = False
 
 
     def empty(self):
@@ -52,10 +52,10 @@ class HoldStation:
         self.value1 = None  # first operand
         self.value2= None  # first operand
         self.type_operation = None
-        self.casePile = False
+        self.case_QSD = False
 
 
-    def one_clock_cycle(self, CDB, updateSS, updatePile):
+    def one_clock_cycle(self, CDB, updateSS, updateQSD):
         res = False
         self.position = self.position - 1
 
@@ -71,7 +71,7 @@ class HoldStation:
         elif self.RP2 > 1:
             self.RP2 = self.RP2 - 1
 
-        if (self.casePile and self.position == updatePile) or ((not self.casePile) and self.position <= updateSS ):
+        if (self.case_QSD and self.position == updateQSD) or ((not self.case_QSD) and self.position <= updateSS):
             # time to update SS
             res = True
 
@@ -84,14 +84,14 @@ class HoldStation:
 
 
 class HS:
-    def __init__(self, n_hs, n_ss, pile_size):
+    def __init__(self, n_hs, n_ss, QSD_size):
         # the first ss is the one ex in this cycle
         self.l_hs = [HoldStation() for i in range(n_hs)]
         self.n = n_hs
         self.occupied = [0]*n_hs
 
         self.updateSS = n_ss - 1
-        self.updatePile = pile_size -1
+        self.updateQSD = QSD_size -1
 
 
     def freeHS(self):
@@ -102,7 +102,7 @@ class HS:
 
 
     def update(self,i, bitMux, inv,RP1, RP2,destination,position, value1, value2 ,
-               FU1 , FU2 , casePile, type_operation, inm = None):
+               FU1 , FU2 , case_QSD, type_operation, inm = None):
         hs = self.l_hs[i]
         hs.bitUse = True
         hs.bitMux = bitMux
@@ -116,7 +116,7 @@ class HS:
         hs.FU2 = FU2
         hs.destination = destination
         hs.position = position
-        hs.casePile = casePile
+        hs.case_QSD = case_QSD
         hs.type_operation = type_operation
         self.occupied[i] = 1
 
@@ -142,7 +142,7 @@ class HS:
         #only update if ocuppied
         for i in range(self.n):
             if self.occupied[i] == 1:
-                update =self.l_hs[i].one_clock_cycle(CDB, self.updateSS, self.updatePile)
+                update =self.l_hs[i].one_clock_cycle(CDB, self.updateSS, self.updateQSD)
                 if update:
                     self.occupied[i] = 0
                     res.append(i)

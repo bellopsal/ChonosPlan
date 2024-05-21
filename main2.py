@@ -95,13 +95,13 @@ class app:
         self.n_registers.insert(0, "5")
         self.frame_n_registers.pack(anchor="e", padx=40)
 
-        self.frame_pile_size = tk.Frame(master=self.frame_a)
-        self.pile_size_l = tk.Label(master = self.frame_pile_size, text="Pile size:", justify="left")
-        self.pile_size_l.pack(fill=tk.Y, side=tk.LEFT)
-        self.pile_size = tk.Entry(master = self.frame_pile_size, width = 5, justify="left")
-        self.pile_size.pack(fill=tk.Y, side=tk.RIGHT)
-        self.pile_size.insert(0, "3")
-        self.frame_pile_size.pack(anchor="e", padx=40)
+        self.frame_QSD_size = tk.Frame(master=self.frame_a)
+        self.QSD_size_l = tk.Label(master = self.frame_QSD_size, text="QSD size:", justify="left")
+        self.QSD_size_l.pack(fill=tk.Y, side=tk.LEFT)
+        self.QSD_size = tk.Entry(master = self.frame_QSD_size, width = 5, justify="left")
+        self.QSD_size.pack(fill=tk.Y, side=tk.RIGHT)
+        self.QSD_size.insert(0, "3")
+        self.frame_QSD_size.pack(anchor="e", padx=40)
 
         self.frame_memory_size = tk.Frame(master=self.frame_a)
         self.memory_size_l = tk.Label(master = self.frame_memory_size, text="Memory size:", justify="left")
@@ -407,7 +407,7 @@ class app:
         r = pd.DataFrame({
         "n_ss": [self.n_ss.get()],
         "n_registers": [self.n_registers.get()],
-        "pile_size":[ self.pile_size.get()],
+        "QSD_size":[ self.QSD_size.get()],
         "memory_size":[ self.memory_size.get()],
         "n_alu":[ self.n_alu.get()],
         "n_mult":[ self.n_mult.get()],
@@ -439,9 +439,9 @@ class app:
 
         self.simulador =Simulador.Simulador_1_FU(program = self.program,
                                                  ss_size = int(self.n_ss.get()),
-                                                 n_registers = int(self.n_registers.get()),
+                                                 registers_size= int(self.n_registers.get()),
 
-                                                 pile_size = int(self.pile_size.get()),
+                                                 QSD_size = int(self.QSD_size.get()),
                                                  memory_size=int(self.memory_size.get()),
                                                  n_alu= int(self.n_alu.get()),
                                                  n_mult= int(self.n_mult.get()),
@@ -626,8 +626,8 @@ class app:
             self.n_registers.delete(0, tk.END)
             self.n_registers.insert(0, str(conf["n_registers"][0]))
 
-            self.pile_size.delete(0, tk.END)
-            self.pile_size.insert(0, str(conf["pile_size"][0]))
+            self.QSD_size.delete(0, tk.END)
+            self.QSD_size.insert(0, str(conf["QSD_size"][0]))
 
             self.memory_size.delete(0, tk.END)
             self.memory_size.insert(0, str(conf["memory_size"][0]))

@@ -22,72 +22,70 @@ class Register:
 
 
 class Registers:
-    def __init__(self, size, b_scoreboard):
-        self.R = [Register(i) for i in range(size)]
-        self.size = size
-        self.b_scoreboard = True
-
-        if self.b_scoreboard:
-            self.scoreboard = Scoreboard.Scoreboards(size)
+    def __init__(self, registers_size, b_scoreboard):
+        self.registers_size = registers_size
+        self.Registers = [Register(i) for i in range(registers_size)]
+        self.scoreboard = Scoreboard.Scoreboards(registers_size)
 
     def __str__(self):
         str_a = ""
-        for a in range(self.size):
-            str_a += str(self.R[a])
+        for a in range(self.registers_size):
+            str_a += str(self.Registers[a])
             str_a += "\n"
 
         return str_a
 
-    def one_clock_cycle(self, CBD):
-        for reg in self.R:
+    def one_clock_cycle(self, CDB):
+        for reg in self.Registers:
             reg.lock = False
             if reg.rp == 1:
                 separated_list = reg.fu.split("_")
                 type = separated_list[0].strip()
                 index = int(separated_list[1].strip())
-                reg.value = CBD.get(type, index)
+                reg.value = CDB.get(type, index)
                 reg.fu = None
                 reg.rp = 0
 
             if reg.rp > 0:
                 reg.rp = reg.rp - 1
 
-    def new_inst(self, destino, rp, fu_name):
+    def new_inst(self, destination, rp, fu_name):
         # primero tengo que actualizar los registros que serán destino
         # asi tengo en cuenta el tiempo anterior y en el caso de escalaridad
         # no perder el orden de las instrucciones!!!
 
-        self.R[destino].rp = rp
-        self.R[destino].fu = fu_name
-        self.R[destino].value = None
-        self.R[destino].lock = False
+        self.Registers[destination].rp = rp
+        self.Registers[destination].fu = fu_name
+        self.Registers[destination].value = None
+        self.Registers[destination].lock = False
 
         self.update_scoreboard()
 
     def lock(self, register):
-        self.R[register].lock = True
+        self.Registers[register].lock = True
 
     def unlock(self):
-        for r in self.R: r.lock = False
+        for r in self.Registers: r.lock = False
 
     def get_R_i(self, i):
-        return self.R[i]
+        return self.Registers[i]
 
     def get_value(self, i):
-        return self.R[i].value
+        return self.Registers[i].value
 
     def get_td(self, i):
-        return self.R[i].rp
+        return self.Registers[i].rp
 
 
-    def td_calculation_type1(self,source1, source2, destiny):
-        if source2 == None: source2 = source1
+    def rp_calculation_type1(self, source1, source2, destination):
+        if source2 == None:
+            self.rp_calculation_type2(source1,destination)
 
-        if self.R[source1].lock or self.R[source2].lock or self.R[destiny].lock:
+        if self.Registers[source1].lock or self.Registers[source2].lock or self.Registers[destination].lock:
             return [True]
         else:
-            t1 = self.R[source1].rp
-            t2 = self.R[source2].rp
+            t1 = self.Registers[source1].rp
+            t2 = self.Registers[source2].rp
 
             # primero tengo que actualizar los registros que serán destino
             # asi tengo en cuenta el tiempo anterior y en el caso de escalaridad
@@ -109,51 +107,48 @@ class Registers:
             if ts_min == 0:
                 FU1 = "reg"
             else:
-                FU1 = self.R[reg_min].fu
+                FU1 = self.Registers[reg_min].fu
             if ts_max == 0:
                 FU2 = "reg"
             else:
-                FU2 = self.R[reg_max].fu
+                FU2 = self.Registers[reg_max].fu
 
 
             return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
 
-    def td_calculation_type1_inm(self, source1, inm, destiny):
+    def rp_calculation_type1_inm(self, source1, destination):
 
-        if self.R[source1].lock or self.R[destiny].lock:
+        if self.Registers[source1].lock or self.Registers[destination].lock:
             return [True]
         else:
-            t1 = self.R[source1].rp
+            t1 = self.Registers[source1].rp
 
             ts_max = t1
-            ts_min = -1
+            ts_min = None
             reg_max = source1
             reg_min = "inm"
             inv = True
-
-
             FU1 = "inm"
-            FU2 = self.R[reg_max].fu
+            FU2 = self.Registers[reg_max].fu
 
             return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv]
 
 
 
-    def td_calculation_type2(self, source, destination):
-        if self.R[source].lock or self.R[destination].lock:
+    def rp_calculation_type2(self, source, destination):
+        if self.Registers[source].lock or self.Registers[destination].lock:
             return [True]
         else:
-            ts_max = self.R[source].rp
-            FU = self.R[source].fu
+            ts_max = self.Registers[source].rp
+            FU = self.Registers[source].fu
+        #[ts_max, 0, source, 0, 0, FU, 0]
+        return [ts_max,0,source,-2, "N/A", FU, 0]
 
-        return [ts_max,0 ,source,0, 0, FU, 0]
-
-    def instBlock(self, lBlock):
+    def inst_block(self, lBlock):
         for r in lBlock:
             if r!= None:
-                self.R[r].lock= True
+                self.Registers[r].lock= True
 
 
     def update_scoreboard(self):
-        if self.b_scoreboard:
-            self.scoreboard.update(self.R)
+        self.scoreboard.update(self.Registers)

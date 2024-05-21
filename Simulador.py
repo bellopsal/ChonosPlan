@@ -16,9 +16,9 @@ from rich.text import Text
 
 class Simulador_1_FU:
 
-    def __init__(self, program, ss_size, n_registers, pile_size, memory_size,
-                 n_alu, n_mult, n_div, n_load, n_store,n_trans,
-                 latency_alu, latency_mult,latency_div,latency_load, latency_store, latency_trans,
+    def __init__(self, program, ss_size, registers_size, QSD_size, memory_size,
+                 n_alu, n_mult, n_div, n_load, n_store, n_trans,
+                 latency_alu, latency_mult, latency_div, latency_load, latency_store, latency_trans,
                  multiplicity, n_hs=10, b_hs=False, n_cycles=120,
                  b_scoreboard=1):
         # set of instructions
@@ -27,7 +27,7 @@ class Simulador_1_FU:
 
         self.memory = Memory.Memory(memory_size)
         self.ss_size = ss_size
-        self.pile_size = pile_size
+        self.QSD_size = QSD_size
 
         self.n_alu = n_alu
         self.n_mult = n_mult
@@ -49,10 +49,10 @@ class Simulador_1_FU:
         self.fus_store = []
         self.fus_trans = []
         self.fu_jump = funtionalUnitJump.FU(name="jump_0", fu_type="jump", ss_size=self.ss_size,
-                                            pile_size = self.pile_size, n_cycles=self.n_cycles)
+                                            QSD_size = self.QSD_size, n_cycles=self.n_cycles)
 
         self.b_hs = b_hs
-        self.hs = holdStations.HS(n_hs, ss_size, pile_size)
+        self.hs = holdStations.HS(n_hs, ss_size, QSD_size)
 
         self.alu_selectionOrder = list(range(n_alu))
         self.mult_selectionOrder = list(range(n_mult))
@@ -67,32 +67,32 @@ class Simulador_1_FU:
         for i in range(n_alu):
             self.fus_alu.append(
                 ALU_funtionalUnit.FU(f"alu_{i}", "alu", ss_size,
-                                 pile_size=pile_size, latency=latency_alu, n_cycles=n_cycles))
+                                 QSD_size=QSD_size, latency=latency_alu, n_cycles=n_cycles))
 
         for i in range(n_mult):
             self.fus_mult.append(
                 MULT_funtionalUnit.FU(f"mult_{i}", "mult", ss_size,
-                                                  pile_size=pile_size, latency=latency_mult, n_cycles=n_cycles))
+                                                  QSD_size=QSD_size, latency=latency_mult, n_cycles=n_cycles))
         for i in range(n_div):
             self.fus_div.append(
                 DIV_funtionalUnit.FU(f"div_{i}", "div", ss_size,
-                                                  pile_size=pile_size, latency=latency_div, n_cycles=n_cycles))
+                                                  QSD_size=QSD_size, latency=latency_div, n_cycles=n_cycles))
 
         for i in range(n_load):
             self.fus_load.append(
                 LOAD_funtionalUnitStore.FU(f"load_{i}", "load", ss_size,
-                                                  pile_size=pile_size, latency=latency_load, n_cycles=n_cycles))
+                                                  QSD_size=QSD_size, latency=latency_load, n_cycles=n_cycles))
 
         for i in range(n_store):
             self.fus_store.append(
                 STORE_funtionalUnitStore.FU(f"store_{i}", "store", ss_size,
-                                      pile_size=pile_size, latency=latency_store,n_cycles=n_cycles))
+                                      QSD_size=QSD_size, latency=latency_store,n_cycles=n_cycles))
         for i in range(n_trans):
             self.fus_trans.append(
                 TRANS_funtionalUnit.FU(f"trans_{i}", "trans", ss_size,
-                                      pile_size=pile_size, latency=latency_trans,n_cycles=n_cycles))
+                                      QSD_size=QSD_size, latency=latency_trans,n_cycles=n_cycles))
 
-        self.registers = Registers.Registers(n_registers, b_scoreboard)
+        self.registers = Registers.Registers(registers_size, b_scoreboard)
         self.CDB = CDB.CDB()
         self.b_scoreboard = b_scoreboard
 
@@ -155,7 +155,7 @@ class Simulador_1_FU:
                     if res == 0:
                         self.statistics.increaseTotalLock()
                         self.PC.inst_lock()
-                        self.registers.instBlock([inst.r1, inst.r2, inst.r3, inst.rs1, inst.rd])
+                        self.registers.inst_block([inst.r1, inst.r2, inst.r3, inst.rs1])
                         self.dump_csv()
                     else:
                         self.statistics.increaseInstIssued()
@@ -188,11 +188,11 @@ class Simulador_1_FU:
             if fu_type == "trans": fu = self.fus_trans[fu_pos]
             if fu_type == "jump": fu = self.fu_jump
 
-            if hs.casePile:
-                i = self.pile_size - 1
+            if hs.case_QSD:
+                i = self.QSD_size - 1
                 fu.SS.update_i(i=i, bitMux=hs.bitMux, FU1=hs.FU1, RP=hs.RP1, FU2=hs.FU2, value=hs.value1,
                                type_operation=hs.type_operation, inv=hs.inv, inm=hs.inm)
-                fu.update_pile(position=i, RP=hs.RP2, FU=hs.FU2, value=hs.value2)
+                fu.update_QSD(position=i, RP=hs.RP2, FU=hs.FU2, value=hs.value2)
 
             else:
                 i = self.ss_size - 1
@@ -237,7 +237,7 @@ class Simulador_1_FU:
                 # if there are no elements in the indexes its means that there are no free slots in the next 4 slots
                 # this is a complete lock in our instruction
                 res = 0
-                self.registers.lock(inst.r1)
+                #self.registers.lock(inst.r1)
 
                 bitMux = 4
 
@@ -351,7 +351,7 @@ class Simulador_1_FU:
             hs = self.hs.l_hs[i]
             table.add_row(str(self.hs.occupied[i]),
                           f"HS{i}",
-                          "" if hs.casePile is None else str(hs.casePile),
+                          "" if hs.case_QSD is None else str(hs.case_QSD),
                           "" if hs.bitMux is None else str(hs.bitMux),
                           "" if hs.RP1 == -1 else str(hs.RP1),
                           "" if hs.RP2 == -1 else str(hs.RP2),
@@ -364,16 +364,16 @@ class Simulador_1_FU:
 
         return table
 
-    def display_pile(self, fu, title):
+    def display_QSD(self, fu, title):
         table = Table(title=title)
         table.add_column("P", justify="center")
         table.add_column("RP", justify="center")
         table.add_column("FU", justify="center")
         table.add_column("value", justify="center")
 
-        for i in range(self.pile_size - 1, -1, -1):
-            ss = fu.pile.pile[i]
-            table.add_row(f"Q{i}", str(ss.RP), ss.fu, str(ss.value))
+        for i in range(self.QSD_size - 1, -1, -1):
+            ss = fu.QSD.QSD[i]
+            table.add_row(f"Q{i}", "" if ss.RP == -1 else "N/A" if ss.RP == -2 else str(ss.RP) , ss.fu, str(ss.value))
 
         return table
 
@@ -415,42 +415,42 @@ class Simulador_1_FU:
 
         if balu:
             alu_renderables = [Panel(Group(self.display_SS(f"alu_{i}", fu=self.fus_alu[i]),
-                                           self.display_pile(fu=self.fus_alu[i], title=f"Queue_{i}")))
+                                           self.display_QSD(fu=self.fus_alu[i], title=f"Queue_{i}")))
                                for i in range(self.n_alu)]
 
             console.print(Columns(alu_renderables, equal=True, align="center", title="Functional Unit: alu"))
 
         if bmux:
             mux_renderables = [Panel(Group(self.display_SS(f"MULT_{i}", fu=self.fus_mult[i]),
-                                           self.display_pile(fu=self.fus_mult[i], title=f"Queue_{i}")))
+                                           self.display_QSD(fu=self.fus_mult[i], title=f"Queue_{i}")))
                                for i in range(self.n_mult)]
 
             console.print(Columns(mux_renderables, equal=True, align="center", title="Functional Unit: MULT"))
 
         if bdiv:
             div_renderables = [Panel(Group(self.display_SS(f"DIV_{i}", fu=self.fus_div[i]),
-                                           self.display_pile(fu=self.fus_div[i], title=f"Queue_{i}")))
+                                           self.display_QSD(fu=self.fus_div[i], title=f"Queue_{i}")))
                                for i in range(self.n_div)]
 
             console.print(Columns(div_renderables, equal=True, align="center", title="Functional Unit: DIV"))
 
         if btrans:
             trans_renderables = [Panel(Group(self.display_SS(f"TRANS_{i}", fu=self.fus_trans[i]),
-                                           self.display_pile(fu=self.fus_trans[i], title=f"Queue_{i}")))
+                                           self.display_QSD(fu=self.fus_trans[i], title=f"Queue_{i}")))
                                for i in range(self.n_trans)]
 
             console.print(Columns(trans_renderables, equal=True, align="center", title="Functional Unit: TRANS"))
 
         if bstore:
             store_renderables = [Panel(Group(self.display_SS(f"STORE_{i}", fu=self.fus_store[i]),
-                                             self.display_pile(fu=self.fus_store[i], title=f"Queue_{i}")))
+                                             self.display_QSD(fu=self.fus_store[i], title=f"Queue_{i}")))
                                  for i in range(self.n_store)]
 
             console.print(Columns(store_renderables, equal=True, align="center", title="Functional Unit: STORE"))
 
         if bload:
             store_renderables = [Panel(Group(self.display_SS(f"LOAD_{i}", fu=self.fus_load[i]),
-                                             self.display_pile(fu=self.fus_load[i], title=f"Queue_{i}")))
+                                             self.display_QSD(fu=self.fus_load[i], title=f"Queue_{i}")))
                                  for i in range(self.n_load)]
 
             console.print(Columns(store_renderables, equal=True, align="center", title="Functional Unit: LOAD"))
@@ -462,7 +462,7 @@ class Simulador_1_FU:
         register.add_column("value", justify="center")
         register.add_column("locked", justify="center")
 
-        for reg in self.registers.R:
+        for reg in self.registers.Registers:
             register.add_row("R" + str(reg.number), "+" + str(reg.rp), reg.fu, str(reg.value), str(reg.lock))
 
         console.print(register)

@@ -42,9 +42,9 @@ instrucciones = Program.Program("exampleOP.csv")
 
 s = Simulador.Simulador_1_FU(program = instrucciones,
                              n_ss = 8,
-                             n_registers = 5,
+                             registers_size= 5,
                              b_scoreboard = 1,
-                             pile_size = 3,
+                             QSD_size = 3,
                              memory_size=32,
                              n_alu= 4,
                              n_mult= 3,
@@ -82,13 +82,13 @@ for i in range(2):
     #print(s.registers)
     #print(s.memory)
     #print(s.fu_store.SS)
-    #print(s.fu_store.pile)
+    #print(s.fu_store.QSD)
     #print(s.registers.scoreboard)
     #print(s.fu_add.strBRT())
     #print(s.fu_add.operationQueue)
     #print(s.fu_mult.SS)
     # print(s.registers)
-    #print(s.fu_add.pile)
+    #print(s.fu_add.QSD)
     #print(s.fu_add.strOperationQueue())
     #print(s.CDB)
 
