@@ -84,13 +84,13 @@ class HoldStation:
 
 
 class HS:
-    def __init__(self, n_hs, n_ss, QSD_size):
+    def __init__(self, hs_size, ss_size, QSD_size):
         # the first ss is the one ex in this cycle
-        self.l_hs = [HoldStation() for i in range(n_hs)]
-        self.n = n_hs
-        self.occupied = [0]*n_hs
+        self.l_hs = [HoldStation() for i in range(hs_size)]
+        self.n = hs_size
+        self.occupied = [0] * hs_size
 
-        self.updateSS = n_ss - 1
+        self.updateSS = ss_size - 1
         self.updateQSD = QSD_size -1
 
 

@@ -336,7 +336,7 @@ class Simulador_1_FU:
         table = Table(title="Hold Stations")
         table.add_column("occupied", justify="center")
         table.add_column("HS", justify="center")
-        table.add_column("case QUEUE?", justify="center")
+        table.add_column("case QSD?", justify="center")
         table.add_column("bitMux", justify="center")
         table.add_column("RP1", justify="center")
         table.add_column("RP2", justify="center")
@@ -415,42 +415,42 @@ class Simulador_1_FU:
 
         if balu:
             alu_renderables = [Panel(Group(self.display_SS(f"alu_{i}", fu=self.fus_alu[i]),
-                                           self.display_QSD(fu=self.fus_alu[i], title=f"Queue_{i}")))
+                                           self.display_QSD(fu=self.fus_alu[i], title=f"QSD_{i}")))
                                for i in range(self.n_alu)]
 
             console.print(Columns(alu_renderables, equal=True, align="center", title="Functional Unit: alu"))
 
         if bmux:
             mux_renderables = [Panel(Group(self.display_SS(f"MULT_{i}", fu=self.fus_mult[i]),
-                                           self.display_QSD(fu=self.fus_mult[i], title=f"Queue_{i}")))
+                                           self.display_QSD(fu=self.fus_mult[i], title=f"QSD_{i}")))
                                for i in range(self.n_mult)]
 
             console.print(Columns(mux_renderables, equal=True, align="center", title="Functional Unit: MULT"))
 
         if bdiv:
             div_renderables = [Panel(Group(self.display_SS(f"DIV_{i}", fu=self.fus_div[i]),
-                                           self.display_QSD(fu=self.fus_div[i], title=f"Queue_{i}")))
+                                           self.display_QSD(fu=self.fus_div[i], title=f"QSD_{i}")))
                                for i in range(self.n_div)]
 
             console.print(Columns(div_renderables, equal=True, align="center", title="Functional Unit: DIV"))
 
         if btrans:
             trans_renderables = [Panel(Group(self.display_SS(f"TRANS_{i}", fu=self.fus_trans[i]),
-                                           self.display_QSD(fu=self.fus_trans[i], title=f"Queue_{i}")))
+                                           self.display_QSD(fu=self.fus_trans[i], title=f"QSD_{i}")))
                                for i in range(self.n_trans)]
 
             console.print(Columns(trans_renderables, equal=True, align="center", title="Functional Unit: TRANS"))
 
         if bstore:
             store_renderables = [Panel(Group(self.display_SS(f"STORE_{i}", fu=self.fus_store[i]),
-                                             self.display_QSD(fu=self.fus_store[i], title=f"Queue_{i}")))
+                                             self.display_QSD(fu=self.fus_store[i], title=f"QSD_{i}")))
                                  for i in range(self.n_store)]
 
             console.print(Columns(store_renderables, equal=True, align="center", title="Functional Unit: STORE"))
 
         if bload:
             store_renderables = [Panel(Group(self.display_SS(f"LOAD_{i}", fu=self.fus_load[i]),
-                                             self.display_QSD(fu=self.fus_load[i], title=f"Queue_{i}")))
+                                             self.display_QSD(fu=self.fus_load[i], title=f"QSD_{i}")))
                                  for i in range(self.n_load)]
 
             console.print(Columns(store_renderables, equal=True, align="center", title="Functional Unit: LOAD"))

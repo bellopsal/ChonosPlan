@@ -104,15 +104,8 @@ class Registers:
                 reg_min = source1
                 inv = False
 
-            if ts_min == 0:
-                FU1 = "reg"
-            else:
-                FU1 = self.Registers[reg_min].fu
-            if ts_max == 0:
-                FU2 = "reg"
-            else:
-                FU2 = self.Registers[reg_max].fu
-
+            FU1 = f"R{reg_min}" if self.Registers[reg_min].fu == None else self.Registers[reg_min].fu
+            FU2 = f"R{reg_max}" if self.Registers[reg_max].fu == None else self.Registers[reg_max].fu
 
             return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
 
@@ -122,14 +115,13 @@ class Registers:
             return [True]
         else:
             t1 = self.Registers[source1].rp
-
             ts_max = t1
-            ts_min = None
+            ts_min = -1
             reg_max = source1
             reg_min = "inm"
             inv = True
             FU1 = "inm"
-            FU2 = self.Registers[reg_max].fu
+            FU2 = f"R{reg_max}" if self.Registers[reg_max].fu == None else self.Registers[reg_max].fu
 
             return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv]
 
