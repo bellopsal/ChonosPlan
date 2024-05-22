@@ -1,4 +1,5 @@
 import CDB
+import Chronogram
 import Memory
 import PC
 
@@ -24,6 +25,7 @@ class Simulador_1_FU:
         # set of instructions
         self.recent_cycle = 0
         self.program = program
+        self.Chronogram = Chronogram.Chronogram()
 
         self.memory = Memory.Memory(memory_size)
         self.ss_size = ss_size
@@ -237,8 +239,6 @@ class Simulador_1_FU:
                 # if there are no elements in the indexes its means that there are no free slots in the next 4 slots
                 # this is a complete lock in our instruction
                 res = 0
-                #self.registers.lock(inst.r1)
-
                 bitMux = 4
 
             else:
@@ -248,7 +248,7 @@ class Simulador_1_FU:
                 if inst.fu_type == "load" or inst.fu_type == "store":
                     res, bitMux, pos = fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.memory_last)
                 else:
-                    res, bitMux= fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs)
+                    res, bitMux= fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.Chronogram, self.recent_cycle)
 
             pos = pos + 1
         return res, bitMux, pos

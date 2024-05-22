@@ -26,7 +26,7 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
                              b_scoreboard = 1,
                              QSD_size = 3,
                              memory_size=32,
-                             multiplicity=3,
+                             multiplicity=1,
                              n_alu= 1,
                              n_mult= 1,
                              n_trans = 3,
@@ -39,51 +39,50 @@ s = Simulador.Simulador_1_FU(program = instrucciones,
                              latency_trans = 5,
                              latency_mult =3,
                              latency_store= 2,
-                             b_hs= False,
-
-                             )
+                             b_hs= False)
 
 s.memory.putValues([*range(32)])
 
-s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=True)
+#s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=True)
 print(s.CDB)
 s.one_clock_cycle()
-s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=True)
+#s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=True)
 print("---------------")
-print(s.CDB)
+#print(s.CDB)
+s.one_clock_cycle()
+#
+# s.display2(balu = True,bmux=False, bstore=False, bmemory=False, bload=False)
+# print("---------------")
+#
+#
+# s.one_clock_cycle()
+# s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
+# s.one_clock_cycle()
+# s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
+# s.one_clock_cycle()
+#
+# s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
+# s.one_clock_cycle()
+
+#s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
+s.one_clock_cycle()
 s.one_clock_cycle()
 
-s.display2(balu = True,bmux=False, bstore=False, bmemory=False, bload=False)
-print("---------------")
 
-
-s.one_clock_cycle()
-s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
-s.one_clock_cycle()
-s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
-s.one_clock_cycle()
-
-s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
-s.one_clock_cycle()
-
-s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=False,bCDB=True)
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-s.one_clock_cycle()
-
-
+print(s.Chronogram.chronogram)
