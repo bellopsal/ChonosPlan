@@ -40,7 +40,7 @@ class FU:
 
         return n
 
-    def newInstruction(self, inst, registers, hs, b_hs):
+    def newInstruction(self, inst, instIndex, registers, hs, b_hs,  chronogram, actual_cycle):
         bitMux = -1
         if inst.function == "j":
             ts_max = 0
@@ -81,6 +81,13 @@ class FU:
 
         else:
             res = 1
+
+        if res == 1:
+
+            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle, ts_max=position, rp=position+1)
+
+        else:
+            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle)
 
         return res, bitMux
 

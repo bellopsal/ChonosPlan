@@ -205,12 +205,13 @@ class Simulador_1_FU:
 
 
     def newInstruction(self, instIndex):
+        self.Chronogram.instruction_issued(instIndex, actual_cycle=self.recent_cycle)
         inst = self.program.get(instIndex)
         fu_type = inst.fu_type
         fus_free = []
         pos = -1
         if fu_type == "jump":
-            res, bitMux = self.fu_jump.newInstruction(inst,  self.registers, self.hs, self.b_hs)
+            res, bitMux = self.fu_jump.newInstruction(inst,instIndex,self.registers, self.hs, self.b_hs, self.Chronogram, self.recent_cycle)
         else:
             if fu_type == "alu":
                 fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_alu]
@@ -246,7 +247,7 @@ class Simulador_1_FU:
                 index = self.selection(indexes, selectionOrder)
                 fu = self.getFU(inst.fu_type, index)
                 if inst.fu_type == "load" or inst.fu_type == "store":
-                    res, bitMux, pos = fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.memory_last)
+                    res, bitMux, pos = fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.memory_last, self.Chronogram, self.recent_cycle)
                 else:
                     res, bitMux= fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.Chronogram, self.recent_cycle)
 
@@ -347,7 +348,7 @@ class Simulador_1_FU:
         table.add_column("value1", justify="center")
         table.add_column("value2", justify="center")
 
-        for i in range(self.hs.n):
+        for i in range(self.hs.hs_size):
             hs = self.hs.l_hs[i]
             table.add_row(str(self.hs.occupied[i]),
                           f"HS{i}",

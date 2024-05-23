@@ -60,7 +60,7 @@ class FU:
 
         return n
 
-    def new_instruction(self, inst, instIndex, registers, hs, b_hs, memory_last):
+    def new_instruction(self, inst, instIndex, registers, hs, b_hs, memory_last, chronogram, actual_cycle):
         bitMux = -1
 
         registersCalculation = registers.rp_calculation_type1(inst.r1, inst.rs1, inst.r1)
@@ -169,7 +169,14 @@ class FU:
                 self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
                                  RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv, inm = inm)
 
-            return res, bitMux, position
+        if res == 1:
+
+            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle, ts_max=position, rp=rp)
+
+        else:
+            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle)
+
+        return res, bitMux, position
 
     def findFirstEmptyBRT(self, ts_max):
         n = self.BRT.find_first_after(ts_max)

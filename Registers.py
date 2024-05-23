@@ -78,36 +78,36 @@ class Registers:
 
 
     def rp_calculation_type1(self, source1, source2, destination):
-        if source2 == None:
-            self.rp_calculation_type2(source1,destination)
-
-        if self.Registers[source1].lock or self.Registers[source2].lock or self.Registers[destination].lock:
-            return [True]
+        if source2 is None:
+            return self.rp_calculation_type2(source1,destination)
         else:
-            t1 = self.Registers[source1].rp
-            t2 = self.Registers[source2].rp
-
-            # primero tengo que actualizar los registros que serán destino
-            # asi tengo en cuenta el tiempo anterior y en el caso de escalaridad
-            # no perder el orden de las instrucciones!!!
-            if t1 >= t2:
-                ts_max = t1
-                ts_min = t2
-                reg_max = source1
-                reg_min = source2
-                inv = True
-
+            if self.Registers[source1].lock or self.Registers[source2].lock or self.Registers[destination].lock:
+                return [True]
             else:
-                ts_max = t2
-                ts_min = t1
-                reg_max = source2
-                reg_min = source1
-                inv = False
+                t1 = self.Registers[source1].rp
+                t2 = self.Registers[source2].rp
 
-            FU1 = f"R{reg_min}" if self.Registers[reg_min].fu == None else self.Registers[reg_min].fu
-            FU2 = f"R{reg_max}" if self.Registers[reg_max].fu == None else self.Registers[reg_max].fu
+                # primero tengo que actualizar los registros que serán destino
+                # asi tengo en cuenta el tiempo anterior y en el caso de escalaridad
+                # no perder el orden de las instrucciones!!!
+                if t1 >= t2:
+                    ts_max = t1
+                    ts_min = t2
+                    reg_max = source1
+                    reg_min = source2
+                    inv = True
 
-            return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
+                else:
+                    ts_max = t2
+                    ts_min = t1
+                    reg_max = source2
+                    reg_min = source1
+                    inv = False
+
+                FU1 = f"R{reg_min}" if self.Registers[reg_min].fu == None else self.Registers[reg_min].fu
+                FU2 = f"R{reg_max}" if self.Registers[reg_max].fu == None else self.Registers[reg_max].fu
+
+                return [ts_max, ts_min, reg_max, reg_min, FU1, FU2, inv ]
 
     def rp_calculation_type1_inm(self, source1, destination):
 

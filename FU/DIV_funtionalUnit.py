@@ -45,7 +45,7 @@ class FU:
 
         return n
 
-    def new_instruction(self, inst, instIndex, registers, hs, b_hs):
+    def new_instruction(self, inst, instIndex, registers, hs, b_hs, chronogram, actual_cycle):
 
         if inst.function.endswith("i"):
             registersCalculation = registers.rp_calculation_type1_inm(inst.r2, inst.r1)
@@ -146,7 +146,14 @@ class FU:
                 self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
                                  RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv)
 
-            return res, bitMux
+        if res == 1:
+
+            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle, ts_max=position, rp=rp)
+
+        else:
+            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle)
+
+        return res, bitMux
 
 
     def update_QSD(self, position, RP=-1, FU=None, value=None):

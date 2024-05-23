@@ -146,23 +146,30 @@ class FU:
                     value_QSD = registers.Registers[reg_max].value
                     self.update_QSD(position=position, value=value_QSD)
                     if n == 0:
+                        res = 1
                         bitMux = 0
                     else:
+                        res = 1
                         bitMux = 1
 
                 if ts_max > 0:
                     if n == 0:
+                        res = 1
                         bitMux = 2
                     else:
+                        res = 1
                         bitMux = 3
                         self.update_QSD(position=position, RP=ts_max, FU=FU2)
                 if ts_min == -1:
+                    res = 1
                     value = inst.inm
                     RP = -1
                 if ts_min == 0:
+                    res = 1
                     value = registers.Registers[reg_min].value
                     RP = -1
                 if ts_min > 0:
+                    res = 1
                     value = None
                     RP = ts_min
 
@@ -173,13 +180,14 @@ class FU:
 
 
                 ## update chronogram
-            if res == 1:
-                chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle, ts_max=position, rp=rp)
+        if res == 1:
 
-            else:
-                chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle,)
+            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle, ts_max=position, rp=rp)
 
-            return res, bitMux
+        else:
+            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle)
+
+        return res, bitMux
 
     def update_QSD(self, position, RP=-1, FU=None, value=None):
         self.QSD.QSD[position].RP = RP

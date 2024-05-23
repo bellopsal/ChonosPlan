@@ -87,7 +87,7 @@ class HS:
     def __init__(self, hs_size, ss_size, QSD_size):
         # the first ss is the one ex in this cycle
         self.l_hs = [HoldStation() for i in range(hs_size)]
-        self.n = hs_size
+        self.hs_size = hs_size
         self.occupied = [0] * hs_size
 
         self.updateSS = ss_size - 1
@@ -129,7 +129,7 @@ class HS:
 
     def __str__(self):
         res = ""
-        for i in range(self.n):
+        for i in range(self.hs_size):
             txt = "\n" + f"SS{i} "+ str(self.get(i))
             res = txt + res
         res = "      bitMux | RP1 | RP2 | FU1 | FU2 | value1 | value2" + res
@@ -140,7 +140,7 @@ class HS:
     def one_clock_cycle(self,CDB):
         res = []
         #only update if ocuppied
-        for i in range(self.n):
+        for i in range(self.hs_size):
             if self.occupied[i] == 1:
                 update =self.l_hs[i].one_clock_cycle(CDB, self.updateSS, self.updateQSD)
                 if update:
@@ -178,7 +178,7 @@ class HS:
             write = csv.writer(f)
             fields = ["SS", "bitMux", "RP", "FU1", "FU2", "value"]
             rows = [[str(i), self.l_hs[i].bitMux, self.l_hs[i].RP1,self.l_hs[i].RP2, self.l_hs[i].FU1, self.l_hs[i].FU2, self.l_hs[i].value1, self.l_hs[i].value2] for i
-                    in range(self.n - 1, -1, -1)]
+                    in range(self.hs_size - 1, -1, -1)]
             write.writerow(fields)
             write.writerows(rows)
 

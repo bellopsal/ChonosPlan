@@ -63,6 +63,8 @@ class app:
         l.pack(padx=self.px/2, pady=self.py/2)
 
 
+
+
         self.frame_inst = tk.Frame(master=self.frame_c)
         self.file_name_label = tk.Label(self.frame_inst, text="No Instructions selected")
         self.file_name_label.pack(fill=tk.Y, side=tk.RIGHT)
@@ -460,7 +462,7 @@ class app:
                                                  b_hs= self.b_hs.get()
 
                                                  )
-        self.open_statistics()
+
 
         self.re_start_button = tk.Button(self.master, text="re-start", command=self.re_start)
         self.re_start_button.pack(padx=self.px/4, pady=self.py/4)
@@ -488,6 +490,10 @@ class app:
         self.start_button.pack_forget()
         self.next_cycle_button.pack(padx=self.px/4, pady=self.py/4)
 
+        from PIL import ImageTk, Image
+
+
+
         sys.stdout = ConsoleRedirector(self.text_widget)
         sys.stderr = ConsoleRedirector(self.text_widget)
 
@@ -512,6 +518,8 @@ class app:
                                 bload_brt=self.display_LOAD_BRT_value.get(),
                                 bjump_brt=self.display_JUMP_BRT_value.get())
 
+        self.open_statistics()
+
     def open_statistics(self):
         self.new_window = tk.Toplevel(self.master)
         self.new_window.title("Statistics")
@@ -531,11 +539,46 @@ class app:
         self.label5 = tk.Label(self.new_window, text=f"Type Instrucctions: {self.simulador.statistics.typeInst}")
         self.label5.pack()
 
+
+        self.simulador.Chronogram.plot_cycles()
+        img = Image.open("figure.png")
+        photo = ImageTk.PhotoImage(img.convert('RGB'))
+        self.label = tk.Label(self.master,image=photo)
+        self.label.image = photo  # keep a reference!
+        self.label.pack()
+
+
+        self.label6 = tk.Label(self.new_window,image=photo)
+        self.label6.image = photo
+        self.label6.pack()
+
+        img.close()
+
+
+
+
     def updateStatistics(self):
         self.label1.config(text=f"Nº cycles: {self.simulador.statistics.cycles}")
         self.label3.config(text=f"inst Issued: {self.simulador.statistics.instIssued}")
         self.label4.config(text=f"Total Locks: {self.simulador.statistics.totalLock}")
         self.label5.config(text=f"Type Instrucctions: {self.simulador.statistics.typeInst}")
+
+        self.label.config(image = None)
+        self.label.image = None
+        self.simulador.Chronogram.plot_cycles()
+
+        img = Image.open("figure.png")
+        photo = ImageTk.PhotoImage(img.convert('RGB'))
+        self.label.config(image=photo)
+        self.label.image = photo  # keep a reference!
+
+        self.label6.config(image=photo)
+        self.label6.image = photo
+
+        img.close()
+
+
+        #self.canvas.pack()
 
 
     def next_cycle(self):
@@ -594,6 +637,7 @@ class app:
         self.re_start_button.pack_forget()
 
         self.full_frame.pack()
+        self.label.pack_forget()
 
         self.start_button.pack()
 
@@ -691,6 +735,9 @@ def main():
     root = tk.Tk()
     root.title("Simulador")
     calculator = app(root)
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    root.geometry("%dx%d+-10+0" % (screen_width, screen_height))
     root.mainloop()
 
 
