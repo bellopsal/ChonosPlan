@@ -157,7 +157,7 @@ class FU:
             chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle, ts_max=position, rp=rp)
 
         else:
-            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle)
+            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle, ts_max =actual_cycle, rp= actual_cycle )
 
 
         return res, bitMux

@@ -26,10 +26,6 @@ class ConsoleRedirector:
     def flush(self):
         pass
 
-
-
-
-
 class app:
 
     def __init__(self, master):
@@ -540,18 +536,27 @@ class app:
         self.label5.pack()
 
 
-        self.simulador.Chronogram.plot_cycles()
+        self.simulador.statistics.Chronogram.plot_cycles()
         img = Image.open("figure.png")
         photo = ImageTk.PhotoImage(img.convert('RGB'))
         self.label = tk.Label(self.master,image=photo)
         self.label.image = photo  # keep a reference!
         self.label.pack()
-
-
         self.label6 = tk.Label(self.new_window,image=photo)
         self.label6.image = photo
-        self.label6.pack()
+        self.label6.pack(side = tk.RIGHT)
 
+        img.close()
+
+        self.simulador.statistics.plot_graphs()
+        img = Image.open("stats.png")
+        photo = ImageTk.PhotoImage(img.convert('RGB'))
+        self.stats = tk.Label(self.master,image=photo)
+        self.stats.image = photo  # keep a reference!
+        self.stats.pack(side = tk.LEFT)
+        self.label7 = tk.Label(self.new_window,image=photo)
+        self.label7.image = photo
+        self.label7.pack()
         img.close()
 
 
@@ -565,15 +570,26 @@ class app:
 
         self.label.config(image = None)
         self.label.image = None
-        self.simulador.Chronogram.plot_cycles()
+        self.simulador.statistics.Chronogram.plot_cycles()
+        print(self.simulador.statistics.Chronogram.chronogram)
 
         img = Image.open("figure.png")
         photo = ImageTk.PhotoImage(img.convert('RGB'))
         self.label.config(image=photo)
         self.label.image = photo  # keep a reference!
-
         self.label6.config(image=photo)
         self.label6.image = photo
+        img.close()
+
+
+        self.simulador.statistics.plot_graphs()
+        img = Image.open("stats.png")
+        photo = ImageTk.PhotoImage(img.convert('RGB'))
+        self.stats.config(image=photo)
+        self.stats.image = photo  # keep a reference!
+
+        self.label7.config(image=photo)
+        self.label7.image = photo
 
         img.close()
 
@@ -619,6 +635,7 @@ class app:
                                 bstore_brt = self.display_STORE_BRT_value.get(),
                                 bload_brt=self.display_LOAD_BRT_value.get(),
                                 bjump_brt=self.display_JUMP_BRT_value.get())
+
         self.updateStatistics()
 
     def n3_cycles(self):
@@ -638,6 +655,7 @@ class app:
 
         self.full_frame.pack()
         self.label.pack_forget()
+        self.stats.pack_forget()
 
         self.start_button.pack()
 

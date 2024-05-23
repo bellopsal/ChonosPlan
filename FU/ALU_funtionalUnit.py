@@ -185,7 +185,7 @@ class FU:
             chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle, ts_max=position, rp=rp)
 
         else:
-            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle)
+            chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle, ts_max =actual_cycle, rp= actual_cycle )
 
         return res, bitMux
 
@@ -213,6 +213,4 @@ class FU:
     def one_clock_cycle(self, CDB):
         self.ss_side, bitMux, FU2 = self.SS.one_clock_cycle(CDB)
         self.QSD_side = self.QSD.one_clock_cycle(CDB, bitMux, FU2)
-
-        # Update the values inside each SS, BRT and QSD and moving them one down
         self.BRT.one_clock_cycle()

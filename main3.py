@@ -45,9 +45,9 @@ s.memory.putValues([*range(32)])
 
 # s.display2(btrans = True,bmux=False, bstore=False, bmemory=False, bload=True)
 print(s.CDB)
-s.Chronogram.plot_cycles()
+s.statistics.Chronogram.plot_cycles()
 s.one_clock_cycle()
-s.Chronogram.plot_cycles()
+s.statistics.Chronogram.plot_cycles()
 s.display2(btrans=True, bmux=False, bstore=False, bmemory=False, bload=True)
 print("---------------")
 # print(s.CDB)
@@ -85,8 +85,8 @@ s.one_clock_cycle()
 s.one_clock_cycle()
 s.one_clock_cycle()
 
-c = s.Chronogram.chronogram
-print(s.Chronogram.chronogram)
+c = s.statistics.Chronogram.chronogram
+print(s.statistics.Chronogram.chronogram)
 print(c[(c["instruction"] == 9) & c["EX_start"].isna()])
 # print(c[(c["instruction"] == 9) & c["EX_start"].isna()][0].index)
 
@@ -96,4 +96,6 @@ import numpy as np
 print(type(c.max().max()))
 # plot:
 
-s.Chronogram.plot_cycles()
+s.statistics.Chronogram.plot_cycles()
+print(s.statistics.stats)
+s.statistics.plot_graphs()

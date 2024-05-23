@@ -1,5 +1,5 @@
 import CDB
-import Chronogram
+
 import Memory
 import PC
 
@@ -25,7 +25,7 @@ class Simulador_1_FU:
         # set of instructions
         self.recent_cycle = 0
         self.program = program
-        self.Chronogram = Chronogram.Chronogram()
+        #self.Chronogram = Chronogram.Chronogram()
 
         self.memory = Memory.Memory(memory_size)
         self.ss_size = ss_size
@@ -150,7 +150,7 @@ class Simulador_1_FU:
                 if instIndex < self.program.program_size:
                     inst = self.program.get(instIndex)
                     # if there are still instructions in the program
-                    res, bitMux, pos = self.newInstruction(instIndex)
+                    res, bitMux, pos = self.new_instruction(instIndex)
                     self.statistics.updateTypeInst(bitMux)
 
 
@@ -166,6 +166,7 @@ class Simulador_1_FU:
                         if inst.fu_type == "jump" and inst.BTB == True:
                             self.PC.last = self.program.dict_tags[inst.offset] - 1
                             break
+        self.statistics.update_statistics()
 
 
     def moveOperationQueue(self, fus, mem = None):
@@ -204,14 +205,14 @@ class Simulador_1_FU:
             hs.empty()
 
 
-    def newInstruction(self, instIndex):
-        self.Chronogram.instruction_issued(instIndex, actual_cycle=self.recent_cycle)
+    def new_instruction(self, instIndex):
+        #self.Chronogram.instruction_issued(instIndex, actual_cycle=self.recent_cycle, ts_max=self.recent_cycle, rp=self.recent_cycle)
         inst = self.program.get(instIndex)
         fu_type = inst.fu_type
         fus_free = []
         pos = -1
         if fu_type == "jump":
-            res, bitMux = self.fu_jump.newInstruction(inst,instIndex,self.registers, self.hs, self.b_hs, self.Chronogram, self.recent_cycle)
+            res, bitMux = self.fu_jump.newInstruction(inst,instIndex,self.registers, self.hs, self.b_hs, self.statistics.Chronogram, self.recent_cycle)
         else:
             if fu_type == "alu":
                 fus_free = [fu.calculateN(inst, self.registers) for fu in self.fus_alu]
@@ -233,7 +234,7 @@ class Simulador_1_FU:
                 selectionOrder = self.trans_selectionOrder
 
 
-            indexes = self.find_lowest_positive_index(fus_free)
+            indexes = self.find_lowest_positive_indexes(fus_free)
 
 
             if len(indexes) == 0:
@@ -247,15 +248,15 @@ class Simulador_1_FU:
                 index = self.selection(indexes, selectionOrder)
                 fu = self.getFU(inst.fu_type, index)
                 if inst.fu_type == "load" or inst.fu_type == "store":
-                    res, bitMux, pos = fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.memory_last, self.Chronogram, self.recent_cycle)
+                    res, bitMux, pos = fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.memory_last, self.statistics.Chronogram, self.recent_cycle)
                 else:
-                    res, bitMux= fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.Chronogram, self.recent_cycle)
+                    res, bitMux= fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.statistics.Chronogram, self.recent_cycle)
 
             pos = pos + 1
         return res, bitMux, pos
 
 
-    def find_lowest_positive_index(self, l):
+    def find_lowest_positive_indexes(self, l):
         # Find the "best" fu to put the new instruction
         lowest_positive = None
         lowest_positive_index = []

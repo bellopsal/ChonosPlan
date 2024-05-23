@@ -150,7 +150,7 @@ class Simulador {
     move_operation_queue()
     from_HS_to_SS()
     new_nnstruction()
-    find_lowest_positive_index()
+    find_lowest_positive_indexes()
     selection()
         Integer recent_cycle
     Program program

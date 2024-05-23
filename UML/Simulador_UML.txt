@@ -6,7 +6,7 @@ class Simulador_1_FU {
     move_operation_queue()
     fromHSToSS()
     new_instruction()
-    find_lowest_positive_index()
+    find_lowest_positive_indexes()
     selection()
     getFU()
     display_SS()

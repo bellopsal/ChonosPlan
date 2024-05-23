@@ -44,6 +44,7 @@ class FU:
         bitMux = -1
         if inst.function == "j":
             ts_max = 0
+            bitMux = 0
 
         else:
             registersCalculation = registers.rp_calculation_type1(inst.r1, inst.rs1, inst.r1)
@@ -75,12 +76,16 @@ class FU:
                     bitMux = 5
                 else:
                     res = 1
+                    bitMux = 6
 
             else:
                 res = 0
+                bitMux = 4
 
         else:
             res = 1
+            bitMux = 0
+
 
         if res == 1:
 
