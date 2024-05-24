@@ -150,7 +150,7 @@ class Simulador_1_FU:
                 if instIndex < self.program.program_size:
                     inst = self.program.get(instIndex)
                     # if there are still instructions in the program
-                    res, bitMux, pos = self.new_instruction(instIndex)
+                    res, bitMux, pos= self.new_instruction(instIndex)
                     self.statistics.updateTypeInst(bitMux)
 
 
@@ -248,7 +248,7 @@ class Simulador_1_FU:
                 index = self.selection(indexes, selectionOrder)
                 fu = self.getFU(inst.fu_type, index)
                 if inst.fu_type == "load" or inst.fu_type == "store":
-                    res, bitMux, pos = fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.memory_last, self.statistics.Chronogram, self.recent_cycle)
+                    res, bitMux= fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.memory_last, self.statistics.Chronogram, self.recent_cycle)
                 else:
                     res, bitMux= fu.new_instruction(inst, instIndex, self.registers, self.hs, self.b_hs, self.statistics.Chronogram, self.recent_cycle)
 

@@ -28,7 +28,7 @@ class Statistics:
         self.instIssued += 1
 
     def update_statistics(self):
-        self.CPI = self.Chronogram.get_statistics()
+        self.CPI = self.Chronogram.get_statistics(self.cycles)
 
         stats_aux = pd.DataFrame.from_dict({"cycle":[self.cycles], "inst_issued":[self.instIssued], "inst_lock": [self.totalLock],
                                              "CPI":[self.CPI], "type_0":[self.typeInst.get(0)], "type_1":[self.typeInst.get(1)],
@@ -58,15 +58,17 @@ class Statistics:
         axs[1].grid(True)
         axs[1].set_xticks(x, x)
 
-        axs[2].plot(x,self.stats["type_0"], label = "type_0")
-        axs[2].plot(x,self.stats["type_1"], label="type_1")
-        axs[2].plot(x,self.stats["type_2"], label="type_2")
-        axs[2].plot(x,self.stats["type_3"], label="type_3")
-        axs[2].plot(x,self.stats["type_4"], label="type_4")
-        axs[2].plot(x,self.stats["type_5"], label="type_5")
-        axs[2].plot(x,self.stats["type_6"], label="type_6")
-        axs[2].plot(x,self.stats["type_7"], label="type_7")
-        axs[2].plot(x,self.stats["type_8"], label="type_8")
+
+
+        axs[2].plot(x,self.stats["type_0"].diff().fillna(0), label = "type_0")
+        axs[2].plot(x,self.stats["type_1"].diff().fillna(0), label="type_1")
+        axs[2].plot(x,self.stats["type_2"].diff().fillna(0), label="type_2")
+        axs[2].plot(x,self.stats["type_3"].diff().fillna(0), label="type_3")
+        axs[2].plot(x,self.stats["type_4"].diff().fillna(0), label="type_4")
+        axs[2].plot(x,self.stats["type_5"].diff().fillna(0), label="type_5")
+        axs[2].plot(x,self.stats["type_6"].diff().fillna(0), label="type_6")
+        axs[2].plot(x,self.stats["type_7"].diff().fillna(0), label="type_7")
+        axs[2].plot(x,self.stats["type_8"].diff().fillna(0), label="type_8")
         axs[2].set_title('BitMUX')
         axs[2].legend(loc='upper center', bbox_to_anchor=(0.5, -0.2),
           fancybox=True,  ncol=5, borderpad=0, labelspacing=0)

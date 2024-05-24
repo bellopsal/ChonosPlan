@@ -116,9 +116,9 @@ class Chronogram:
         return image
 
 
-    def get_statistics(self):
+    def get_statistics(self, total_cycles):
         self.chronogram["total_cycles"] = self.chronogram["WB_start"] - self.chronogram["IS_start"] + 1
-        total_cycles = self.chronogram[self.chronogram["total_cycles"] >= 0]["total_cycles"].sum()
+        #total_cycles = self.chronogram[self.chronogram["total_cycles"] >= 0]["total_cycles"].sum()
         n_instructions = len(self.chronogram)
 
         CPI = total_cycles/n_instructions

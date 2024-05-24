@@ -41,7 +41,7 @@ instrucciones = Program.Program("exampleOP.csv")
 #                  ]
 
 s = Simulador.Simulador_1_FU(program = instrucciones,
-                             n_ss = 8,
+                             ss = 8,
                              registers_size= 5,
                              b_scoreboard = 1,
                              QSD_size = 3,

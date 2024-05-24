@@ -170,7 +170,7 @@ class FU:
         else:
             chronogram.instruction_issued(instIndex, actual_cycle= actual_cycle, ts_max =actual_cycle, rp= actual_cycle )
 
-        return res, bitMux, position
+        return res, bitMux
 
     def findFirstEmptyBRT(self, ts_max):
         n = self.BRT.find_first_after(ts_max)
