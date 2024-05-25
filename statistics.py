@@ -7,13 +7,14 @@ class Statistics:
         self.stats = pd.DataFrame.from_dict({"cycle":[0], "inst_issued":[0], "inst_lock": [0],
                                              "CPI":[0], "type_0":[0], "type_1":[0], "type_2":[0],
                                              "type_3":[0],"type_4":[0], "type_5":[0], "type_6":[0],
-                                             "type_7":[0], "type_8":[0]})
+                                             "type_7":[0], "type_8":[0],"mean_latency":[0]})
         self.totalLock = 0
         self.typeInst = {-1: 0, 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0}
         self.instIssued = 0
         self.cycles = 0
         self.Chronogram = Chronogram.Chronogram()
         self.CPI = 0
+        self.mean_latency = 0
 
     def newCycle(self):
         self.cycles += 1
@@ -28,14 +29,15 @@ class Statistics:
         self.instIssued += 1
 
     def update_statistics(self):
-        self.CPI = self.Chronogram.get_statistics(self.cycles)
+        self.CPI, self.mean_latency = self.Chronogram.get_statistics(self.cycles)
 
         stats_aux = pd.DataFrame.from_dict({"cycle":[self.cycles], "inst_issued":[self.instIssued], "inst_lock": [self.totalLock],
                                              "CPI":[self.CPI], "type_0":[self.typeInst.get(0)], "type_1":[self.typeInst.get(1)],
                                             "type_2":[self.typeInst.get(2)],"type_3":[self.typeInst.get(3)],
                                             "type_4":[self.typeInst.get(4)], "type_5":[self.typeInst.get(5)],
                                             "type_6":[self.typeInst.get(6)],
-                                             "type_7":[self.typeInst.get(7)], "type_8":[self.typeInst.get(8)]})
+                                             "type_7":[self.typeInst.get(7)], "type_8":[self.typeInst.get(8)],
+                                            "mean_latency":[self.mean_latency]})
         self.stats = pd.concat([self.stats, stats_aux])
 
 

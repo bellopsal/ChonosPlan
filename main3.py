@@ -13,7 +13,7 @@ instrucciones = [Inst(operation="add", tag="bucle", r1=1, r2=1, r3=2),
                  Inst(operation="mul", r1=1, r2=0, r3=0),
                  Inst(operation="add", r1=3, r2=1, r3=1)]
 
-instrucciones = Program.Program("ex2.csv")
+instrucciones = Program.Program("ejemploBasicoDepenEstructurales.csv")
 #instrucciones = Program.Program("ex.csv")
 # print(instrucciones.instructions[1])
 # print(instrucciones.instructions[3])
@@ -26,8 +26,8 @@ s = Simulador.Simulador_1_FU(program=instrucciones,
                              b_scoreboard=1,
                              QSD_size=3,
                              memory_size=32,
-                             multiplicity=6,
-                             n_alu=5,
+                             multiplicity=1,
+                             n_alu=1,
                              n_mult=2,
                              n_trans=3,
                              n_div=3,

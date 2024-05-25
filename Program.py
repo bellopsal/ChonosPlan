@@ -56,6 +56,14 @@ class Program:
 
                 self.program_size = self.program_size + 1
 
+    def __str__(self):
+        txt = ""
+        for i in range(self.program_size):
+            txt = txt + f"{i}: {self.get(i)}\n"
+        return txt
+
+
+
 
 class Instruction:
 
@@ -87,7 +95,7 @@ class Instruction:
         if self.rs1 != None: txt = txt + "R"+str(self.rs1)
         if self.offset != None: txt = txt + "" + str(self.offset)
         if self.fu_type=="jump": txt = txt+ f"(BTB: {self.BTB})"
-        txt = txt + self.fu_type
+        #txt = txt + self.fu_type
         return txt
 
 

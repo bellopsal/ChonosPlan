@@ -37,6 +37,9 @@ class app:
         self.h.config(command=self.text_widget.xview)
         self.v.config(command=self.text_widget.yview)
 
+        # help window
+
+
         self.px = 15
         self.py = 15
 
@@ -435,6 +438,7 @@ class app:
 
     def start(self):
 
+
         self.simulador =Simulador.Simulador_1_FU(program = self.program,
                                                  ss_size = int(self.n_ss.get()),
                                                  registers_size= int(self.n_registers.get()),
@@ -458,7 +462,28 @@ class app:
                                                  b_hs= self.b_hs.get()
 
                                                  )
+        self.config = pd.DataFrame({
+            "n_ss": [self.n_ss.get()],
+            "n_registers": [self.n_registers.get()],
+            "QSD_size": [self.QSD_size.get()],
+            "memory_size": [self.memory_size.get()],
+            "n_alu": [self.n_alu.get()],
+            "n_mult": [self.n_mult.get()],
+            "n_div": [self.n_div.get()],
+            "n_trans": [self.n_trans.get()],
+            "n_load": [self.n_load.get()],
+            "n_store": [self.n_store.get()],
+            "latency_alu": [self.latency_alu.get()],
+            "latency_mult": [self.latency_mult.get()],
+            "latency_div": [self.latency_div.get()],
+            "latency_trans": [self.latency_trans.get()],
+            "latency_store": [self.latency_store.get()],
+            "latency_load": [self.latency_load.get()],
+            "n_cycles": [self.n_cycles.get()],
+            "multiplicity": [self.multiplicity.get()],
+            "b_hs": [self.b_hs.get()]
 
+        })
 
         self.re_start_button = tk.Button(self.master, text="re-start", command=self.re_start)
         self.re_start_button.pack(padx=self.px/4, pady=self.py/4)
@@ -520,44 +545,82 @@ class app:
         self.new_window = tk.Toplevel(self.master)
         self.new_window.title("Statistics")
 
-        self.label1 = tk.Label(self.new_window, text=f"Nº cycles: {self.simulador.statistics.cycles}")
+        self.left_size = tk.Label(self.new_window)
+        self.right_size = tk.Label(self.new_window)
+
+        aux_top = tk.Frame(self.left_size)
+        aux_botton = tk.Frame(self.left_size)
+
+        aux = tk.Frame(aux_top, highlightbackground="black", highlightthickness=2)
+        tk.Label(aux, text=f"STATISTICS", font="Script 20 bold").pack()
+
+        self.label1 = tk.Label(aux, text=f"Nº cycles: {self.simulador.statistics.cycles}")
         self.label1.pack()
 
-        self.label2 = tk.Label(self.new_window, text=f"Multiplicity: {self.simulador.multiplicity}")
+        self.label2 = tk.Label(aux, text=f"Multiplicity: {self.simulador.multiplicity}")
         self.label2.pack()
 
-        self.label3 = tk.Label(self.new_window, text=f"inst Issued: {self.simulador.statistics.instIssued}")
+        self.label3 = tk.Label(aux, text=f"inst Issued: {self.simulador.statistics.instIssued}")
         self.label3.pack()
 
-        self.label4 = tk.Label(self.new_window, text=f"Total Locks: {self.simulador.statistics.totalLock}")
+        self.label4 = tk.Label(aux, text=f"Total Locks: {self.simulador.statistics.totalLock}")
         self.label4.pack()
 
-        self.label5 = tk.Label(self.new_window, text=f"Type Instrucctions: {self.simulador.statistics.typeInst}")
+        #self.label5 = tk.Label(self.left_size, text=f"Type Instrucctions: {self.simulador.statistics.typeInst}")
+        #self.label5.pack()
+        self.label5 = tk.Label(aux, text=f"Mean Latency: {self.simulador.statistics.mean_latency}")
         self.label5.pack()
 
+        self.label8 = tk.Label(aux, text=f"CPI: {self.simulador.statistics.CPI}")
+        self.label8.pack()
 
-        self.simulador.statistics.Chronogram.plot_cycles()
-        img = Image.open("figure.png")
-        photo = ImageTk.PhotoImage(img.convert('RGB'))
-        self.label = tk.Label(self.master,image=photo)
-        self.label.image = photo  # keep a reference!
-        self.label.pack()
-        self.label6 = tk.Label(self.new_window,image=photo)
-        self.label6.image = photo
-        self.label6.pack(side = tk.RIGHT)
+        aux.pack(side = tk.RIGHT, padx=self.px/4, pady=self.py/4)
 
-        img.close()
+
+        #aux_r = tk.Label(aux_top)
+        #aux_r.pack(side = tk.RIGHT)
+        #aux_l = tk.Label(aux_top)
+        #aux_l.pack(side=tk.LEFT)
+        a = tk.Frame(aux_top, highlightbackground="black", highlightthickness=2)
+        tk.Label(a, text=f"SIMULATION CONFIG", font="Script 20 bold").pack()
+
+        tk.Label(a,text = self.simulador.program).pack(side = tk.RIGHT)
+        df_dict = self.config.iloc[0].to_dict()
+        config_string = "\n ".join([f"{key}: {value}" for key, value in df_dict.items()])
+        tk.Label(a,text = config_string).pack(side = tk.RIGHT)
+
+        a.pack(padx=self.px/4, pady=self.py/4)
+        self.left_size.pack(side=tk.LEFT)
+        self.right_size.pack(side = tk.RIGHT)
 
         self.simulador.statistics.plot_graphs()
         img = Image.open("stats.png")
         photo = ImageTk.PhotoImage(img.convert('RGB'))
-        self.stats = tk.Label(self.master,image=photo)
-        self.stats.image = photo  # keep a reference!
-        self.stats.pack(side = tk.LEFT)
-        self.label7 = tk.Label(self.new_window,image=photo)
+        self.label7 = tk.Label(aux_botton,image=photo)
         self.label7.image = photo
         self.label7.pack()
         img.close()
+
+        self.simulador.statistics.Chronogram.plot_cycles()
+        img = Image.open("figure.png")
+        photo = ImageTk.PhotoImage(img.convert('RGB'))
+        self.label6 = tk.Label(self.right_size,image=photo)
+        self.label6.image = photo
+        self.label6.pack(side = tk.RIGHT)
+        img = img.resize((350,700))
+        photo = ImageTk.PhotoImage(img.convert('RGB'))
+        self.label = tk.Label(self.master,image=photo)
+        self.label.image = photo  # keep a reference!
+        self.label.pack()
+        self.labelCPI = tk.Label(self.master, text=f"CPI: {self.simulador.statistics.CPI}")
+        self.labelCPI.pack()
+        img.close()
+
+        aux_top.pack()
+        aux_botton.pack()
+
+
+
 
 
 
@@ -566,28 +629,30 @@ class app:
         self.label1.config(text=f"Nº cycles: {self.simulador.statistics.cycles}")
         self.label3.config(text=f"inst Issued: {self.simulador.statistics.instIssued}")
         self.label4.config(text=f"Total Locks: {self.simulador.statistics.totalLock}")
-        self.label5.config(text=f"Type Instrucctions: {self.simulador.statistics.typeInst}")
+        self.label5.config(text=f"Mean Latency: {self.simulador.statistics.mean_latency}")
+        self.label8.config(text=f"CPI: {self.simulador.statistics.CPI}")
 
         self.label.config(image = None)
         self.label.image = None
         self.simulador.statistics.Chronogram.plot_cycles()
-        print(self.simulador.statistics.Chronogram.chronogram)
 
         img = Image.open("figure.png")
         photo = ImageTk.PhotoImage(img.convert('RGB'))
-        self.label.config(image=photo)
-        self.label.image = photo  # keep a reference!
         self.label6.config(image=photo)
         self.label6.image = photo
+
+        img = img.resize((350,700))
+        photo = ImageTk.PhotoImage(img.convert('RGB'))
+        self.label.config(image=photo)
+        self.label.image = photo  # keep a reference!
+        self.labelCPI.config(text=f"CPI: {self.simulador.statistics.CPI}")
+
         img.close()
 
 
         self.simulador.statistics.plot_graphs()
         img = Image.open("stats.png")
         photo = ImageTk.PhotoImage(img.convert('RGB'))
-        self.stats.config(image=photo)
-        self.stats.image = photo  # keep a reference!
-
         self.label7.config(image=photo)
         self.label7.image = photo
 
@@ -655,7 +720,8 @@ class app:
 
         self.full_frame.pack()
         self.label.pack_forget()
-        self.stats.pack_forget()
+        self.labelCPI.pack_forget()
+        #self.stats.pack_forget()
 
         self.start_button.pack()
 

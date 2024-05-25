@@ -75,6 +75,8 @@ class Chronogram:
         c_aux.iloc[f_same, [3, 4]] = c_aux.iloc[f_same, 1].values.reshape(-1, 1)
 
         fig, ax = plt.subplots()
+        fig.set_figheight(10)
+        fig.set_figwidth(7)
         ax.grid(axis="y")
         plt.xticks(rotation=90)
         plt.yticks(rotation=90)
@@ -103,6 +105,9 @@ class Chronogram:
         # plt.show()
         plt.tight_layout()
         legend = plt.legend()
+        # Rotate each legend text item
+        for text in legend.get_texts():
+            text.set_rotation(90)
 
         fig.savefig('figure.png')
         image = Image.open('figure.png', )
@@ -117,10 +122,11 @@ class Chronogram:
 
 
     def get_statistics(self, total_cycles):
-        self.chronogram["total_cycles"] = self.chronogram["WB_start"] - self.chronogram["IS_start"] + 1
+        self.chronogram["total_cycles"] = self.chronogram["WB_start"] - self.chronogram["IF_start"] + 1
         #total_cycles = self.chronogram[self.chronogram["total_cycles"] >= 0]["total_cycles"].sum()
         n_instructions = len(self.chronogram)
 
         CPI = total_cycles/n_instructions
+        mean_latency = self.chronogram[self.chronogram["total_cycles"]>=0]["total_cycles"].mean()
 
-        return CPI
+        return CPI, mean_latency
