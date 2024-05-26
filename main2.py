@@ -584,10 +584,10 @@ class app:
         a = tk.Frame(aux_top, highlightbackground="black", highlightthickness=2)
         tk.Label(a, text=f"SIMULATION CONFIG", font="Script 20 bold").pack()
 
-        tk.Label(a,text = self.simulador.program).pack(side = tk.RIGHT)
+        tk.Label(a,text = self.simulador.program).pack(side = tk.RIGHT, padx=self.px/4, pady=self.py/4)
         df_dict = self.config.iloc[0].to_dict()
         config_string = "\n ".join([f"{key}: {value}" for key, value in df_dict.items()])
-        tk.Label(a,text = config_string).pack(side = tk.RIGHT)
+        tk.Label(a,text = config_string, justify=tk.LEFT).pack(side = tk.RIGHT, padx=self.px/4, pady=self.py/4)
 
         a.pack(padx=self.px/4, pady=self.py/4)
         self.left_size.pack(side=tk.LEFT)
@@ -629,7 +629,7 @@ class app:
         self.label1.config(text=f"Nº cycles: {self.simulador.statistics.cycles}")
         self.label3.config(text=f"inst Issued: {self.simulador.statistics.instIssued}")
         self.label4.config(text=f"Total Locks: {self.simulador.statistics.totalLock}")
-        self.label5.config(text=f"Mean Latency: {self.simulador.statistics.mean_latency}")
+        self.label5.config(text=f"Mean Latency: {self.simulador.statistics.mean_latency.round(3)}")
         self.label8.config(text=f"CPI: {self.simulador.statistics.CPI}")
 
         self.label.config(image = None)
