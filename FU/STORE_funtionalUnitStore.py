@@ -166,7 +166,7 @@ class FU:
 
                 if b_lb: registers.new_inst(destination=inst.r1, rp=rp, fu_name=self.name)
                 self.BRT.occupy_i(position)
-                self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
+                self.SS.update_i(i=position, bitMux=RP1, FU1=FU1, FU2=FU2,
                                  RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv, inm = inm)
 
         if res == 1:

@@ -1,0 +1,15 @@
+tag,operation,r1,r2,r3,rs1,inm,offset,BTB
+bucle,addi,0,0,,,1,,
+,addi,1,0,,,1,,
+,addi,2,0,,,1,,
+,addi,3,0,,,1,,
+,addi,4,0,,,1,,
+,addi,5,0,,,1,,
+,addi,6,0,,,1,,
+,addi,7,0,,,1,,
+,j,,,,,,bucle,
+
+
+
+
+

@@ -147,6 +147,7 @@ class Simulador_1_FU:
         if len(self.PC.PC) > 0:
             for _ in range(len(self.PC.PC)):
                 instIndex = self.PC.new_instruction()
+                print(instIndex)
                 if instIndex < self.program.program_size:
                     inst = self.program.get(instIndex)
                     # if there are still instructions in the program

@@ -74,7 +74,7 @@ class FU:
     def new_instruction(self, inst, instIndex, registers, hs, b_hs, chronogram, actual_cycle):
 
         if inst.function.endswith("i"):
-            registersCalculation = registers.rp_calculation_type1_inm(inst.r2, inst.r1)
+            registersCalculation = registers.rp_calculation_type1_inm(source1=inst.r2, destination= inst.r1)
 
         else:
             registersCalculation = registers.rp_calculation_type1(inst.r2, inst.r3, inst.r1)
@@ -130,7 +130,7 @@ class FU:
                         if ts_max == 0:
                             value2 = registers.Registers[reg_max].value
                             RP1 = -1
-                        hs.update(i=freeHS, RP1=ts_min, RP2=ts_max, position=position, value1=value1,
+                        hs.update(i=freeHS, RP1=RP1, RP2=ts_max, position=position, value1=value1,
                                   destination=self.name, value2=value2, inv=inv, bitMux=bitMux, FU1=FU1,
                                   FU2=FU2, case_QSD=case_QSD, type_operation=inst.function)
 
