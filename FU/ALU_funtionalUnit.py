@@ -64,7 +64,7 @@ class FU:
 
     def calculateN(self, inst, registers):
         if inst.function.endswith("i"):
-            l = registers.rp_calculation_type1(inst.r2, inst.inm, inst.r1)
+            l = registers.rp_calculation_type1_inm(inst.r2, inst.r1)
         else:
             l = registers.rp_calculation_type1(inst.r2, inst.r3, inst.r1)
         n = self.BRT.find_first_after(l[0])
@@ -94,9 +94,11 @@ class FU:
             rp = ts_max + self.latency
             n = self.BRT.find_first_after(ts_max)
 
+
             res = 1
             rp = rp + n
             position = ts_max + n
+            print(str(n))
 
             if n == -1:
                 # this case will never happen here, this method will not enter in this case
@@ -112,7 +114,7 @@ class FU:
                         res = 0
                         bitMux = 5
                     else:
-
+                        RP1 = ts_min
                         value1 = None
                         value2 = None
                         case_QSD = False
@@ -126,10 +128,10 @@ class FU:
                             RP1 = -1
                         if ts_min == 0:
                             value1 = registers.Registers[reg_min].value
-                            RP1 = -1
+                            RP1 = 0
                         if ts_max == 0:
                             value2 = registers.Registers[reg_max].value
-                            RP1 = -1
+                            RP1 = 0
                         hs.update(i=freeHS, RP1=RP1, RP2=ts_max, position=position, value1=value1,
                                   destination=self.name, value2=value2, inv=inv, bitMux=bitMux, FU1=FU1,
                                   FU2=FU2, case_QSD=case_QSD, type_operation=inst.function)

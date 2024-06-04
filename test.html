@@ -15,9 +15,48 @@ body {
 </head>
 <body>
     <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit"><span class="r1"> </span><span class="r1">3</span> <span class="r2">───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
-<span class="r3">                                                                         Functional Unit: alu                                                                          </span>
+<span class="r3">                                              Hold Stations                                               </span>
+┏━━━━━━━━━━┳━━━━━┳━━━━━━━━━━━┳━━━━━━━━┳━━━━━┳━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━┳━━━━━┳━━━━━━━━┳━━━━━━━━┓
+┃<span class="r4"> occupied </span>┃<span class="r4"> HS  </span>┃<span class="r4"> case QSD? </span>┃<span class="r4"> bitMux </span>┃<span class="r4"> RP1 </span>┃<span class="r4"> RP2 </span>┃<span class="r4"> position </span>┃<span class="r4"> destination </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value1 </span>┃<span class="r4"> value2 </span>┃
+┡━━━━━━━━━━╇━━━━━╇━━━━━━━━━━━╇━━━━━━━━╇━━━━━╇━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━╇━━━━━╇━━━━━━━━╇━━━━━━━━┩
+│    0     │ HS0 │   False   │        │     │     │          │             │     │     │        │        │
+│    0     │ HS1 │   False   │        │     │     │          │             │     │     │        │        │
+│    0     │ HS2 │   False   │        │     │     │          │             │     │     │        │        │
+│    0     │ HS3 │   False   │        │     │     │          │             │     │     │        │        │
+│    0     │ HS4 │   False   │        │     │     │          │             │     │     │        │        │
+│    0     │ HS5 │   False   │        │     │     │          │             │     │     │        │        │
+│    0     │ HS6 │   False   │        │     │     │          │             │     │     │        │        │
+│    0     │ HS7 │   False   │        │     │     │          │             │     │     │        │        │
+│    0     │ HS8 │   False   │        │     │     │          │             │     │     │        │        │
+│    0     │ HS9 │   False   │        │     │     │          │             │     │     │        │        │
+└──────────┴─────┴───────────┴────────┴─────┴─────┴──────────┴─────────────┴─────┴─────┴────────┴────────┘
+<span class="r3">                                                                               Functional Unit: alu                                                                                </span>
+╭─────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────────╮
+│ <span class="r3">                         alu_0                         </span> │ │ <span class="r3">                         alu_1                         </span> │ │ <span class="r3">                         alu_2                         </span> │
+│ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │
+│ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4">  FU1  </span>┃<span class="r4">  FU2  </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4">  FU1  </span>┃<span class="r4">  FU2  </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4">  FU1  </span>┃<span class="r4">  FU2  </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │
+│ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │
+│ │ SS7 │      │    │       │       │       │           │ │ │ │ SS7 │      │    │       │       │       │           │ │ │ │ SS7 │      │    │       │       │       │           │ │
+│ │ SS6 │      │    │       │       │       │           │ │ │ │ SS6 │      │    │       │       │       │           │ │ │ │ SS6 │      │    │       │       │       │           │ │
+│ │ SS5 │      │    │       │       │       │           │ │ │ │ SS5 │      │    │       │       │       │           │ │ │ │ SS5 │  2   │ 3  │ alu_1 │ alu_2 │       │     4     │ │
+│ │ SS4 │      │    │       │       │       │           │ │ │ │ SS4 │      │    │       │       │       │           │ │ │ │ SS4 │      │    │       │       │       │           │ │
+│ │ SS3 │  2   │ 2  │ alu_2 │ alu_1 │       │     2     │ │ │ │ SS3 │  2   │ 2  │ alu_0 │ alu_1 │       │     3     │ │ │ │ SS3 │  2   │ 2  │ alu_1 │ alu_1 │       │     1     │ │
+│ │ SS2 │  2   │    │ alu_0 │ alu_0 │   1   │     6     │ │ │ │ SS2 │  2   │    │ alu_0 │ alu_1 │   1   │     4     │ │ │ │ SS2 │  2   │    │ alu_0 │ alu_2 │   1   │     5     │ │
+│ │ SS1 │      │    │       │       │       │           │ │ │ │ SS1 │  1   │    │  inm  │  R0   │   1   │     0     │ │ │ │ SS1 │      │    │       │       │       │           │ │
+│ │ SS0 │  2   │    │  R3   │ alu_0 │   6   │     3     │ │ │ │ SS0 │  2   │    │  R1   │ alu_0 │   2   │     1     │ │ │ │ SS0 │  2   │    │  R2   │ alu_0 │   4   │     2     │ │
+│ └─────┴──────┴────┴───────┴───────┴───────┴───────────┘ │ │ └─────┴──────┴────┴───────┴───────┴───────┴───────────┘ │ │ └─────┴──────┴────┴───────┴───────┴───────┴───────────┘ │
+│ <span class="r3">         QSD_0          </span>                                │ │ <span class="r3">         QSD_1          </span>                                │ │ <span class="r3">         QSD_2          </span>                                │
+│ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                                │ │ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                                │ │ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                                │
+│ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                                │ │ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                                │ │ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                                │
+│ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                                │ │ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                                │ │ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                                │
+│ │ Q2 │    │    │ None  │                                │ │ │ Q2 │    │    │ None  │                                │ │ │ Q2 │    │    │ None  │                                │
+│ │ Q1 │    │    │ None  │                                │ │ │ Q1 │    │    │   1   │                                │ │ │ Q1 │    │    │ None  │                                │
+│ │ Q0 │    │    │   1   │                                │ │ │ Q0 │    │    │   1   │                                │ │ │ Q0 │    │    │   1   │                                │
+│ └────┴────┴────┴───────┘                                │ │ └────┴────┴────┴───────┘                                │ │ └────┴────┴────┴───────┘                                │
+╰─────────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────────╯
+<span class="r3">                                                                         Functional Unit: MULT                                                                         </span>
 ╭─────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────╮
-│ <span class="r3">                       alu_0                       </span> │ │ <span class="r3">                       alu_1                       </span> │ │ <span class="r3">                       alu_2                       </span> │
+│ <span class="r3">                      MULT_0                       </span> │ │ <span class="r3">                      MULT_1                       </span> │ │ <span class="r3">                      MULT_2                       </span> │
 │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │
 │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │
 │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │
@@ -39,45 +78,114 @@ body {
 │ │ Q0 │    │    │ None  │                            │ │ │ Q0 │    │    │ None  │                            │ │ │ Q0 │    │    │ None  │                            │
 │ └────┴────┴────┴───────┘                            │ │ └────┴────┴────┴───────┘                            │ │ └────┴────┴────┴───────┘                            │
 ╰─────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────╯
-<span class="r3">                                                Functional Unit: MULT                                                </span>
-╭────────────────────────────────────────────────────────╮ ╭────────────────────────────────────────────────────────╮
-│ <span class="r3">                        MULT_0                        </span> │ │ <span class="r3">                        MULT_1                        </span> │
-│ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │
-│ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4">  FU2   </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4">  FU2   </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │
-│ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │
-│ │ SS7 │      │    │     │        │       │           │ │ │ │ SS7 │      │    │     │        │       │           │ │
-│ │ SS6 │      │    │     │        │       │           │ │ │ │ SS6 │  2   │    │ inm │ mult_0 │   1   │     1     │ │
-│ │ SS5 │  2   │    │ inm │ mult_1 │   1   │     1     │ │ │ │ SS5 │      │    │     │        │       │           │ │
-│ │ SS4 │      │    │     │        │       │           │ │ │ │ SS4 │  2   │    │ inm │ mult_0 │   1   │     1     │ │
-│ │ SS3 │      │    │     │        │       │           │ │ │ │ SS3 │      │    │     │        │       │           │ │
-│ │ SS2 │      │    │     │        │       │           │ │ │ │ SS2 │      │    │     │        │       │           │ │
-│ │ SS1 │      │    │     │        │       │           │ │ │ │ SS1 │      │    │     │        │       │           │ │
-│ │ SS0 │  0   │    │ inm │   R0   │   1   │     0     │ │ │ │ SS0 │      │    │     │        │       │           │ │
-│ └─────┴──────┴────┴─────┴────────┴───────┴───────────┘ │ │ └─────┴──────┴────┴─────┴────────┴───────┴───────────┘ │
-│ <span class="r3">         QSD_0          </span>                               │ │ <span class="r3">         QSD_1          </span>                               │
-│ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                               │ │ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                               │
-│ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                               │ │ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                               │
-│ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                               │ │ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                               │
-│ │ Q2 │    │    │ None  │                               │ │ │ Q2 │    │    │ None  │                               │
-│ │ Q1 │    │    │ None  │                               │ │ │ Q1 │    │    │ None  │                               │
-│ │ Q0 │    │    │   0   │                               │ │ │ Q0 │    │    │ None  │                               │
-│ └────┴────┴────┴───────┘                               │ │ └────┴────┴────┴───────┘                               │
-╰────────────────────────────────────────────────────────╯ ╰────────────────────────────────────────────────────────╯
-<span class="r3">                 REGISTERS                  </span>
-┏━━━━━━━━━━┳━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━━┓
-┃<span class="r4"> Register </span>┃<span class="r4"> RP  </span>┃<span class="r4">   FU   </span>┃<span class="r4"> value </span>┃<span class="r4"> locked </span>┃
-┡━━━━━━━━━━╇━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━━┩
-│    R0    │ +0  │        │   0   │ False  │
-│    R1    │ +30 │ mult_0 │ None  │ False  │
-│    R2    │ +0  │        │   4   │ False  │
-│    R3    │ +0  │        │   6   │ False  │
-│    R4    │ +0  │        │   8   │ False  │
-│    R5    │ +0  │        │  10   │ False  │
-│    R6    │ +0  │        │  12   │ False  │
-│    R7    │ +0  │        │  14   │ False  │
-│    R8    │ +0  │        │  16   │ False  │
-│    R9    │ +0  │        │  18   │ False  │
-└──────────┴─────┴────────┴───────┴────────┘
+<span class="r3">                                                                         Functional Unit: DIV                                                                          </span>
+╭─────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────╮
+│ <span class="r3">                       DIV_0                       </span> │ │ <span class="r3">                       DIV_1                       </span> │ │ <span class="r3">                       DIV_2                       </span> │
+│ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │
+│ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │
+│ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │
+│ │ SS7 │      │    │     │     │       │           │ │ │ │ SS7 │      │    │     │     │       │           │ │ │ │ SS7 │      │    │     │     │       │           │ │
+│ │ SS6 │      │    │     │     │       │           │ │ │ │ SS6 │      │    │     │     │       │           │ │ │ │ SS6 │      │    │     │     │       │           │ │
+│ │ SS5 │      │    │     │     │       │           │ │ │ │ SS5 │      │    │     │     │       │           │ │ │ │ SS5 │      │    │     │     │       │           │ │
+│ │ SS4 │      │    │     │     │       │           │ │ │ │ SS4 │      │    │     │     │       │           │ │ │ │ SS4 │      │    │     │     │       │           │ │
+│ │ SS3 │      │    │     │     │       │           │ │ │ │ SS3 │      │    │     │     │       │           │ │ │ │ SS3 │      │    │     │     │       │           │ │
+│ │ SS2 │      │    │     │     │       │           │ │ │ │ SS2 │      │    │     │     │       │           │ │ │ │ SS2 │      │    │     │     │       │           │ │
+│ │ SS1 │      │    │     │     │       │           │ │ │ │ SS1 │      │    │     │     │       │           │ │ │ │ SS1 │      │    │     │     │       │           │ │
+│ │ SS0 │      │    │     │     │       │           │ │ │ │ SS0 │      │    │     │     │       │           │ │ │ │ SS0 │      │    │     │     │       │           │ │
+│ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │ │ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │ │ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │
+│ <span class="r3">         QSD_0          </span>                            │ │ <span class="r3">         QSD_1          </span>                            │ │ <span class="r3">         QSD_2          </span>                            │
+│ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │ │ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │ │ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │
+│ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │ │ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │ │ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │
+│ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │ │ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │ │ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │
+│ │ Q2 │    │    │ None  │                            │ │ │ Q2 │    │    │ None  │                            │ │ │ Q2 │    │    │ None  │                            │
+│ │ Q1 │    │    │ None  │                            │ │ │ Q1 │    │    │ None  │                            │ │ │ Q1 │    │    │ None  │                            │
+│ │ Q0 │    │    │ None  │                            │ │ │ Q0 │    │    │ None  │                            │ │ │ Q0 │    │    │ None  │                            │
+│ └────┴────┴────┴───────┘                            │ │ └────┴────┴────┴───────┘                            │ │ └────┴────┴────┴───────┘                            │
+╰─────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────╯
+<span class="r3">                                                                        Functional Unit: TRANS                                                                         </span>
+╭─────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────╮
+│ <span class="r3">                      TRANS_0                      </span> │ │ <span class="r3">                      TRANS_1                      </span> │ │ <span class="r3">                      TRANS_2                      </span> │
+│ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │
+│ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │
+│ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │
+│ │ SS7 │      │    │     │     │       │           │ │ │ │ SS7 │      │    │     │     │       │           │ │ │ │ SS7 │      │    │     │     │       │           │ │
+│ │ SS6 │      │    │     │     │       │           │ │ │ │ SS6 │      │    │     │     │       │           │ │ │ │ SS6 │      │    │     │     │       │           │ │
+│ │ SS5 │      │    │     │     │       │           │ │ │ │ SS5 │      │    │     │     │       │           │ │ │ │ SS5 │      │    │     │     │       │           │ │
+│ │ SS4 │      │    │     │     │       │           │ │ │ │ SS4 │      │    │     │     │       │           │ │ │ │ SS4 │      │    │     │     │       │           │ │
+│ │ SS3 │      │    │     │     │       │           │ │ │ │ SS3 │      │    │     │     │       │           │ │ │ │ SS3 │      │    │     │     │       │           │ │
+│ │ SS2 │      │    │     │     │       │           │ │ │ │ SS2 │      │    │     │     │       │           │ │ │ │ SS2 │      │    │     │     │       │           │ │
+│ │ SS1 │      │    │     │     │       │           │ │ │ │ SS1 │      │    │     │     │       │           │ │ │ │ SS1 │      │    │     │     │       │           │ │
+│ │ SS0 │      │    │     │     │       │           │ │ │ │ SS0 │      │    │     │     │       │           │ │ │ │ SS0 │      │    │     │     │       │           │ │
+│ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │ │ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │ │ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │
+│ <span class="r3">         QSD_0          </span>                            │ │ <span class="r3">         QSD_1          </span>                            │ │ <span class="r3">         QSD_2          </span>                            │
+│ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │ │ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │ │ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │
+│ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │ │ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │ │ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │
+│ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │ │ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │ │ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │
+│ │ Q2 │    │    │ None  │                            │ │ │ Q2 │    │    │ None  │                            │ │ │ Q2 │    │    │ None  │                            │
+│ │ Q1 │    │    │ None  │                            │ │ │ Q1 │    │    │ None  │                            │ │ │ Q1 │    │    │ None  │                            │
+│ │ Q0 │    │    │ None  │                            │ │ │ Q0 │    │    │ None  │                            │ │ │ Q0 │    │    │ None  │                            │
+│ └────┴────┴────┴───────┘                            │ │ └────┴────┴────┴───────┘                            │ │ └────┴────┴────┴───────┘                            │
+╰─────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────╯
+<span class="r3">                                                                        Functional Unit: STORE                                                                         </span>
+╭─────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────╮
+│ <span class="r3">                      STORE_0                      </span> │ │ <span class="r3">                      STORE_1                      </span> │ │ <span class="r3">                      STORE_2                      </span> │
+│ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │
+│ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │
+│ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │
+│ │ SS7 │      │    │     │     │       │           │ │ │ │ SS7 │      │    │     │     │       │           │ │ │ │ SS7 │      │    │     │     │       │           │ │
+│ │ SS6 │      │    │     │     │       │           │ │ │ │ SS6 │      │    │     │     │       │           │ │ │ │ SS6 │      │    │     │     │       │           │ │
+│ │ SS5 │      │    │     │     │       │           │ │ │ │ SS5 │      │    │     │     │       │           │ │ │ │ SS5 │      │    │     │     │       │           │ │
+│ │ SS4 │      │    │     │     │       │           │ │ │ │ SS4 │      │    │     │     │       │           │ │ │ │ SS4 │      │    │     │     │       │           │ │
+│ │ SS3 │      │    │     │     │       │           │ │ │ │ SS3 │      │    │     │     │       │           │ │ │ │ SS3 │      │    │     │     │       │           │ │
+│ │ SS2 │      │    │     │     │       │           │ │ │ │ SS2 │      │    │     │     │       │           │ │ │ │ SS2 │      │    │     │     │       │           │ │
+│ │ SS1 │      │    │     │     │       │           │ │ │ │ SS1 │      │    │     │     │       │           │ │ │ │ SS1 │      │    │     │     │       │           │ │
+│ │ SS0 │      │    │     │     │       │           │ │ │ │ SS0 │      │    │     │     │       │           │ │ │ │ SS0 │      │    │     │     │       │           │ │
+│ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │ │ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │ │ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │
+│ <span class="r3">         QSD_0          </span>                            │ │ <span class="r3">         QSD_1          </span>                            │ │ <span class="r3">         QSD_2          </span>                            │
+│ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │ │ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │ │ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │
+│ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │ │ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │ │ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │
+│ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │ │ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │ │ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │
+│ │ Q2 │    │    │ None  │                            │ │ │ Q2 │    │    │ None  │                            │ │ │ Q2 │    │    │ None  │                            │
+│ │ Q1 │    │    │ None  │                            │ │ │ Q1 │    │    │ None  │                            │ │ │ Q1 │    │    │ None  │                            │
+│ │ Q0 │    │    │ None  │                            │ │ │ Q0 │    │    │ None  │                            │ │ │ Q0 │    │    │ None  │                            │
+│ └────┴────┴────┴───────┘                            │ │ └────┴────┴────┴───────┘                            │ │ └────┴────┴────┴───────┘                            │
+╰─────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────╯
+<span class="r3">                                                                         Functional Unit: LOAD                                                                         </span>
+╭─────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────╮ ╭─────────────────────────────────────────────────────╮
+│ <span class="r3">                      LOAD_0                       </span> │ │ <span class="r3">                      LOAD_1                       </span> │ │ <span class="r3">                      LOAD_2                       </span> │
+│ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │ │ ┏━━━━━┳━━━━━━┳━━━━┳━━━━━┳━━━━━┳━━━━━━━┳━━━━━━━━━━━┓ │
+│ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │ │ ┃<span class="r4"> SS  </span>┃<span class="r4"> bMux </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU1 </span>┃<span class="r4"> FU2 </span>┃<span class="r4"> value </span>┃<span class="r4"> instIndex </span>┃ │
+│ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │ │ ┡━━━━━╇━━━━━━╇━━━━╇━━━━━╇━━━━━╇━━━━━━━╇━━━━━━━━━━━┩ │
+│ │ SS7 │      │    │     │     │       │           │ │ │ │ SS7 │      │    │     │     │       │           │ │ │ │ SS7 │      │    │     │     │       │           │ │
+│ │ SS6 │      │    │     │     │       │           │ │ │ │ SS6 │      │    │     │     │       │           │ │ │ │ SS6 │      │    │     │     │       │           │ │
+│ │ SS5 │      │    │     │     │       │           │ │ │ │ SS5 │      │    │     │     │       │           │ │ │ │ SS5 │      │    │     │     │       │           │ │
+│ │ SS4 │      │    │     │     │       │           │ │ │ │ SS4 │      │    │     │     │       │           │ │ │ │ SS4 │      │    │     │     │       │           │ │
+│ │ SS3 │      │    │     │     │       │           │ │ │ │ SS3 │      │    │     │     │       │           │ │ │ │ SS3 │      │    │     │     │       │           │ │
+│ │ SS2 │      │    │     │     │       │           │ │ │ │ SS2 │      │    │     │     │       │           │ │ │ │ SS2 │      │    │     │     │       │           │ │
+│ │ SS1 │      │    │     │     │       │           │ │ │ │ SS1 │      │    │     │     │       │           │ │ │ │ SS1 │      │    │     │     │       │           │ │
+│ │ SS0 │      │    │     │     │       │           │ │ │ │ SS0 │      │    │     │     │       │           │ │ │ │ SS0 │      │    │     │     │       │           │ │
+│ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │ │ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │ │ └─────┴──────┴────┴─────┴─────┴───────┴───────────┘ │
+│ <span class="r3">         QSD_0          </span>                            │ │ <span class="r3">         QSD_1          </span>                            │ │ <span class="r3">         QSD_2          </span>                            │
+│ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │ │ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │ │ ┏━━━━┳━━━━┳━━━━┳━━━━━━━┓                            │
+│ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │ │ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │ │ ┃<span class="r4"> P  </span>┃<span class="r4"> RP </span>┃<span class="r4"> FU </span>┃<span class="r4"> value </span>┃                            │
+│ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │ │ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │ │ ┡━━━━╇━━━━╇━━━━╇━━━━━━━┩                            │
+│ │ Q2 │    │    │ None  │                            │ │ │ Q2 │    │    │ None  │                            │ │ │ Q2 │    │    │ None  │                            │
+│ │ Q1 │    │    │ None  │                            │ │ │ Q1 │    │    │ None  │                            │ │ │ Q1 │    │    │ None  │                            │
+│ │ Q0 │    │    │ None  │                            │ │ │ Q0 │    │    │ None  │                            │ │ │ Q0 │    │    │ None  │                            │
+│ └────┴────┴────┴───────┘                            │ │ └────┴────┴────┴───────┘                            │ │ └────┴────┴────┴───────┘                            │
+╰─────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────╯ ╰─────────────────────────────────────────────────────╯
+<span class="r3">                REGISTERS                 </span>
+┏━━━━━━━━━━┳━━━━┳━━━━━━━┳━━━━━━━┳━━━━━━━━┓
+┃<span class="r4"> Register </span>┃<span class="r4"> RP </span>┃<span class="r4">  FU   </span>┃<span class="r4"> value </span>┃<span class="r4"> locked </span>┃
+┡━━━━━━━━━━╇━━━━╇━━━━━━━╇━━━━━━━╇━━━━━━━━┩
+│    R0    │ +3 │ alu_1 │ None  │ False  │
+│    R1    │ +5 │ alu_2 │ None  │ False  │
+│    R2    │ +5 │ alu_0 │ None  │ False  │
+│    R3    │ +5 │ alu_1 │ None  │ False  │
+│    R4    │ +7 │ alu_2 │ None  │ False  │
+│    R5    │ +4 │ alu_2 │ None  │ False  │
+│    R6    │ +4 │ alu_0 │ None  │ False  │
+└──────────┴────┴───────┴───────┴────────┘
 </code></pre>
 </body>
 </html>

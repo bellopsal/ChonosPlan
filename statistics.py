@@ -21,6 +21,13 @@ class Statistics:
 
     def updateTypeInst(self, bitMux):
         self.typeInst[bitMux] += 1
+        if bitMux == 8 or bitMux == 4 or bitMux == 5:
+            self.increaseTotalLock()
+        else:
+            self.increaseInstIssued()
+
+
+
 
     def increaseTotalLock(self):
         self.totalLock += 1
@@ -30,6 +37,7 @@ class Statistics:
 
     def update_statistics(self):
         self.CPI, self.mean_latency = self.Chronogram.get_statistics(self.cycles)
+        self.CPI = self.cycles/self.instIssued
 
         stats_aux = pd.DataFrame.from_dict({"cycle":[self.cycles], "inst_issued":[self.instIssued], "inst_lock": [self.totalLock],
                                              "CPI":[self.CPI], "type_0":[self.typeInst.get(0)], "type_1":[self.typeInst.get(1)],
@@ -80,4 +88,5 @@ class Statistics:
         plt.xticks(x, x)
         plt.tight_layout()
         fig.savefig('stats.png')
+        plt.close(fig)
 

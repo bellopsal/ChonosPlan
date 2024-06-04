@@ -116,7 +116,7 @@ class FU:
 
                         value1 = None
                         value2 = None
-
+                        RP1 = ts_min
                         case_QSD = False
                         bitMux = 6
 
@@ -132,7 +132,7 @@ class FU:
                         if ts_max == 0:
                             value2 = registers.Registers[reg_max].value
                             RP1 = -1
-                        hs.update(i = freeHS, RP1=ts_min, RP2 = ts_max, position = position, value1 = value1, destination = self.name,
+                        hs.update(i = freeHS, RP1=RP1, RP2 = ts_max, position = position, value1 = value1, destination = self.name,
                                   value2 = value2, inv = inv, bitMux = bitMux, FU1= FU1, FU2 = FU2, case_QSD = case_QSD, type_operation=inst.function, inm = inm)
 
                         if b_lb:
@@ -166,7 +166,7 @@ class FU:
 
                 if b_lb: registers.new_inst(destination=inst.r1, rp=rp, fu_name=self.name)
                 self.BRT.occupy_i(position)
-                self.SS.update_i(i=position, bitMux=RP1, FU1=FU1, FU2=FU2,
+                self.SS.update_i(i=position, bitMux=bitMux, FU1=FU1, FU2=FU2,
                                  RP=RP, value=value, type_operation=inst.function,instruction =instIndex,  inv=inv, inm = inm)
 
         if res == 1:

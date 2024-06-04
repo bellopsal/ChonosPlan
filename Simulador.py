@@ -147,7 +147,6 @@ class Simulador_1_FU:
         if len(self.PC.PC) > 0:
             for _ in range(len(self.PC.PC)):
                 instIndex = self.PC.new_instruction()
-                print(instIndex)
                 if instIndex < self.program.program_size:
                     inst = self.program.get(instIndex)
                     # if there are still instructions in the program
@@ -155,18 +154,18 @@ class Simulador_1_FU:
                     self.statistics.updateTypeInst(bitMux)
 
 
-                    if res == 0:
-                        self.statistics.increaseTotalLock()
-                        self.PC.inst_lock()
-                        self.registers.inst_block([inst.r1, inst.r2, inst.r3, inst.rs1])
-                        self.dump_csv()
-                    else:
-                        self.statistics.increaseInstIssued()
-                        self.dump_csv()
-                        if pos > self.memory_last: self.memory_last = pos
-                        if inst.fu_type == "jump" and inst.BTB == True:
-                            self.PC.last = self.program.dict_tags[inst.offset] - 1
-                            break
+                if res == 0:
+                    #self.statistics.increaseTotalLock()
+                    self.PC.inst_lock()
+                    self.registers.inst_block([inst.r1, inst.r2, inst.r3, inst.rs1])
+                    self.dump_csv()
+                else:
+                    #self.statistics.increaseInstIssued()
+                    self.dump_csv()
+                    if pos > self.memory_last: self.memory_last = pos
+                    if inst.fu_type == "jump" and inst.BTB == True:
+                        self.PC.last = self.program.dict_tags[inst.offset] - 1
+                        break
         self.statistics.update_statistics()
 
 

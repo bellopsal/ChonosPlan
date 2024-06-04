@@ -1,12 +1,11 @@
 tag,operation,r1,r2,r3,rs1,inm,offset,BTB
 bucle,addi,0,0,,,1,,
-,add,1,0,0,,,,
-,add,2,1,0,,,,
-,add,3,1,0,,,,
-,add,4,2,0,,,,
+,add,1,1,0,,,,
+,add,2,2,0,,,,
+,add,3,3,0,,,,
+,add,4,1,0,,,,
 ,add,5,2,0,,,,
 ,add,6,3,0,,,,
-,add,7,3,0,,,,
 ,j,,,,,,bucle,
 
 

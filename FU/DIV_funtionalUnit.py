@@ -38,7 +38,7 @@ class FU:
 
     def calculateN(self, inst, registers):
         if inst.function.endswith("i"):
-            l = registers.rp_calculation_type1(inst.r2, inst.inm, inst.r1)
+            l = registers.rp_calculation_type1_inm(inst.r2, inst.r1)
         else:
             l = registers.rp_calculation_type1(inst.r2, inst.r3, inst.r1)
         n = self.BRT.find_first_after(l[0])
@@ -88,7 +88,7 @@ class FU:
                         res = 0
                         bitMux = 5
                     else:
-
+                        RP1 = ts_min
                         value1 = None
                         value2 = None
                         case_QSD = False

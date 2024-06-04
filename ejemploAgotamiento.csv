@@ -1,5 +1,5 @@
 tag,operation,r1,r2,r3,rs1,inm,offset,BTB
-bucle,multi,1,0,,,1,,
+bucle,multi,1,1,,,1,,
 ,multi,1,1,,,1,,
 ,multi,1,1,,,1,,
 ,multi,1,1,,,1,,
