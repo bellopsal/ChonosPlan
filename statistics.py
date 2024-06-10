@@ -58,7 +58,7 @@ class Statistics:
         lock_aux = self.stats["inst_lock"].diff().fillna(0)
         axs[0].plot(x,issued_aux, label='issued')
         axs[0].plot(x,lock_aux, label='locked')
-        #axs[0].set_title('Sine Function')
+        axs[0].set_title('Instructions Ιssued')
         axs[0].legend()
         axs[0].grid(True)
         axs[0].set_xticks(x, x)
