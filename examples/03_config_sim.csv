@@ -1,0 +1,2 @@
+,n_ss,n_registers,QSD_size,memory_size,n_alu,n_mult,n_div,n_trans,n_load,n_store,latency_alu,latency_mult,latency_div,latency_trans,latency_store,latency_load,n_cycles,multiplicity,b_hs
+0,8,5,3,32,3,3,3,3,3,3,2,3,3,5,2,2,30,4,True
