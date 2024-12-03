@@ -4,8 +4,8 @@ import pandas as pd
 #from tkinter.tix import ScrolledWindow
 from tkinter import filedialog
 
-import Program
-import Simulador
+import src.Program as Program
+import src.Simulador as Simulador
 from PIL import Image, ImageTk
 import sys
 
@@ -434,7 +434,7 @@ class app:
     def start(self):
 
 
-        self.simulador = Simulador.Simulador_1_FU(program = self.program,
+        self.simulador = Simulador.Simulator(program = self.program,
                                                   ss_size = int(self.n_ss.get()),
                                                   registers_size= int(self.n_registers.get()),
 
@@ -585,7 +585,7 @@ class app:
         self.right_size.pack(side = tk.RIGHT)
 
         self.simulador.statistics.plot_graphs()
-        img = Image.open("../files/stats.png")
+        img = Image.open("./files/stats.png")
         photo = ImageTk.PhotoImage(img.convert('RGB'))
         self.label7 = tk.Label(aux_botton,image=photo)
         self.label7.image = photo
@@ -593,7 +593,7 @@ class app:
         img.close()
 
         self.simulador.statistics.Chronogram.plot_cycles()
-        img = Image.open("../files/figure.png")
+        img = Image.open("./files/figure.png")
         photo = ImageTk.PhotoImage(img.convert('RGB'))
         self.label6 = tk.Label(self.right_size,image=photo)
         self.label6.image = photo
@@ -627,7 +627,7 @@ class app:
         self.label.image = None
         self.simulador.statistics.Chronogram.plot_cycles()
 
-        img = Image.open("../files/figure.png")
+        img = Image.open("./files/figure.png")
         photo = ImageTk.PhotoImage(img.convert('RGB'))
         self.label6.config(image=photo)
         self.label6.image = photo
@@ -642,7 +642,7 @@ class app:
 
 
         self.simulador.statistics.plot_graphs()
-        img = Image.open("../files/stats.png")
+        img = Image.open("./files/stats.png")
         photo = ImageTk.PhotoImage(img.convert('RGB'))
         self.label7.config(image=photo)
         self.label7.image = photo

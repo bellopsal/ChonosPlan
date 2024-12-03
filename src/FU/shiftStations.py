@@ -42,9 +42,9 @@ class SS:
         # the first ss is the one ex in this cycle
         self.l_ss = [ShiftStation() for i in range(ss_size)]
         self.ss_size = ss_size
-        self.csv = "../files/ss.csv"
+        self.csv = "./files/ss.csv"
 
-        with open("../files/ss.csv", "w") as f:
+        with open("./files/ss.csv", "w") as f:
             write = csv.writer(f)
             fields = ["SS", "bitMux", "RP", "FU1", "FU2", "value"]
             rows = [
@@ -90,7 +90,7 @@ class SS:
         self.l_ss[i].instruction = instruction
         self.l_ss[i].type_operation = type_operation
 
-        with open("../files/ss.csv", "a") as f:
+        with open("./files/ss.csv", "a") as f:
             write = csv.writer(f)
             fields = ["SS", "bitMux", "RP", "FU1", "FU2", "value"]
             rows = [
@@ -148,7 +148,7 @@ class QSD:
         self.n = size
         self.csv = "QSD.csv"
 
-        with open("../files/QSD.csv", "w") as f:
+        with open("./files/QSD.csv", "w") as f:
             write = csv.writer(f)
             fields = ["Element", "RP", "FU", "value"]
             rows = [[str(i), self.QSD[i].RP, self.QSD[i].fu, self.QSD[i].value] for i

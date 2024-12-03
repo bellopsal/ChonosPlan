@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import Chronogram
+import src.Chronogram as Chronogram
 
 
 class Statistics:
@@ -119,5 +119,5 @@ class Statistics:
 
         # Layout adjustments and save the figure
         plt.tight_layout()
-        fig.savefig('../files/stats.png')
+        fig.savefig('./files/stats.png')
         plt.close(fig)

@@ -120,12 +120,12 @@ class Chronogram:
         for text in legend.get_texts():
             text.set_rotation(90)
 
-        fig.savefig('../files/figure.png')
-        image = Image.open('../files/figure.png')
+        fig.savefig('./files/figure.png')
+        image = Image.open('./files/figure.png')
 
         # Rotate the image for better display
         rotated_image = image.rotate(270, expand=True)
-        rotated_image.save('../files/figure.png')
+        rotated_image.save('./files/figure.png')
         plt.close(fig)
 
         return rotated_image

@@ -40,7 +40,7 @@ class Scoreboards:
         rows = [["R"+str(i)]+self.scoreboard[i].dump_csv() for i in range(self.n)]
 
 
-        with open("../files/scoreboard.csv", "w") as f:
+        with open("./files/scoreboard.csv", "w") as f:
             write = csv.writer(f)
             write.writerow(fields)
             write.writerows(rows)

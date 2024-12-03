@@ -1,6 +1,5 @@
 import csv
 
-
 class Memory:
     """Simulates a memory module with storage, retrieval, and CSV export capabilities.
 
@@ -18,7 +17,7 @@ class Memory:
         self.size = size
         self.memory = list(range(size))
 
-        with open("../files/memory.csv", "w") as f:
+        with open("./files/memory.csv", "w") as f:
             writer = csv.writer(f)
             writer.writerow(range(size))  # Write header
             writer.writerow(self.memory)  # Write initial memory values
@@ -65,6 +64,6 @@ class Memory:
 
     def dump_csv(self):
         """Appends the current state of memory to a CSV file."""
-        with open("../files/memory.csv", "a") as f:
+        with open("./files/memory.csv", "a") as f:
             writer = csv.writer(f)
             writer.writerow(self.memory)
